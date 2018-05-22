@@ -3,21 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/profile"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Moje produkty" />
+            android:title="Profil" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/add"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Wymienione produkty" />
+            android:title="Dodaj" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Znajomi" />
-        <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/history"
             android:icon="@drawable/ic_menu_manage"
             android:title="Ustawienia" />
     </group>

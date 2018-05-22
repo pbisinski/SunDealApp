@@ -92,7 +92,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                         if(task.isSuccessful()){
                             //uruchomienie ProfileActivity
                             finish();
-                            startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         }
                     }
                 });
@@ -104,11 +104,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         if(view == buttonSignIn){
             userLogin();
-        }
-
-        if(view == textViewSignup){
-            finish();
-            startActivity(new Intent(this, ProfileActivity.class));
         }
     }
 }

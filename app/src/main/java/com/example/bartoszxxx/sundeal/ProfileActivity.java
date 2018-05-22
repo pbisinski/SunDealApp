@@ -36,7 +36,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(new Intent(this, SignInActivity.class));
         }
 
-        FirebaseUser user = firebaseAuth.getCurrentUser();
+                FirebaseUser user = firebaseAuth.getCurrentUser();
 
         //inicjalizacja widoków
         textViewUserEmail = (TextView) findViewById(R.id.textViewUserEmail);
