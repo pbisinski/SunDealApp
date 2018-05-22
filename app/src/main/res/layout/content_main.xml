@@ -19,12 +19,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Wyszukaj"
-        android:layout_margin="80dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginRight="100dp"
         />
 
-    <Button
+    <!--<Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="O programie"
@@ -32,7 +29,12 @@
         android:layout_marginLeft="100dp"
         android:layout_marginRight="100dp"
         android:onClick="przejscie"
-        />
+        />-->
+    <ListView
+        android:id="@+id/listViewArtists"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"></ListView>
 
 
 </LinearLayout>

@@ -1,6 +1,5 @@
 package com.example.bartoszxxx.sundeal;
 
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -17,54 +16,43 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
-
-    //definiowanie pól
-    private Button buttonSignIn;
+    //defining view objects
     private EditText editTextEmail;
     private EditText editTextPassword;
-
-    private FirebaseAuth firebaseAuth;
-    private ProgressDialog progressDialog;
     private Button buttonSignUp;
+    private ProgressDialog progressDialog;
 
+
+    //defining firebaseauth object
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
+        setContentView(R.layout.activity_sign_up);
 
-        //utworzenie obiektu autoryzacji firebase
+        //initializing firebase auth object
         firebaseAuth = FirebaseAuth.getInstance();
 
-        //jeżeli not null to uzytkownik zalogowany
-        if(firebaseAuth.getCurrentUser() != null){
-            //zamyka aktywność
-            finish();
-            //otwiera aktywność ProfileActivity
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-        }
-
-        //inicjalizacja widoków
+        //initializing views
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
         buttonSignUp = (Button) findViewById(R.id.buttonSignUp);
 
         progressDialog = new ProgressDialog(this);
 
-        //odbieranie kliknięcia
-        buttonSignIn.setOnClickListener(this);
-        //textViewSignIn.setOnClickListener(this);
+        //attaching listener to button
+        buttonSignUp.setOnClickListener(this);
+        //textViewSignUp.setOnClickListener(this);
     }
 
-    //metoda - logowanie
-    private void userLogin(){
+    private void registerUser(){
         String email = editTextEmail.getText().toString().trim();
         String password  = editTextPassword.getText().toString().trim();
 
-        //kontrola czy zostały wpisane e-mail i hasło
+        //checking if email and passwords are empty
         if(TextUtils.isEmpty(email)){
             Toast.makeText(this,"Podaj adres e-mail",Toast.LENGTH_LONG).show();
             return;
@@ -75,36 +63,38 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
-        //jeżeli pola nie są puste to wyświetla się progressDialog - logowanie w trakcie
-        progressDialog.setMessage("Logowanie, proszę czekać");
+        //if the email and password are not empty
+        //displaying a progress dialog
+
+        progressDialog.setMessage("Rejestracja, proszę czekać");
         progressDialog.show();
 
-        //logowanie użytkownika
-        firebaseAuth.signInWithEmailAndPassword(email, password)
+        //creating a new user
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
-                        //jeżeli logowanie się powiodło uruchamia się ProfileActivity
+                        //checking if success
                         if(task.isSuccessful()){
-                            //uruchomienie ProfileActivity
+                            //display some message here
+                            Toast.makeText(SignUpActivity.this,"Użytkownik został zarejestrowany",Toast.LENGTH_LONG).show();
                             finish();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        }else{
+                            //display some message here
+                            Toast.makeText(SignUpActivity.this,"Błąd rejestracji",Toast.LENGTH_LONG).show();
                         }
+                        progressDialog.dismiss();
                     }
                 });
 
     }
 
-    //przejście przyciskiem do MainActivity
     @Override
     public void onClick(View view) {
-        if(view == buttonSignIn){
-            userLogin();
+        if(view == buttonSignUp){
+            registerUser();
         }
 
-        if(view == buttonSignUp){
-            startActivity(new Intent(this, SignUpActivity.class));
-        }
     }
 }
