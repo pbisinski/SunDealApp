@@ -19,7 +19,7 @@ public class AddItemActivity extends AppCompatActivity {
 
     EditText item, description, location;
     Button insert;
-    String oddam_zamienie;
+    String oddam_zamienie="";
     Switch oddam, zamienie;
     FirebaseDatabase database;
     DatabaseReference ref;
@@ -44,9 +44,9 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     private void isOddam() {
-        if(oddam.isChecked()){oddam_zamienie.concat("oddam");}
-        if(oddam.isChecked()&&zamienie.isChecked()){oddam_zamienie.concat(" , ");}
-        if(zamienie.isChecked()){oddam_zamienie.concat("zamienie");}
+        if(oddam.isChecked()){oddam_zamienie = oddam_zamienie.concat("oddam");}
+        if(oddam.isChecked()&&zamienie.isChecked()){oddam_zamienie = oddam_zamienie.concat(" , ");}
+        if(zamienie.isChecked()){oddam_zamienie = oddam_zamienie.concat("zamienie");}
     }
     private void setClear() {
         item.setText("");
@@ -55,8 +55,8 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     public void BtnInsert(View view) {
-        String id = ref.push().getKey();
         isOddam();
+        String id = ref.push().getKey();
         User user = new User(item.getText().toString(), description.getText().toString(), location.getText().toString(), oddam_zamienie);
         ref.child(id).setValue(user);
         Toast.makeText(AddItemActivity.this, "Data Inserted", Toast.LENGTH_LONG).show();
