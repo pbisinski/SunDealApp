@@ -44,7 +44,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             //zamyka aktywność
             finish();
             //otwiera aktywność ProfileActivity
-            startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
 
         //inicjalizacja widoków

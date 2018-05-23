@@ -5,15 +5,17 @@ public class User {
     private String item;
     private String description;
     private String location;
+    private String oddam;
 
     public User() {
 
     }
 
-    public User(String item, String description, String location) {
+    public User(String item, String description, String location, String oddam) {
         this.item = item;
         this.description = description;
         this.location = location;
+        this.oddam = oddam;
     }
 
     public String getItem() {
@@ -35,6 +37,7 @@ public class User {
     public String getLocation() {
         return location;
     }
+
 
     public void setLocation(String location) {
         this.location = location;

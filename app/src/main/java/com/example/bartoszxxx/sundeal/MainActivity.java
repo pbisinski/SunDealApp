@@ -15,15 +15,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 
-public class MainActivity extends AppCompatActivity
 
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
+
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        firebaseAuth = FirebaseAuth.getInstance();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -63,7 +66,14 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+                    //nastąpi wylogowanie
+                    firebaseAuth.signOut();
+                    //zamknięcie aktywności
+                    finish();
+                    //uruchamianie SignInActivity
+                    startActivity(new Intent(this, SignInActivity.class));
+
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -78,7 +88,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.profile) {
             Toast.makeText(this,"siema", Toast.LENGTH_LONG).show();
         } else if (id == R.id.add) {
-            Toast.makeText(this,"siema2", Toast.LENGTH_LONG).show();
+            Intent przejscie;
+            przejscie = new Intent(MainActivity.this, AddItemActivity.class);
+            this.startActivity(przejscie);
 
         } else if (id == R.id.history) {
             Toast.makeText(this,"siema3", Toast.LENGTH_LONG).show();
