@@ -13,14 +13,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.io.File;
 
 
 public class MainActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,13 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View hView =  navigationView.getHeaderView(0);
+        TextView nav_user = (TextView)hView.findViewById(R.id.nav_name);
+        TextView nav_email = (TextView)hView.findViewById(R.id.nav_email);
+        firebaseUser = firebaseAuth.getCurrentUser();
+        nav_user.setText(firebaseUser.getDisplayName());
+        nav_email.setText(firebaseUser.getEmail());
     }
 
     @Override
@@ -72,8 +84,6 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                     finish();
                     //uruchamianie SignInActivity
                     startActivity(new Intent(this, SignInActivity.class));
-
-
         }
 
         return super.onOptionsItemSelected(item);

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
 
@@ -29,6 +35,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private TextView textViewSignup;
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
+    private File file;
+
 
 
     @Override
@@ -38,6 +46,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         //utworzenie obiektu autoryzacji firebase
         firebaseAuth = FirebaseAuth.getInstance();
+
+        //utworzenie katalogu danych uzytkownika
+        file = new File(this.getFilesDir(), "sundealapp.data");
+        if(!file.exists()){
+            file.mkdir();
+        }
 
         //jeżeli not null to uzytkownik zalogowany
         if(firebaseAuth.getCurrentUser() != null){
@@ -62,7 +76,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     //metoda - logowanie
     private void userLogin(){
-        String email = editTextEmail.getText().toString().trim();
+        final String email = editTextEmail.getText().toString().trim();
         String password  = editTextPassword.getText().toString().trim();
 
 
@@ -93,6 +107,20 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                             //uruchomienie ProfileActivity
                             finish();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+                            BufferedWriter bw = null;
+                            FileWriter fw = null;
+
+                            try{
+                                File user_data = new File(file, "user");
+                                FileWriter writer = new FileWriter(user_data);
+                                writer.append(email);
+                                writer.flush();
+                                writer.close();
+
+                            } catch (IOException e) {
+                                Log.e("ERROR", "blad zapisu pliku");
+                            }
                         }
                     }
                 });
