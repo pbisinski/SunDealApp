@@ -47,11 +47,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //utworzenie obiektu autoryzacji firebase
         firebaseAuth = FirebaseAuth.getInstance();
 
-        //utworzenie katalogu danych uzytkownika
-        file = new File(this.getFilesDir(), "sundealapp.data");
-        if(!file.exists()){
-            file.mkdir();
-        }
+
 
         //jeżeli not null to uzytkownik zalogowany
         if(firebaseAuth.getCurrentUser() != null){

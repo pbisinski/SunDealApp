@@ -26,7 +26,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 
 public class MainActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,6 +38,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     private FirebaseUser firebaseUser;
     private FirebaseDatabase database;
     private DatabaseReference ref;
+    private File file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,11 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         nav_user.setText(firebaseUser.getDisplayName());
         nav_email.setText(firebaseUser.getEmail());
 
+        //utworzenie katalogu danych uzytkownika
+        file = new File(this.getFilesDir(), "sundealapp.data");
+        if(!file.exists()){
+            file.mkdir();
+        }
     }
 
     @Override
@@ -121,6 +130,13 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         return true;
     }
 
+    public void przejscie(View view) {
+        Intent przejscie;
+        przejscie = new Intent(MainActivity.this, AboutAppActivity.class);
+        this.startActivity(przejscie);
+        return;
+    }
+
     // Attach a listener to read the data at our posts reference
     public void wyswietl(View view){
         database = FirebaseDatabase.getInstance();
@@ -132,7 +148,21 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     //User user = dataSnapshot.getValue(User.class);
-                    Log.e("DATABASE", childDataSnapshot.getValue(User.class).getItem());
+
+                    try{
+                        File data = new File(file, "user_data");
+                        FileWriter writer = new FileWriter(data);
+                        writer.append(childDataSnapshot.getValue(User.class).getItem());
+                        writer.append(", ");
+                        writer.append(childDataSnapshot.getValue(User.class).getDescription());
+                        writer.append(", ");
+                        writer.append(childDataSnapshot.getValue(User.class).getLocation());
+                        writer.flush();
+                        writer.close();
+
+                    } catch (IOException e) {
+                        Log.e("ERROR", "blad zapisu pliku");
+                    }
                 }
             }
 
