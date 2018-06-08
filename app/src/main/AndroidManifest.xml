@@ -12,9 +12,12 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AboutAppActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".SignUpActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".SignInActivity">
             <intent-filter>
@@ -27,7 +30,8 @@
             android:name=".ProfileActivity"
             android:label="@string/title_activity_profile"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AddItemActivity"></activity>
+        <activity android:name=".AddItemActivity" />
+        <activity android:name=".MyProductsActivity"></activity>
     </application>
 
 </manifest>

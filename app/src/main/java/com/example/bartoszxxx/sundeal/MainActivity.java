@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         if(!file.exists()){
             file.mkdir();
         }
+
+        wyswietl();
     }
 
     @Override
@@ -81,12 +83,12 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         }
     }
 
-   /* @Override
+   @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
-    }*/
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -115,14 +117,16 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         int id = item.getItemId();
 
         if (id == R.id.profile) {
-            Toast.makeText(this,"siema", Toast.LENGTH_LONG).show();
+            Intent przejscie;
+            przejscie = new Intent(MainActivity.this, MyProductsActivity.class);
+            this.startActivity(przejscie);
         } else if (id == R.id.add) {
             Intent przejscie;
             przejscie = new Intent(MainActivity.this, AddItemActivity.class);
             this.startActivity(przejscie);
 
         } else if (id == R.id.history) {
-            Toast.makeText(this,"siema3", Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"<place_holder>", Toast.LENGTH_LONG).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -138,7 +142,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     }
 
     // Attach a listener to read the data at our posts reference
-    public void wyswietl(View view){
+    public void wyswietl(){
         database = FirebaseDatabase.getInstance();
         ref = database.getReference("User");
         Query queryRef = ref.orderByChild("owner").equalTo(firebaseUser.getEmail());
@@ -146,20 +150,29 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         queryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                File data = new File(file, "user_data");
+                try{
+                    if (data.exists()) {
+                        data.delete();
+                    }
+                    data.createNewFile();
+                } catch (IOException e) {
+                    Log.e("ERROR", "blad tworzenia pliku");
+                }
+
                 for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     //User user = dataSnapshot.getValue(User.class);
-
                     try{
-                        File data = new File(file, "user_data");
-                        FileWriter writer = new FileWriter(data);
-                        writer.append(childDataSnapshot.getValue(User.class).getItem());
-                        writer.append(", ");
-                        writer.append(childDataSnapshot.getValue(User.class).getDescription());
-                        writer.append(", ");
-                        writer.append(childDataSnapshot.getValue(User.class).getLocation());
-                        writer.flush();
-                        writer.close();
-
+                        FileWriter fw = new FileWriter(data, true);
+                        BufferedWriter bw = new BufferedWriter(fw);
+                        bw.newLine();
+                        bw.write(childDataSnapshot.getValue(User.class).getItem());
+                        bw.write(", ");
+                        bw.write(childDataSnapshot.getValue(User.class).getDescription());
+                        bw.write(", ");
+                        bw.write(childDataSnapshot.getValue(User.class).getLocation());
+                        bw.flush();
+                        bw.close();
                     } catch (IOException e) {
                         Log.e("ERROR", "blad zapisu pliku");
                     }
