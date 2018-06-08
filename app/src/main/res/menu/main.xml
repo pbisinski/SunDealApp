@@ -8,11 +8,4 @@
         app:showAsAction="never" />
 
 
-    <item
-        android:id="@+id/action_favorite"
-        android:icon="@android:drawable/ic_menu_info_details"
-        android:title="@string/action_favorite"
-        app:showAsAction="ifRoom" />
-
-
 </menu>

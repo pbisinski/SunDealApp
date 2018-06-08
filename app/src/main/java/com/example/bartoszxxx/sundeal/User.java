@@ -2,25 +2,31 @@ package com.example.bartoszxxx.sundeal;
 
 public class User {
 
+    private String owner;
     private String item;
     private String description;
     private String location;
-    private String oddam;
+    private Boolean oddam;
+    private Boolean zamienie;
 
     public User() {
 
     }
 
-    public User(String item, String description, String location, String oddam) {
+    public User(String owner, String item, String description, String location, Boolean oddam, Boolean zamienie) {
+        this.owner = owner;
         this.item = item;
         this.description = description;
         this.location = location;
         this.oddam = oddam;
+        this.zamienie = zamienie;
     }
 
-    public String getItem() {
-        return item;
-    }
+    public String getOwner() { return owner; }
+
+    public void setOwner(String owner) { this.owner = owner; }
+
+    public String getItem() { return item; }
 
     public void setItem(String item) {
         this.item = item;
@@ -38,8 +44,15 @@ public class User {
         return location;
     }
 
-
     public void setLocation(String location) {
         this.location = location;
     }
+
+    public Boolean getOddam() { return oddam; }
+
+    public void setOddam(Boolean oddam) { this.oddam = oddam; }
+
+    public Boolean getZamienie() { return zamienie; }
+
+    public void setZamienie(Boolean zamienie) { this.zamienie = zamienie; }
 }

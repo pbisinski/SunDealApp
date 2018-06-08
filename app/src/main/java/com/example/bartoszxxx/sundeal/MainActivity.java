@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +19,12 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 
@@ -26,6 +33,8 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
+    private FirebaseDatabase database;
+    private DatabaseReference ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +59,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         firebaseUser = firebaseAuth.getCurrentUser();
         nav_user.setText(firebaseUser.getDisplayName());
         nav_email.setText(firebaseUser.getEmail());
+
     }
 
     @Override
@@ -111,11 +121,26 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         return true;
     }
 
+    // Attach a listener to read the data at our posts reference
+    public void wyswietl(View view){
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference("User");
+        Query queryRef = ref.orderByChild("owner").equalTo(firebaseUser.getEmail());
 
-    public void przejscie(View view) {
-        Intent przejscie;
-        przejscie = new Intent(MainActivity.this, AboutAppActivity.class);
-        this.startActivity(przejscie);
+        queryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    //User user = dataSnapshot.getValue(User.class);
+                    Log.e("DATABASE", childDataSnapshot.getValue(User.class).getItem());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
 

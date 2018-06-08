@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,17 +21,19 @@ public class AddItemActivity extends AppCompatActivity {
 
     EditText item, description, location;
     Button insert;
-    String oddam_zamienie="";
     Switch oddam, zamienie;
     FirebaseDatabase database;
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
     DatabaseReference ref;
-    User user;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
 
         item = (EditText) findViewById(R.id.item);
         description = (EditText) findViewById(R.id.description);
@@ -39,26 +43,22 @@ public class AddItemActivity extends AppCompatActivity {
         zamienie = (Switch) findViewById(R.id.switch2);
         database = FirebaseDatabase.getInstance();
         ref = database.getReference("User");
-
-
     }
 
-    private void isOddam() {
-        if(oddam.isChecked()){oddam_zamienie = oddam_zamienie.concat("oddam");}
-        if(oddam.isChecked()&&zamienie.isChecked()){oddam_zamienie = oddam_zamienie.concat(" , ");}
-        if(zamienie.isChecked()){oddam_zamienie = oddam_zamienie.concat("zamienie");}
-    }
     private void setClear() {
         item.setText("");
         description.setText("");
         location.setText("");
+        oddam.setChecked(false);
+        zamienie.setChecked(false);
     }
 
     public void BtnInsert(View view) {
-        isOddam();
+        //String id = firebaseAuth.getCurrentUser().getEmail();
         String id = ref.push().getKey();
-        User user = new User(item.getText().toString(), description.getText().toString(), location.getText().toString(), oddam_zamienie);
+        User user = new User(firebaseUser.getEmail(), item.getText().toString(), description.getText().toString(), location.getText().toString(), oddam.isChecked(), zamienie.isChecked());
         ref.child(id).setValue(user);
         Toast.makeText(AddItemActivity.this, "Data Inserted", Toast.LENGTH_LONG).show();
         setClear();
-    }}
+    }
+}

@@ -16,13 +16,14 @@
         android:hint="Wpisz nazwę produktu"/>
 
     <Button
+        android:id="@+id/button_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Wyszukaj"
         android:layout_margin="80dp"
         android:layout_marginLeft="100dp"
         android:layout_marginRight="100dp"
-        />
+        android:onClick="wyswietl"
+        android:text="Wyszukaj" />
 
     <Button
         android:layout_width="match_parent"
