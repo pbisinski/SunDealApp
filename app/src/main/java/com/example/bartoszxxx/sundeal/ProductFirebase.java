@@ -1,21 +1,28 @@
 package com.example.bartoszxxx.sundeal;
 
-public class User extends Product{
+public class ProductFirebase extends Product{
 
     private String owner;
+    //rozwiazanie problemu wyszukiwania
+    private String item_lowercase;
     private Boolean oddam;
     private Boolean zamienie;
 
-    public User() {
+    public ProductFirebase() {
 
     }
 
-    public User(String owner, String item, String description, String location, Boolean oddam, Boolean zamienie) {
+    public ProductFirebase(String owner, String item, String item_lowercase, String description, String location, Boolean oddam, Boolean zamienie) {
         super(item,description,location);
+        this.item_lowercase=item_lowercase;
         this.owner = owner;
         this.oddam = oddam;
         this.zamienie = zamienie;
     }
+
+    public String getItem_lowercase() { return item_lowercase; }
+
+    public void setItem_lowercase(String item_lowercase) { this.item_lowercase = item_lowercase; }
 
     public String getOwner() { return owner; }
 

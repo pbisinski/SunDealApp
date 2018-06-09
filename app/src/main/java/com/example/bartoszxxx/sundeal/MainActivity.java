@@ -2,8 +2,6 @@ package com.example.bartoszxxx.sundeal;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,8 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -47,12 +45,19 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     private TextView nav_email;
     private List<Product> products;
     private RecyclerAdapter rAdapter;
+    private EditText search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Polaczenie z FireBase
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference("ProductFirebase");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -62,28 +67,23 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        //Wyswietlenie danych zalogowanego uzytkownika w panelu bocznym
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         View hView =  navigationView.getHeaderView(0);
-        nav_user = (TextView)hView.findViewById(R.id.nav_name);
-        nav_email = (TextView)hView.findViewById(R.id.nav_email);
-
-        //dostep do informacji o zalogowanym uzytkowniku
-        firebaseUser = firebaseAuth.getCurrentUser();
+        nav_user = (TextView) hView.findViewById(R.id.nav_name);
         nav_user.setText(firebaseUser.getDisplayName());
+        nav_email = (TextView) hView.findViewById(R.id.nav_email);
         nav_email.setText(firebaseUser.getEmail());
 
-        //utworzenie katalogu danych uzytkownika
+        //Utworzenie katalogu danych uzytkownika
         file = new File(this.getFilesDir(), "sundealapp.data");
         if(!file.exists()){
             file.mkdir();
         }
 
-        //pobranie produktow uzytkownika do pliku
+        // pobranie produktow uzytkownika do pliku TODO usprawnienie
         getUserProducts();
-
-        products = new ArrayList<>();
 
         // znajdź RecyclerView
         RecyclerView recyclerView = findViewById(R.id.products_recycler);
@@ -96,6 +96,8 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
 
         // połączenie adaptera z RecyclerView
         recyclerView.setAdapter(rAdapter);
+
+        //TODO klikanie na elementy RecyclerView
     }
 
     @Override
@@ -122,13 +124,13 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //Funkcja wylogowywania
         if (id == R.id.action_settings) {
-                    //nastąpi wylogowanie
+                    //Wylogowanie z FireBase
                     firebaseAuth.signOut();
-                    //zamknięcie aktywności
+                    //Zamknięcie aktywności
                     finish();
-                    //uruchamianie SignInActivity
+                    //Uruchomianie SignInActivity
                     startActivity(new Intent(this, SignInActivity.class));
         }
 
@@ -142,17 +144,14 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         int id = item.getItemId();
 
         if (id == R.id.profile) {
-            Intent przejscie;
-            przejscie = new Intent(MainActivity.this, MyProductsActivity.class);
+            Intent przejscie = new Intent(MainActivity.this, MyProductsActivity.class);
             this.startActivity(przejscie);
         } else if (id == R.id.add) {
-            Intent przejscie;
-            przejscie = new Intent(MainActivity.this, AddItemActivity.class);
+            Intent przejscie = new Intent(MainActivity.this, AddItemActivity.class);
             this.startActivity(przejscie);
 
         } else if (id == R.id.about) {
-            Intent przejscie;
-            przejscie = new Intent(MainActivity.this, AboutAppActivity.class);
+            Intent przejscie = new Intent(MainActivity.this, AboutAppActivity.class);
             this.startActivity(przejscie);
         }
 
@@ -161,12 +160,9 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         return true;
     }
 
-    //pobranie informacji o produktach uzytkownika
+    //Pobranie informacji o produktach uzytkownika
     public void getUserProducts(){
-        database = FirebaseDatabase.getInstance();
-        ref = database.getReference("User");
         Query queryRef = ref.orderByChild("owner").equalTo(firebaseUser.getEmail());
-
         queryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -174,23 +170,23 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 try{
                     if (data.exists()) {
                         data.delete();
+                        data.createNewFile();
                     }
-                    data.createNewFile();
                 } catch (IOException e) {
                     Log.e("ERROR", "blad tworzenia pliku");
                 }
 
                 for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    //User user = dataSnapshot.getValue(User.class);
+                    //Wpisanie rekordow do pliku w pamieci lokalnej (oddzielane przecinkami)
                     try{
                         FileWriter fw = new FileWriter(data, true);
                         BufferedWriter bw = new BufferedWriter(fw);
                         bw.newLine();
-                        bw.write(childDataSnapshot.getValue(User.class).getItem());
+                        bw.write(childDataSnapshot.getValue(ProductFirebase.class).getItem());
                         bw.write(",");
-                        bw.write(childDataSnapshot.getValue(User.class).getDescription());
+                        bw.write(childDataSnapshot.getValue(ProductFirebase.class).getDescription());
                         bw.write(",");
-                        bw.write(childDataSnapshot.getValue(User.class).getLocation());
+                        bw.write(childDataSnapshot.getValue(ProductFirebase.class).getLocation());
                         bw.flush();
                         bw.close();
                     } catch (IOException e) {
@@ -206,23 +202,26 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         });
     }
 
-    //pobranie i wyswietlenie wyszukanych produktow do RecyclerView
+    //Zapytanie i wyswietlenie wyszukanych produktow po nazwie do RecyclerView
     public void getAllProducts(View view){
-        database = FirebaseDatabase.getInstance();
-        ref = database.getReference("User");
-        Query queryRef = ref.orderByKey();
-
+        search = (EditText) findViewById(R.id.search);
+        //Rozwiazanie problemu wyszukiwania
+        String queryText = search.getText().toString().toLowerCase();
+        Query queryRef = ref.orderByChild("item_lowercase").startAt(queryText).endAt(queryText+"\uf8ff");
+        //Stworzenie listy od nowa
+        products = new ArrayList<>();
         queryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    //User user = dataSnapshot.getValue(User.class);
-                    String item = childDataSnapshot.getValue(User.class).getItem();
-                    String description = childDataSnapshot.getValue(User.class).getDescription();
-                    String location = childDataSnapshot.getValue(User.class).getLocation();
+                    //Pobranie danych z obiektu bazy, dodanie do listy produktow
+                    String item = childDataSnapshot.getValue(ProductFirebase.class).getItem();
+                    String description = childDataSnapshot.getValue(ProductFirebase.class).getDescription();
+                    String location = childDataSnapshot.getValue(ProductFirebase.class).getLocation();
                     Product product = new Product(item, description, location);
                     products.add(product);
                 }
+                //Przekazanie Adapterowi aktualnej listy produktow
                 rAdapter.setReviews(products);
             }
 

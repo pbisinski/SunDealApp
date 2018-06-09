@@ -24,7 +24,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @NonNull
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // 1. utwórz inflater (narzędzie do wczytywania widoków stworzonych w XML
+        // 1. utwórz inflater (narzędzie do wczytywania widoków stworzonych w XML)
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         // 2. wczytaj widok jednego wiersza
@@ -38,13 +38,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return viewHolder;
     }
 
-    /**
-     * Ustaw recenzje.
-     * W poprzednich rozwiązaniach (lista książek i komentarzy)
-     * recenzje były przekazywane przez konstruktor.
-     *
-     * @param reviews lista recenzji
-     */
+
+     //Ustaw produkty
     public void setReviews(List<Product> reviews) {
         this.products = reviews;
         notifyDataSetChanged();
@@ -59,8 +54,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        // w momencie tworzenia adaptera nie otrzymujemy recenzjie
-        // dlatego reviews może być nullem
+        //W momencie tworzenia adaptera nie otrzymujemy dlatego products może być nullem
         if (products != null) {
             return products.size();
         }
@@ -68,35 +62,27 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return 0;
     }
 
-    /**
-     * Pozyskaj jedną recenzję z danej pozycji.
-     * Lista recenzji może być nullem ponieważ recenzje
-     * nie są przekazywane przez konstruktor.
-     *
-     * @param index pozycja recenzji
-     * @return recenzja lub null
-     */
+
+     //Pozyskaj jedną recenzję z danej pozycji.
+     //Lista produktów może być nullem ponieważ nie jest przekazywana przez konstruktor.
     public Product getProduct(int index) {
         return (products != null) ? products.get(index) : null;
     }
 
-    /**
-     * Holder dla widoków.
-     */
+
+     //Holder dla widoków.
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        //widgety z review_list_element.xml
+        //Widgety z review_list_element.xml
         public TextView title;
         public TextView author;
         public TextView text;
-        //TODO dodać wyświetlanie ID
 
         public ViewHolder(View itemView) {
             super(itemView);
-            //wyszukanie widgetów
+            //Wyszukanie widgetów
             title = itemView.findViewById(R.id.title);
             author = itemView.findViewById(R.id.author);
             text = itemView.findViewById(R.id.text);
-            //TODO dodać wyświetlanie ID
         }
     }
 }

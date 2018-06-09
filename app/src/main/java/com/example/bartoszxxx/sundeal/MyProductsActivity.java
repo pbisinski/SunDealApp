@@ -32,10 +32,10 @@ public class MyProductsActivity extends AppCompatActivity {
         //dostep do pliku z danymi
         file = new File(this.getFilesDir(), "sundealapp.data");
 
-        // znajdź RecyclerView
+        //znajdź RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recycler);
 
-        // ustawienie sposobu rozmieszczenia elementów
+        //ustawienie sposobu rozmieszczenia elementów
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //stworzenie listy produktow
@@ -57,12 +57,11 @@ public class MyProductsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // utworzenie adaptera
+        //utworzenie adaptera
         rAdapter = new RecyclerAdapter(products);
 
-        // połączenie adaptera z RecyclerView
+        //połączenie adaptera z RecyclerView
         recyclerView.setAdapter(rAdapter);
-
     }
 
 

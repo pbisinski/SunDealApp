@@ -9,16 +9,17 @@
 
 
     <EditText
+        android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="60dp"
         android:hint="Wpisz nazwę produktu" />
 
     <Button
         android:id="@+id/button_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="80dp"
+        android:layout_margin="10dp"
         android:layout_marginLeft="100dp"
         android:layout_marginRight="100dp"
         android:onClick="getAllProducts"
