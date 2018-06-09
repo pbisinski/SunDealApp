@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -30,6 +32,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
@@ -39,6 +43,10 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     private FirebaseDatabase database;
     private DatabaseReference ref;
     private File file;
+    private TextView nav_user;
+    private TextView nav_email;
+    private List<Product> products;
+    private RecyclerAdapter rAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +66,10 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         navigationView.setNavigationItemSelectedListener(this);
 
         View hView =  navigationView.getHeaderView(0);
-        TextView nav_user = (TextView)hView.findViewById(R.id.nav_name);
-        TextView nav_email = (TextView)hView.findViewById(R.id.nav_email);
+        nav_user = (TextView)hView.findViewById(R.id.nav_name);
+        nav_email = (TextView)hView.findViewById(R.id.nav_email);
+
+        //dostep do informacji o zalogowanym uzytkowniku
         firebaseUser = firebaseAuth.getCurrentUser();
         nav_user.setText(firebaseUser.getDisplayName());
         nav_email.setText(firebaseUser.getEmail());
@@ -70,7 +80,22 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
             file.mkdir();
         }
 
-        wyswietl();
+        //pobranie produktow uzytkownika do pliku
+        getUserProducts();
+
+        products = new ArrayList<>();
+
+        // znajdź RecyclerView
+        RecyclerView recyclerView = findViewById(R.id.products_recycler);
+
+        // ustawienie sposobu rozmieszczenia elementów
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // utworzenie adaptera
+        rAdapter = new RecyclerAdapter();
+
+        // połączenie adaptera z RecyclerView
+        recyclerView.setAdapter(rAdapter);
     }
 
     @Override
@@ -125,8 +150,10 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
             przejscie = new Intent(MainActivity.this, AddItemActivity.class);
             this.startActivity(przejscie);
 
-        } else if (id == R.id.history) {
-            Toast.makeText(this,"<place_holder>", Toast.LENGTH_LONG).show();
+        } else if (id == R.id.about) {
+            Intent przejscie;
+            przejscie = new Intent(MainActivity.this, AboutAppActivity.class);
+            this.startActivity(przejscie);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -134,15 +161,8 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         return true;
     }
 
-    public void przejscie(View view) {
-        Intent przejscie;
-        przejscie = new Intent(MainActivity.this, AboutAppActivity.class);
-        this.startActivity(przejscie);
-        return;
-    }
-
-    // Attach a listener to read the data at our posts reference
-    public void wyswietl(){
+    //pobranie informacji o produktach uzytkownika
+    public void getUserProducts(){
         database = FirebaseDatabase.getInstance();
         ref = database.getReference("User");
         Query queryRef = ref.orderByChild("owner").equalTo(firebaseUser.getEmail());
@@ -167,9 +187,9 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                         BufferedWriter bw = new BufferedWriter(fw);
                         bw.newLine();
                         bw.write(childDataSnapshot.getValue(User.class).getItem());
-                        bw.write(", ");
+                        bw.write(",");
                         bw.write(childDataSnapshot.getValue(User.class).getDescription());
-                        bw.write(", ");
+                        bw.write(",");
                         bw.write(childDataSnapshot.getValue(User.class).getLocation());
                         bw.flush();
                         bw.close();
@@ -177,6 +197,33 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                         Log.e("ERROR", "blad zapisu pliku");
                     }
                 }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    //pobranie i wyswietlenie wyszukanych produktow do RecyclerView
+    public void getAllProducts(View view){
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference("User");
+        Query queryRef = ref.orderByKey();
+
+        queryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    //User user = dataSnapshot.getValue(User.class);
+                    String item = childDataSnapshot.getValue(User.class).getItem();
+                    String description = childDataSnapshot.getValue(User.class).getDescription();
+                    String location = childDataSnapshot.getValue(User.class).getLocation();
+                    Product product = new Product(item, description, location);
+                    products.add(product);
+                }
+                rAdapter.setReviews(products);
             }
 
             @Override

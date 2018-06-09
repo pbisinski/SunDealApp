@@ -31,6 +31,8 @@ public class AddItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -54,7 +56,6 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     public void BtnInsert(View view) {
-        //String id = firebaseAuth.getCurrentUser().getEmail();
         String id = ref.push().getKey();
         User user = new User(firebaseUser.getEmail(), item.getText().toString(), description.getText().toString(), location.getText().toString(), oddam.isChecked(), zamienie.isChecked());
         ref.child(id).setValue(user);

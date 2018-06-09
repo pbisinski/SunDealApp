@@ -1,11 +1,8 @@
 package com.example.bartoszxxx.sundeal;
 
-public class User {
+public class User extends Product{
 
     private String owner;
-    private String item;
-    private String description;
-    private String location;
     private Boolean oddam;
     private Boolean zamienie;
 
@@ -14,10 +11,8 @@ public class User {
     }
 
     public User(String owner, String item, String description, String location, Boolean oddam, Boolean zamienie) {
+        super(item,description,location);
         this.owner = owner;
-        this.item = item;
-        this.description = description;
-        this.location = location;
         this.oddam = oddam;
         this.zamienie = zamienie;
     }
@@ -25,28 +20,6 @@ public class User {
     public String getOwner() { return owner; }
 
     public void setOwner(String owner) { this.owner = owner; }
-
-    public String getItem() { return item; }
-
-    public void setItem(String item) {
-        this.item = item;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
 
     public Boolean getOddam() { return oddam; }
 
