@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
-        ref = database.getReference("ProductFirebase");
+        ref = database.getReference("Products");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // utworzenie adaptera
-        rAdapter = new RecyclerAdapter();
+        rAdapter = new RecyclerAdapter(this);
 
         // połączenie adaptera z RecyclerView
         recyclerView.setAdapter(rAdapter);
@@ -126,12 +126,8 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
 
         //Funkcja wylogowywania
         if (id == R.id.action_settings) {
-                    //Wylogowanie z FireBase
-                    firebaseAuth.signOut();
-                    //Zamknięcie aktywności
-                    finish();
-                    //Uruchomianie SignInActivity
-                    startActivity(new Intent(this, SignInActivity.class));
+            Intent przejscie = new Intent(MainActivity.this, AboutAppActivity.class);
+            this.startActivity(przejscie);
         }
 
         return super.onOptionsItemSelected(item);
@@ -149,10 +145,16 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         } else if (id == R.id.add) {
             Intent przejscie = new Intent(MainActivity.this, AddItemActivity.class);
             this.startActivity(przejscie);
-
         } else if (id == R.id.about) {
-            Intent przejscie = new Intent(MainActivity.this, AboutAppActivity.class);
+            Intent przejscie = new Intent(MainActivity.this, SettingsActivity.class);
             this.startActivity(przejscie);
+        } else if (id == R.id.test) {
+            //Wylogowanie z FireBase
+            firebaseAuth.signOut();
+            //Zamknięcie aktywności
+            finish();
+            //Uruchomianie SignInActivity
+            startActivity(new Intent(this, SignInActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -187,6 +189,8 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                         bw.write(childDataSnapshot.getValue(ProductFirebase.class).getDescription());
                         bw.write(",");
                         bw.write(childDataSnapshot.getValue(ProductFirebase.class).getLocation());
+                        bw.write(",");
+                        bw.write(childDataSnapshot.getValue(ProductFirebase.class).getKey());
                         bw.flush();
                         bw.close();
                     } catch (IOException e) {
@@ -218,7 +222,8 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                     String item = childDataSnapshot.getValue(ProductFirebase.class).getItem();
                     String description = childDataSnapshot.getValue(ProductFirebase.class).getDescription();
                     String location = childDataSnapshot.getValue(ProductFirebase.class).getLocation();
-                    Product product = new Product(item, description, location);
+                    String key = childDataSnapshot.getValue(ProductFirebase.class).getKey();
+                    Product product = new Product(item, description, location, key);
                     products.add(product);
                 }
                 //Przekazanie Adapterowi aktualnej listy produktow

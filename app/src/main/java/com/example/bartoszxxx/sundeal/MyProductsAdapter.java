@@ -1,36 +1,41 @@
 package com.example.bartoszxxx.sundeal;
 
-import android.app.LauncherActivity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.List;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.ViewHolder> {
 
     private List<Product> products;
     private Context context;
+    private FirebaseDatabase database;
+    private DatabaseReference ref;
 
-    public RecyclerAdapter(Context context) {
-        this.context = context;
+    public MyProductsAdapter(Context context) {
+
     }
 
-    public RecyclerAdapter(List<Product> products, Context context) {
+    public MyProductsAdapter(List<Product> products, Context context) {
         this.products = products;
         this.context = context;
     }
 
     @NonNull
     @Override
-    public RecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyProductsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // 1. utwórz inflater (narzędzie do wczytywania widoków stworzonych w XML)
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
@@ -39,7 +44,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         // 3. stwórz obiek ViewHolder, który będzie trzymać odwołania
         // do elementów jednego wiersza (np. tytułu)
-        RecyclerAdapter.ViewHolder viewHolder = new RecyclerAdapter.ViewHolder(rowView);
+        MyProductsAdapter.ViewHolder viewHolder = new MyProductsAdapter.ViewHolder(rowView);
 
         // 4. zwróć nowoutworzony obiekt
         return viewHolder;
@@ -53,17 +58,33 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyProductsAdapter.ViewHolder holder, int position) {
         final Product listItem = products.get(position);
 
         holder.title.setText(products.get(position).getItem());
         holder.author.setText(products.get(position).getDescription());
         holder.text.setText(products.get(position).getLocation());
 
-        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+        holder.options.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, listItem.getItem(), Toast.LENGTH_SHORT).show();
+                //creating a popup menu
+                PopupMenu popup = new PopupMenu(context, holder.options);
+                //inflating menu from xml resource
+                popup.inflate(R.menu.item);
+                //adding click listener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        database = FirebaseDatabase.getInstance();
+                        ref = database.getReference("Products");
+                        ref.child(listItem.getKey()).removeValue();
+                        Toast.makeText(context,"Usunięto", Toast.LENGTH_LONG).show();
+                        return false;
+                    }
+                });
+                //displaying the popup
+                popup.show();
             }
         });
     }
@@ -92,7 +113,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         public TextView title;
         public TextView author;
         public TextView text;
-        public RelativeLayout relativeLayout;
+        public TextView options;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -100,7 +121,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             title = itemView.findViewById(R.id.title);
             author = itemView.findViewById(R.id.author);
             text = itemView.findViewById(R.id.text);
-            relativeLayout = itemView.findViewById(R.id.relativeLayout);
+            options = itemView.findViewById(R.id.options);
         }
     }
 }

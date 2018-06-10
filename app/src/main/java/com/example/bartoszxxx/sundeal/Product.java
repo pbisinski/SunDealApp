@@ -5,15 +5,17 @@ public class Product {
     private String item;
     private String description;
     private String location;
+    private String key;
 
     public Product(){
 
     }
 
-    public Product(String item, String description, String location) {
+    public Product(String item, String description, String location, String key) {
         this.item = item;
         this.description = description;
         this.location = location;
+        this.key = key;
     }
 
     public String getItem() { return item; }
@@ -27,5 +29,9 @@ public class Product {
     public String getLocation() { return location; }
 
     public void setLocation(String location) { this.location = location; }
+
+    public String getKey() { return key; }
+
+    public void setKey(String key) { this.key = key; }
 
 }

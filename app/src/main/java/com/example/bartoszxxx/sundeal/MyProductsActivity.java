@@ -1,5 +1,7 @@
 package com.example.bartoszxxx.sundeal;
 
+import android.content.Intent;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.io.BufferedReader;
@@ -20,12 +23,13 @@ public class MyProductsActivity extends AppCompatActivity {
 
     private File file;
     private List<Product> products;
-    private RecyclerAdapter rAdapter;
+    private MyProductsAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_products);
+        setTitle("Moje produkty");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -49,7 +53,7 @@ public class MyProductsActivity extends AppCompatActivity {
             bufferedReader.readLine();
             while ((line = bufferedReader.readLine()) != null) {
                 String[] dane = line.split(",",5);
-                Product product = new Product(dane[0],dane[1],dane[2]);
+                Product product = new Product(dane[0],dane[1],dane[2], dane[3]);
                 products.add(product);
             }
             fileReader.close();
@@ -58,12 +62,15 @@ public class MyProductsActivity extends AppCompatActivity {
         }
 
         //utworzenie adaptera
-        rAdapter = new RecyclerAdapter(products);
+        mAdapter = new MyProductsAdapter(products, this);
 
         //połączenie adaptera z RecyclerView
-        recyclerView.setAdapter(rAdapter);
+        recyclerView.setAdapter(mAdapter);
     }
 
-
-
+    @Override
+    public void onBackPressed() {
+        final Intent upIntent = NavUtils.getParentActivityIntent(this);
+        NavUtils.navigateUpTo(this, upIntent);
+    }
 }

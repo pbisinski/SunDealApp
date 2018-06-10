@@ -11,19 +11,19 @@
         <item
             android:id="@+id/add"
             android:icon="@drawable/ic_menu_send"
-            android:title="Dodaj" />
+            android:title="Dodaj produkt" />
         <item
             android:id="@+id/about"
             android:icon="@drawable/ic_menu_manage"
-            android:title="O programie" />
+            android:title="Ustawienia" />
     </group>
 
-    <item android:title="Test">
+    <item android:title="Inne">
         <menu>
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/test"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Test" />
+                android:title="Wyloguj" />
         </menu>
     </item>
 

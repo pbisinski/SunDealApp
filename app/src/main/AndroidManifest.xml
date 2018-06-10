@@ -27,15 +27,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ProfileActivity"
-            android:label="@string/title_activity_profile"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AddItemActivity"
-            android:parentActivityName=".MainActivity">
-        </activity>
-        <activity android:name=".MyProductsActivity"
-            android:parentActivityName=".MainActivity">
-        </activity>
+            android:name=".AddItemActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".MyProductsActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".SettingsActivity"
+            android:parentActivityName=".MainActivity"  />
     </application>
 
 </manifest>

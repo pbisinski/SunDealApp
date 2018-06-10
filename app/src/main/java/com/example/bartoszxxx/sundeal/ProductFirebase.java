@@ -12,8 +12,8 @@ public class ProductFirebase extends Product{
 
     }
 
-    public ProductFirebase(String owner, String item, String item_lowercase, String description, String location, Boolean oddam, Boolean zamienie) {
-        super(item,description,location);
+    public ProductFirebase(String owner, String item, String item_lowercase, String description, String location, Boolean oddam, Boolean zamienie, String key) {
+        super(item,description,location,key);
         this.item_lowercase=item_lowercase;
         this.owner = owner;
         this.oddam = oddam;

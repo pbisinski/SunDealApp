@@ -1,6 +1,8 @@
 package com.example.bartoszxxx.sundeal;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -34,7 +36,7 @@ public class AddItemActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
         //Nazwa tabeli z produktami
-        ref = database.getReference("ProductFirebase");
+        ref = database.getReference("Products");
 
         item = (EditText) findViewById(R.id.item);
         description = (EditText) findViewById(R.id.description);
@@ -56,9 +58,15 @@ public class AddItemActivity extends AppCompatActivity {
     //Dodaj rekord do bazy
     public void BtnInsert(View view) {
         String id = ref.push().getKey();
-        ProductFirebase productFirebase = new ProductFirebase(firebaseUser.getEmail(), item.getText().toString(), item.getText().toString().toLowerCase(), description.getText().toString(), location.getText().toString(), oddam.isChecked(), zamienie.isChecked());
+        ProductFirebase productFirebase = new ProductFirebase(firebaseUser.getEmail(), item.getText().toString(), item.getText().toString().toLowerCase(), description.getText().toString(), location.getText().toString(), oddam.isChecked(), zamienie.isChecked(), id);
         ref.child(id).setValue(productFirebase);
         Toast.makeText(AddItemActivity.this, "Pomyślnie dodano: "+productFirebase.getItem(), Toast.LENGTH_LONG).show();
         setClear();
+    }
+
+    @Override
+    public void onBackPressed() {
+        final Intent upIntent = NavUtils.getParentActivityIntent(this);
+        NavUtils.navigateUpTo(this, upIntent);
     }
 }
