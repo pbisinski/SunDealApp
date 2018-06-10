@@ -34,7 +34,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void setChanges(View view){
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(displayedName.getText().toString())
+                .setDisplayName(displayedName.getText().toString().trim())
                 .build();
         firebaseUser.updateProfile(profileUpdates);
         Toast.makeText(this,"Informacje zaktualizowano",Toast.LENGTH_SHORT).show();
@@ -44,5 +44,6 @@ public class SettingsActivity extends AppCompatActivity {
     public void onBackPressed() {
         final Intent upIntent = NavUtils.getParentActivityIntent(this);
         NavUtils.navigateUpTo(this, upIntent);
+        finish();
     }
 }

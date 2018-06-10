@@ -5,7 +5,7 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">O aplikacji</string>
+    <string name="action_settings">Wyloguj</string>
     <string name="item_settings">Usuń</string>
     <string name="action_favorite">action_favorite</string>
     <string name="title_activity_profile">ProfileActivity</string>

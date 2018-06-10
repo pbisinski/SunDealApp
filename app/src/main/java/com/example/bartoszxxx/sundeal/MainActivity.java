@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         // połączenie adaptera z RecyclerView
         recyclerView.setAdapter(rAdapter);
 
-        //TODO klikanie na elementy RecyclerView
     }
 
     @Override
@@ -126,8 +125,12 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
 
         //Funkcja wylogowywania
         if (id == R.id.action_settings) {
-            Intent przejscie = new Intent(MainActivity.this, AboutAppActivity.class);
-            this.startActivity(przejscie);
+            //Wylogowanie z FireBase
+            firebaseAuth.signOut();
+            //Zamknięcie aktywności
+            finish();
+            //Uruchomianie SignInActivity
+            startActivity(new Intent(this, SignInActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
@@ -149,12 +152,8 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
             Intent przejscie = new Intent(MainActivity.this, SettingsActivity.class);
             this.startActivity(przejscie);
         } else if (id == R.id.test) {
-            //Wylogowanie z FireBase
-            firebaseAuth.signOut();
-            //Zamknięcie aktywności
-            finish();
-            //Uruchomianie SignInActivity
-            startActivity(new Intent(this, SignInActivity.class));
+            Intent przejscie = new Intent(MainActivity.this, AboutAppActivity.class);
+            this.startActivity(przejscie);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

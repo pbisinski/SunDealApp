@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -57,8 +58,33 @@ public class AddItemActivity extends AppCompatActivity {
 
     //Dodaj rekord do bazy
     public void BtnInsert(View view) {
+
+        String itemValue = item.getText().toString().trim();
+        String descriptionValue = description.getText().toString().trim();
+        String locationValue = location.getText().toString();
+
+        if(TextUtils.isEmpty(itemValue)){
+            Toast.makeText(this,"Podaj nazwę produktu",Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        //opis moze byc pusty?
+
+        if(TextUtils.isEmpty(locationValue)){
+            Toast.makeText(this,"Podaj lokalizację",Toast.LENGTH_LONG).show();
+            return;
+        }
+
         String id = ref.push().getKey();
-        ProductFirebase productFirebase = new ProductFirebase(firebaseUser.getEmail(), item.getText().toString(), item.getText().toString().toLowerCase(), description.getText().toString(), location.getText().toString(), oddam.isChecked(), zamienie.isChecked(), id);
+        ProductFirebase productFirebase = new ProductFirebase(
+                firebaseUser.getEmail(),
+                itemValue,
+                itemValue.toLowerCase(),
+                descriptionValue,
+                locationValue,
+                oddam.isChecked(),
+                zamienie.isChecked(),
+                id);
         ref.child(id).setValue(productFirebase);
         Toast.makeText(AddItemActivity.this, "Pomyślnie dodano: "+productFirebase.getItem(), Toast.LENGTH_LONG).show();
         setClear();
@@ -68,5 +94,6 @@ public class AddItemActivity extends AppCompatActivity {
     public void onBackPressed() {
         final Intent upIntent = NavUtils.getParentActivityIntent(this);
         NavUtils.navigateUpTo(this, upIntent);
+        finish();
     }
 }

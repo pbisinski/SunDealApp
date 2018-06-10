@@ -72,5 +72,6 @@ public class MyProductsActivity extends AppCompatActivity {
     public void onBackPressed() {
         final Intent upIntent = NavUtils.getParentActivityIntent(this);
         NavUtils.navigateUpTo(this, upIntent);
+        finish();
     }
 }
