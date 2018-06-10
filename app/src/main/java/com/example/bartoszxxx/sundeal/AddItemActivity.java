@@ -75,6 +75,11 @@ public class AddItemActivity extends AppCompatActivity {
             return;
         }
 
+        if(!oddam.isChecked()&&!zamienie.isChecked()){
+            Toast.makeText(this,"Wybierz rodzaj transakcji",Toast.LENGTH_LONG).show();
+            return;
+        }
+
         String id = ref.push().getKey();
         ProductFirebase productFirebase = new ProductFirebase(
                 firebaseUser.getEmail(),
