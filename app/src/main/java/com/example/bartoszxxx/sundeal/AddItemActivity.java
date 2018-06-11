@@ -21,10 +21,6 @@ public class AddItemActivity extends AppCompatActivity {
     EditText item, description, location;
     Button insert;
     Switch oddam, zamienie;
-    FirebaseDatabase database;
-    FirebaseAuth firebaseAuth;
-    FirebaseUser firebaseUser;
-    DatabaseReference ref;
     FirebaseHelper firebaseHelper;
 
     @Override
@@ -33,12 +29,6 @@ public class AddItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        database = FirebaseDatabase.getInstance();
-        //Nazwa tabeli z produktami
-        ref = database.getReference("Products");
 
         item = (EditText) findViewById(R.id.item);
         description = (EditText) findViewById(R.id.description);
@@ -81,9 +71,9 @@ public class AddItemActivity extends AppCompatActivity {
             return;
         }
 
-        String id = ref.push().getKey();
+        String id = firebaseHelper.getRef().push().getKey();
         ProductFirebase productFirebase = new ProductFirebase(
-                firebaseUser.getEmail(),
+                firebaseHelper.getFirebaseUser().getEmail(),
                 itemValue,
                 itemValue.toLowerCase(),
                 descriptionValue,
@@ -91,7 +81,7 @@ public class AddItemActivity extends AppCompatActivity {
                 oddam.isChecked(),
                 zamienie.isChecked(),
                 id);
-        ref.child(id).setValue(productFirebase);
+        firebaseHelper.getRef().child(id).setValue(productFirebase);
         Toast.makeText(AddItemActivity.this, "Pomyślnie dodano: "+productFirebase.getItem(), Toast.LENGTH_LONG).show();
         setClear();
     }

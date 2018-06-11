@@ -46,8 +46,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
 
-     //Ustaw produkty
-    public void setReviews(List<Product> reviews) {
+     //produkty to recenzje
+    public void setProducts(List<Product> reviews) {
         this.products = reviews;
         notifyDataSetChanged();
     }
@@ -77,7 +77,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         return 0;
     }
-
 
      //Pozyskaj jedną recenzję z danej pozycji.
      //Lista produktów może być nullem ponieważ nie jest przekazywana przez konstruktor.

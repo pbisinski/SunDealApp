@@ -10,26 +10,10 @@
     android:orientation="vertical">
 
 
-    <EditText
-        android:id="@+id/search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:hint="Wpisz nazwę produktu" />
-
-    <Button
-        android:id="@+id/button_search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginRight="100dp"
-        android:onClick="getAllProducts"
-        android:text="Wyszukaj" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/products_recycler"
         android:layout_width="match_parent"
+        android:layout_marginTop="60dp"
         android:layout_height="match_parent" />
 
 </LinearLayout>

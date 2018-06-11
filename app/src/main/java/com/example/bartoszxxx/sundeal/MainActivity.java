@@ -1,10 +1,13 @@
 package com.example.bartoszxxx.sundeal;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,18 +46,20 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     private TextView nav_email;
     private List<Product> products;
     private RecyclerAdapter rAdapter;
-    private EditText search;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("Wpisz nazwę produktu");
 
         //Polaczenie z FireBase
         firebaseHelper = new FirebaseHelper();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setTitle("Wyszukaj produkt");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -106,7 +112,52 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+       getMenuInflater().inflate(R.menu.search_menu, menu);
+       //dynamiczne pole wyszukiwania
+       MenuItem item = menu.findItem(R.id.action_search);
+       searchView = (SearchView) item.getActionView();
+
+       searchView.setOnSearchClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               getAllProducts("");
+           }
+       });
+
+       searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+           @Override
+           public boolean onClose() {
+                products = null;
+                rAdapter.setProducts(products);
+                return false;
+           }
+       });
+       searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+           Handler mHandler = new Handler();
+
+           @Override
+           public boolean onQueryTextSubmit(final String s) {
+               searchView.clearFocus();
+               return true;
+           }
+
+           @Override
+           public boolean onQueryTextChange(final String s) {
+               mHandler.removeCallbacksAndMessages(null);
+               if(s.equals("")){
+
+                   return false;
+               }
+               mHandler.postDelayed(new Runnable() {
+                   @Override
+                   public void run() {
+                       getAllProducts(s);
+                   }
+               }, 500);
+               return true;
+           }
+
+       });
         return true;
     }
 
@@ -142,12 +193,19 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         } else if (id == R.id.add) {
             Intent przejscie = new Intent(MainActivity.this, AddItemActivity.class);
             this.startActivity(przejscie);
-        } else if (id == R.id.about) {
+        } else if (id == R.id.settings) {
             Intent przejscie = new Intent(MainActivity.this, SettingsActivity.class);
             this.startActivity(przejscie);
-        } else if (id == R.id.test) {
+        } else if (id == R.id.about) {
             Intent przejscie = new Intent(MainActivity.this, AboutAppActivity.class);
             this.startActivity(przejscie);
+        } else if (id == R.id.logout) {
+            //Wylogowanie z FireBase
+            firebaseHelper.getFirebaseAuth().signOut();
+            //Zamknięcie aktywności
+            finish();
+            //Uruchomianie SignInActivity
+            startActivity(new Intent(this, SignInActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -200,17 +258,13 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     }
 
     //Zapytanie i wyswietlenie wyszukanych produktow po nazwie do RecyclerView
-    public void getAllProducts(View view){
-        search = (EditText) findViewById(R.id.search);
-        //Rozwiazanie problemu wyszukiwania
-        String queryText = search.getText().toString().toLowerCase();
-        Query queryRef = firebaseHelper.getRef().orderByChild("item_lowercase").startAt(queryText).endAt(queryText+"\uf8ff");
-        //Stworzenie listy od nowa
+    public void getAllProducts(String queryText){
         products = new ArrayList<>();
-        queryRef.addValueEventListener(new ValueEventListener() {
+        Query queryRef = firebaseHelper.getRef().orderByChild("item_lowercase").startAt(queryText).endAt(queryText + "\uf8ff");
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     //Pobranie danych z obiektu bazy, dodanie do listy produktow
                     String item = childDataSnapshot.getValue(ProductFirebase.class).getItem();
                     String description = childDataSnapshot.getValue(ProductFirebase.class).getDescription();
@@ -219,8 +273,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                     Product product = new Product(item, description, location, key);
                     products.add(product);
                 }
-                //Przekazanie Adapterowi aktualnej listy produktow
-                rAdapter.setReviews(products);
+                rAdapter.setProducts(products);
             }
 
             @Override

@@ -23,6 +23,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
     private Context context;
     private FirebaseDatabase database;
     private DatabaseReference ref;
+    private FirebaseHelper firebaseHelper;
 
     public MyProductsAdapter(Context context) {
 
@@ -50,13 +51,6 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
         return viewHolder;
     }
 
-
-     //Ustaw produkty
-    public void setReviews(List<Product> reviews) {
-        this.products = reviews;
-        notifyDataSetChanged();
-    }
-
     @Override
     public void onBindViewHolder(@NonNull final MyProductsAdapter.ViewHolder holder, int position) {
         final Product listItem = products.get(position);
@@ -76,9 +70,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        database = FirebaseDatabase.getInstance();
-                        ref = database.getReference("Products");
-                        ref.child(listItem.getKey()).removeValue();
+                        firebaseHelper.getRef().child(listItem.getKey()).removeValue();
                         Toast.makeText(context,"Usunięto", Toast.LENGTH_LONG).show();
                         return false;
                     }
@@ -98,7 +90,6 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
 
         return 0;
     }
-
 
      //Pozyskaj jedną recenzję z danej pozycji.
      //Lista produktów może być nullem ponieważ nie jest przekazywana przez konstruktor.

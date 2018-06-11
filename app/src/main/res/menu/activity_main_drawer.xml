@@ -13,7 +13,7 @@
             android:icon="@drawable/ic_menu_send"
             android:title="Dodaj produkt" />
         <item
-            android:id="@+id/about"
+            android:id="@+id/settings"
             android:icon="@drawable/ic_menu_manage"
             android:title="Ustawienia" />
     </group>
@@ -21,9 +21,13 @@
     <item android:title="Inne">
         <menu>
             <item
-                android:id="@+id/test"
+                android:id="@+id/about"
                 android:icon="@drawable/ic_menu_send"
                 android:title="O aplikacji" />
+            <item
+                android:id="@+id/logout"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Wyloguj" />
         </menu>
     </item>
 

@@ -18,14 +18,10 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
-    //defining view objects
     private EditText editTextEmail;
     private EditText editTextPassword;
     private Button buttonSignUp;
     private ProgressDialog progressDialog;
-
-
-    //defining firebaseauth object
     private FirebaseAuth firebaseAuth;
 
     @Override
@@ -33,19 +29,16 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        //initializing firebase auth object
+        //polaczenie z baza
         firebaseAuth = FirebaseAuth.getInstance();
 
-        //initializing views
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         buttonSignUp = (Button) findViewById(R.id.buttonSignUp);
 
         progressDialog = new ProgressDialog(this);
 
-        //attaching listener to button
         buttonSignUp.setOnClickListener(this);
-        //textViewSignUp.setOnClickListener(this);
     }
 
     private void registerUser(){
@@ -65,7 +58,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         //if the email and password are not empty
         //displaying a progress dialog
-
         progressDialog.setMessage("Rejestracja, proszę czekać");
         progressDialog.show();
 
