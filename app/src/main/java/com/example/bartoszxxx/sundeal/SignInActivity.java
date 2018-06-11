@@ -25,7 +25,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private EditText editTextEmail;
     private EditText editTextPassword;
 
-    private FirebaseAuth firebaseAuth;
+    private FirebaseHelper firebaseHelper;
     private ProgressDialog progressDialog;
     private Button buttonSignUp;
 
@@ -35,11 +35,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        //utworzenie obiektu autoryzacji firebase
-        firebaseAuth = FirebaseAuth.getInstance();
+        //polaczenie z baza
+        firebaseHelper = new FirebaseHelper();
 
         //jeżeli not null to uzytkownik zalogowany
-        if(firebaseAuth.getCurrentUser() != null){
+        if(firebaseHelper.getFirebaseAuth().getCurrentUser() != null){
             //zamyka aktywność
             finish();
             //otwiera aktywność ProfileActivity
@@ -80,7 +80,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         progressDialog.show();
 
         //logowanie użytkownika
-        firebaseAuth.signInWithEmailAndPassword(email, password)
+        firebaseHelper.getFirebaseAuth().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

@@ -36,10 +36,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
 
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser firebaseUser;
-    private FirebaseDatabase database;
-    private DatabaseReference ref;
+    private FirebaseHelper firebaseHelper;
     private File file;
     private TextView nav_user;
     private TextView nav_email;
@@ -53,10 +50,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         setContentView(R.layout.activity_main);
 
         //Polaczenie z FireBase
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        database = FirebaseDatabase.getInstance();
-        ref = database.getReference("Products");
+        firebaseHelper = new FirebaseHelper();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -72,9 +66,9 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         navigationView.setNavigationItemSelectedListener(this);
         View hView =  navigationView.getHeaderView(0);
         nav_user = (TextView) hView.findViewById(R.id.nav_name);
-        nav_user.setText(firebaseUser.getDisplayName());
+        nav_user.setText(firebaseHelper.getFirebaseUser().getDisplayName());
         nav_email = (TextView) hView.findViewById(R.id.nav_email);
-        nav_email.setText(firebaseUser.getEmail());
+        nav_email.setText(firebaseHelper.getFirebaseUser().getEmail());
 
         //Utworzenie katalogu danych uzytkownika
         file = new File(this.getFilesDir(), "sundealapp.data");
@@ -126,7 +120,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         //Funkcja wylogowywania
         if (id == R.id.action_settings) {
             //Wylogowanie z FireBase
-            firebaseAuth.signOut();
+            firebaseHelper.getFirebaseAuth().signOut();
             //Zamknięcie aktywności
             finish();
             //Uruchomianie SignInActivity
@@ -163,7 +157,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
 
     //Pobranie informacji o produktach uzytkownika
     public void getUserProducts(){
-        Query queryRef = ref.orderByChild("owner").equalTo(firebaseUser.getEmail());
+        Query queryRef = firebaseHelper.getRef().orderByChild("owner").equalTo(firebaseHelper.getFirebaseUser().getEmail());
         queryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -210,7 +204,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         search = (EditText) findViewById(R.id.search);
         //Rozwiazanie problemu wyszukiwania
         String queryText = search.getText().toString().toLowerCase();
-        Query queryRef = ref.orderByChild("item_lowercase").startAt(queryText).endAt(queryText+"\uf8ff");
+        Query queryRef = firebaseHelper.getRef().orderByChild("item_lowercase").startAt(queryText).endAt(queryText+"\uf8ff");
         //Stworzenie listy od nowa
         products = new ArrayList<>();
         queryRef.addValueEventListener(new ValueEventListener() {
