@@ -59,14 +59,13 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
         holder.author.setText(products.get(position).getDescription());
         holder.text.setText(products.get(position).getLocation());
 
+        //Obsluga klikniecia na element listy
         holder.options.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //creating a popup menu
                 PopupMenu popup = new PopupMenu(context, holder.options);
-                //inflating menu from xml resource
+                //Dodanie XMLa jednego produktu
                 popup.inflate(R.menu.item);
-                //adding click listener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -75,7 +74,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
                         return false;
                     }
                 });
-                //displaying the popup
+                //Wyswietl menu
                 popup.show();
             }
         });
@@ -83,15 +82,14 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
 
     @Override
     public int getItemCount() {
-        //W momencie tworzenia adaptera nie otrzymujemy dlatego products może być nullem
+        //W momencie tworzenia adaptera nie otrzymujemy, dlatego products może być nullem
         if (products != null) {
             return products.size();
         }
-
         return 0;
     }
 
-     //Pozyskaj jedną recenzję z danej pozycji.
+     //Pozyskaj jeden produkt z danej pozycji.
      //Lista produktów może być nullem ponieważ nie jest przekazywana przez konstruktor.
     public Product getProduct(int index) {
         return (products != null) ? products.get(index) : null;
@@ -100,7 +98,6 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
 
      //Holder dla widoków.
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        //Widgety z review_list_element.xml
         public TextView title;
         public TextView author;
         public TextView text;
@@ -108,7 +105,6 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
 
         public ViewHolder(View itemView) {
             super(itemView);
-            //Wyszukanie widgetów
             title = itemView.findViewById(R.id.title);
             author = itemView.findViewById(R.id.author);
             text = itemView.findViewById(R.id.text);
