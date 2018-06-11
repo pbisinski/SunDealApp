@@ -30,6 +30,7 @@ public class AddItemActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        firebaseHelper = new FirebaseHelper();
         item = (EditText) findViewById(R.id.item);
         description = (EditText) findViewById(R.id.description);
         location = (EditText) findViewById(R.id.location);

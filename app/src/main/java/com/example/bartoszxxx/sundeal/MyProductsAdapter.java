@@ -32,22 +32,22 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
     public MyProductsAdapter(List<Product> products, Context context) {
         this.products = products;
         this.context = context;
+        firebaseHelper = new FirebaseHelper();
     }
 
     @NonNull
     @Override
     public MyProductsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // 1. utwórz inflater (narzędzie do wczytywania widoków stworzonych w XML)
+        //utwórz inflater (narzędzie do wczytywania widoków stworzonych w XML)
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-        // 2. wczytaj widok jednego wiersza
+        //wczytaj widok jednego wiersza
         View rowView = inflater.inflate(R.layout.product_list_element, parent, false);
 
-        // 3. stwórz obiek ViewHolder, który będzie trzymać odwołania
-        // do elementów jednego wiersza (np. tytułu)
+        // twórz obiek ViewHolder, który będzie trzymać odwołania do elementów jednego wiersza (np. tytułu)
         MyProductsAdapter.ViewHolder viewHolder = new MyProductsAdapter.ViewHolder(rowView);
 
-        // 4. zwróć nowoutworzony obiekt
+        //zwróć nowoutworzony obiekt
         return viewHolder;
     }
 
