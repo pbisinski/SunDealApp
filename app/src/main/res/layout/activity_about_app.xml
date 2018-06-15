@@ -11,8 +11,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="100dp">
+        android:layout_marginTop="100dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            android:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/textView"
@@ -21,28 +26,38 @@
             android:gravity="center"
             android:text="SunDeal"
             android:textSize="40dp"
-            android:textStyle="bold|italic" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Aplikacja do wymiany towarów" />
+            android:text="Dziel się, pozyskuj, wymieniaj" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="v 0.0.4" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="100dp">
+            android:layout_marginTop="100dp"
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="left"
-                android:text="Autorzy:\nPrzemysław Bisiński\nBartosz Budzynowski\nMateusz Sadzik" />
+                android:gravity="center"
+                android:text="Autorzy:\nPrzemysław Bisiński\nBartosz Budzynowski\nMateusz Sadzik"
+                android:textStyle="bold" />
 
         </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>
