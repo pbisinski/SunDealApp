@@ -5,38 +5,83 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="10dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="100dp">
+        android:layout_marginTop="100dp"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/descName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="SunDeal"
-            android:textSize="40dp"
-            android:textStyle="bold|italic" />
+            android:text="Wyświetlana nazwa" />
 
         <EditText
-            android:id="@+id/displayedName"
+            android:id="@+id/editName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName" />
 
-        <Button
-            android:id="@+id/button"
+        <TextView
+            android:id="@+id/descPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="setChanges"
-            android:text="Zapisz" />
+            android:text="Hasło" />
+
+        <EditText
+            android:id="@+id/editPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword" />
+
+        <TextView
+            android:id="@+id/descEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="E-mail" />
+
+        <EditText
+            android:id="@+id/editEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textEmailAddress" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/descLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Potwierdź zmiany dotychczasowym hasłem" />
+
+        <EditText
+            android:id="@+id/loginPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="setChanges"
+        android:text="Zapisz" />
 
 </LinearLayout>

@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@color/colorPrimary"
+            android:textColor="#316ddc"
             android:text="Nie masz jeszcze konta ? Zarejestruj się"
             android:onClick="onClick"
             style="?android:attr/borderlessButtonStyle" />
