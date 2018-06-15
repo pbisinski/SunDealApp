@@ -1,13 +1,11 @@
 package com.example.bartoszxxx.sundeal;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,16 +15,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.bartoszxxx.sundeal.Adapters.RecyclerAdapter;
+import com.example.bartoszxxx.sundeal.Products.ListProduct;
+import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -44,9 +43,11 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     private File file;
     private TextView nav_user;
     private TextView nav_email;
-    private List<Product> products;
+    private List<ListProduct> products;
     private RecyclerAdapter rAdapter;
     private SearchView searchView;
+
+    private MapFragment dummyMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,14 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         // połączenie adaptera z RecyclerView
         recyclerView.setAdapter(rAdapter);
 
+        MapFragment dummyMap = new MapFragment();
+
+        dummyMap.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                Log.d("MAPS API","map ready");
+            }
+        });
     }
 
     @Override
@@ -236,11 +245,11 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                         BufferedWriter bw = new BufferedWriter(fw);
                         bw.newLine();
                         bw.write(childDataSnapshot.getValue(ProductFirebase.class).getItem());
-                        bw.write(",");
+                        bw.write("`");
                         bw.write(childDataSnapshot.getValue(ProductFirebase.class).getDescription());
-                        bw.write(",");
+                        bw.write("`");
                         bw.write(childDataSnapshot.getValue(ProductFirebase.class).getLocation());
-                        bw.write(",");
+                        bw.write("`");
                         bw.write(childDataSnapshot.getValue(ProductFirebase.class).getKey());
                         bw.flush();
                         bw.close();
@@ -266,11 +275,14 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     //Pobranie danych z obiektu bazy, dodanie do listy produktow
+                    String owner = childDataSnapshot.getValue(ProductFirebase.class).getKey();
                     String item = childDataSnapshot.getValue(ProductFirebase.class).getItem();
                     String description = childDataSnapshot.getValue(ProductFirebase.class).getDescription();
                     String location = childDataSnapshot.getValue(ProductFirebase.class).getLocation();
                     String key = childDataSnapshot.getValue(ProductFirebase.class).getKey();
-                    Product product = new Product(item, description, location, key);
+                    Boolean oddam = childDataSnapshot.getValue(ProductFirebase.class).getOddam();
+                    Boolean zamienie = childDataSnapshot.getValue(ProductFirebase.class).getZamienie();
+                    ListProduct product = new ListProduct(owner, item, description, location, oddam, zamienie, key);
                     products.add(product);
                 }
                 rAdapter.setProducts(products);

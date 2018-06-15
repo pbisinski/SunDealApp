@@ -6,11 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+
+import com.example.bartoszxxx.sundeal.Adapters.MyProductsAdapter;
+import com.example.bartoszxxx.sundeal.Products.Product;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -52,7 +50,7 @@ public class MyProductsActivity extends AppCompatActivity {
             //odczytanie jednej linii (pusta)
             bufferedReader.readLine();
             while ((line = bufferedReader.readLine()) != null) {
-                String[] dane = line.split(",",5);
+                String[] dane = line.split("`");
                 Product product = new Product(dane[0],dane[1],dane[2], dane[3]);
                 products.add(product);
             }

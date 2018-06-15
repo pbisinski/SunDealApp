@@ -1,6 +1,8 @@
 package com.example.bartoszxxx.sundeal;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -9,19 +11,36 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-public class AddItemActivity extends AppCompatActivity {
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
-    EditText item, description, location;
+public class AddItemActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    EditText item, description;
+    TextView location;
     Button insert;
     Switch oddam, zamienie;
     FirebaseHelper firebaseHelper;
+
+    private GoogleMap mMap;
+    private LatLng latLng;
+    private Marker marker;
+    Geocoder geocoder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +52,61 @@ public class AddItemActivity extends AppCompatActivity {
         firebaseHelper = new FirebaseHelper();
         item = (EditText) findViewById(R.id.item);
         description = (EditText) findViewById(R.id.description);
-        location = (EditText) findViewById(R.id.location);
+        location = (TextView) findViewById(R.id.location);
         insert = (Button) findViewById(R.id.BtnInsert);
         oddam = (Switch) findViewById(R.id.switch1);
         zamienie = (Switch) findViewById(R.id.switch2);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        geocoder = new Geocoder(this, Locale.getDefault());
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        LatLng warsaw = new LatLng(52.229676, 21.012229);
+        mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(warsaw , 11) );
+
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng point) {
+                latLng = point;
+
+                List<Address> addresses = new ArrayList<>();
+                try {
+                    addresses = geocoder.getFromLocation(point.latitude, point.longitude, 1);
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+
+                Address address = addresses.get(0);
+
+                if (address != null) {
+                    location.setText(address.getAddressLine(0));
+                }
+
+                if (marker != null) {
+                    marker.remove();
+                }
+
+                marker = mMap.addMarker((new MarkerOptions().position(point).title( address.getAddressLine(0))
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))));
+
+            }
+        });
+
     }
 
     //Czyszczenie pól
     private void setClear() {
         item.setText("");
         description.setText("");
-        location.setText("");
+        location.setText("Wybierz lokalizację:");
         oddam.setChecked(false);
         zamienie.setChecked(false);
     }
@@ -56,21 +119,22 @@ public class AddItemActivity extends AppCompatActivity {
         String locationValue = location.getText().toString();
 
         if(TextUtils.isEmpty(itemValue)){
-            Toast.makeText(this,"Podaj nazwę produktu",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Podaj nazwę produktu",Toast.LENGTH_SHORT).show();
             return;
         }
 
         //opis moze byc pusty?
 
-        if(TextUtils.isEmpty(locationValue)){
-            Toast.makeText(this,"Podaj lokalizację",Toast.LENGTH_LONG).show();
+        if(!oddam.isChecked()&&!zamienie.isChecked()){
+            Toast.makeText(this,"Wybierz rodzaj transakcji",Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if(!oddam.isChecked()&&!zamienie.isChecked()){
-            Toast.makeText(this,"Wybierz rodzaj transakcji",Toast.LENGTH_LONG).show();
+        if(oddam.isChecked()&&zamienie.isChecked()){
+            Toast.makeText(this,"Możesz wybrać tylko jeden rodzaj transakcji",Toast.LENGTH_SHORT).show();
             return;
         }
+
 
         String id = firebaseHelper.getRef().push().getKey();
         ProductFirebase productFirebase = new ProductFirebase(
@@ -89,8 +153,6 @@ public class AddItemActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        final Intent upIntent = NavUtils.getParentActivityIntent(this);
-        NavUtils.navigateUpTo(this, upIntent);
-        finish();
+        super.onBackPressed();
     }
 }

@@ -10,20 +10,28 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
         android:layout_below="@+id/title" />
 
     <TextView
         android:id="@+id/text"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/author" />
+
+    <TextView
+        android:id="@+id/options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="20dp"
+        android:text="&#8942;"
+        android:textAppearance="?android:textAppearanceLarge" />
 
 </RelativeLayout>

@@ -16,8 +16,6 @@ public class AboutAppActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        final Intent upIntent = NavUtils.getParentActivityIntent(this);
-        NavUtils.navigateUpTo(this, upIntent);
-        finish();
+        super.onBackPressed();
     }
 }

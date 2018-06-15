@@ -1,4 +1,4 @@
-package com.example.bartoszxxx.sundeal;
+package com.example.bartoszxxx.sundeal.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.bartoszxxx.sundeal.FirebaseHelper;
+import com.example.bartoszxxx.sundeal.Products.Product;
+import com.example.bartoszxxx.sundeal.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -42,7 +44,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         //wczytaj widok jednego wiersza
-        View rowView = inflater.inflate(R.layout.product_list_element, parent, false);
+        View rowView = inflater.inflate(R.layout.my_product_list_element, parent, false);
 
         // twórz obiek ViewHolder, który będzie trzymać odwołania do elementów jednego wiersza (np. tytułu)
         MyProductsAdapter.ViewHolder viewHolder = new MyProductsAdapter.ViewHolder(rowView);

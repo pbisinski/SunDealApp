@@ -1,4 +1,4 @@
-package com.example.bartoszxxx.sundeal;
+package com.example.bartoszxxx.sundeal.Products;
 
 public class Product {
 
@@ -7,7 +7,7 @@ public class Product {
     private String location;
     private String key;
 
-    public Product(){
+    public Product() {
 
     }
 
