@@ -56,7 +56,7 @@ public class SettingsActivity extends AppCompatActivity {
     public void setChanges(View view) {
 
         if (TextUtils.isEmpty(loginPassword.getText().toString())) {
-            Toast.makeText(SettingsActivity.this, "Podaj dotychczasowe hasło", Toast.LENGTH_SHORT).show();
+            loginPassword.setError("Pole nie może być puste");
         } else {
             //Odswiezenie autoryzacji uzytkownika
             AuthCredential firebaseCred = EmailAuthProvider
@@ -88,6 +88,7 @@ public class SettingsActivity extends AppCompatActivity {
                             editPassword.setText("");
                         }
                         loginPassword.setText("");
+                        loginPassword.setError(null);
                     }
 
 

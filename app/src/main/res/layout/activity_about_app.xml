@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Dziel się, pozyskuj, wymieniaj" />
+            android:text="Dziel się, wymieniaj" />
 
         <TextView
             android:id="@+id/textView2"
@@ -53,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Autorzy:\nPrzemysław Bisiński\nBartosz Budzynowski\nMateusz Sadzik"
+                android:text="Autorzy:"
                 android:textStyle="bold" />
 
             <TextView

@@ -1,13 +1,17 @@
 package com.example.bartoszxxx.sundeal;
 
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -41,6 +45,7 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
     TextView location;
     Button insert;
     Switch oddam, zamienie;
+    RelativeLayout relativeSwitches;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +61,7 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
         insert = (Button) findViewById(R.id.BtnInsert);
         oddam = (Switch) findViewById(R.id.switch1);
         zamienie = (Switch) findViewById(R.id.switch2);
+        relativeSwitches = (RelativeLayout) findViewById(R.id.relativeSwitches);
 
         mScrollView = (ScrollView) findViewById(R.id.scroll_view);
 
@@ -68,6 +74,26 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
             @Override
             public void onTouch() {
                 mScrollView.requestDisallowInterceptTouchEvent(true);
+            }
+        });
+
+        item.addTextChangedListener(new TextWatcher()  {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)  {
+                if (item.getText().toString().length() < 3) {
+                    item.setError("Zbyt krótki tytuł");
+                } else {
+                    item.setError(null);
+                }
             }
         });
     }
@@ -127,7 +153,7 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
         String locationValue = location.getText().toString();
 
         if(TextUtils.isEmpty(itemValue)){
-            Toast.makeText(this,"Podaj nazwę produktu",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Tytuł nie może być pusty",Toast.LENGTH_SHORT).show();
             return;
         }
         if(!oddam.isChecked()&&!zamienie.isChecked()){
@@ -137,6 +163,9 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
         if(oddam.isChecked()&&zamienie.isChecked()){
             Toast.makeText(this,"Możesz wybrać tylko jeden rodzaj transakcji",Toast.LENGTH_SHORT).show();
             return;
+        }
+        if(locationValue.equals("Wybierz lokalizację")){
+            locationValue = "brak";
         }
         //Wygenerowanie klucza
         String id = firebaseHelper.getRef().push().getKey();

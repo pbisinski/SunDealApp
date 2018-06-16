@@ -62,11 +62,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         String password  = editTextPassword.getText().toString().trim();
 
         if(TextUtils.isEmpty(email)){
-            Toast.makeText(this,"Podaj adres e-mail",Toast.LENGTH_LONG).show();
+            editTextEmail.setError("Podaj e-mail");
             return;
         }
         if(TextUtils.isEmpty(password)){
-            Toast.makeText(this,"Podaj hasło",Toast.LENGTH_LONG).show();
+            editTextPassword.setError("Podaj hasło");
             return;
         }
         if(!TextUtils.isEmpty(email)&&!TextUtils.isEmpty(password)) {

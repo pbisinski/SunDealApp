@@ -47,12 +47,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         //Jesli pole e-mail puste - Toast
         if(TextUtils.isEmpty(email)){
-            Toast.makeText(this,"Podaj adres e-mail",Toast.LENGTH_SHORT).show();
+            editTextEmail.setError("Podaj e-mail");
             return;
         }
         //Jesli pole hasla puste lub haslo zbyt krotkie - Toast
         if(TextUtils.isEmpty(password) || password.length() < 6){
-            Toast.makeText(this,"Podaj hasło (min. 6 znaków)",Toast.LENGTH_SHORT).show();
+            editTextPassword.setError("Hasło min. 6 znaków");
             return;
         }
         //Jesli dane poprawne rejestruj
