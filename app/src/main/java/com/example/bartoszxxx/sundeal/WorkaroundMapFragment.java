@@ -11,20 +11,18 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.SupportMapFragment;
 
+//Customowy MapFragment obslugujacy przewijanie mapy w ScrollView
 public class WorkaroundMapFragment extends SupportMapFragment {
+
     private OnTouchListener mListener;
 
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle savedInstance) {
         View layout = super.onCreateView(layoutInflater, viewGroup, savedInstance);
-
         TouchableWrapper frameLayout = new TouchableWrapper(getActivity());
-
         frameLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-
         ((ViewGroup) layout).addView(frameLayout,
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
         return layout;
     }
 

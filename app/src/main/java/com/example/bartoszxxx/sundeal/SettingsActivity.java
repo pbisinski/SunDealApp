@@ -28,11 +28,14 @@ public class SettingsActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
+    private AuthCredential firebaseCred;
+
+    //Widzety
     private EditText editName;
     private EditText editEmail;
     private EditText editPassword;
     private EditText loginPassword;
-    private AuthCredential firebaseCred;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +50,6 @@ public class SettingsActivity extends AppCompatActivity {
         editName = (EditText) findViewById(R.id.editName);
         editEmail = (EditText) findViewById(R.id.editEmail);
         editPassword = (EditText) findViewById(R.id.editPassword);
-
         loginPassword = (EditText) findViewById(R.id.loginPassword);
     }
 
@@ -56,12 +58,15 @@ public class SettingsActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(loginPassword.getText().toString())) {
             Toast.makeText(SettingsActivity.this, "Podaj dotychczasowe hasło", Toast.LENGTH_SHORT).show();
         } else {
+            //Odswiezenie autoryzacji uzytkownika
             AuthCredential firebaseCred = EmailAuthProvider
                 .getCredential(firebaseUser.getEmail(), loginPassword.getText().toString());
+            //Jesli odswiezenie pomyslne
             firebaseUser.reauthenticate(firebaseCred)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        //Jesli pole nazwy niepuste  - aktualizuj
                         if (!TextUtils.isEmpty(editName.getText().toString())) {
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(editName.getText().toString().trim())
@@ -70,13 +75,13 @@ public class SettingsActivity extends AppCompatActivity {
                             Toast.makeText(SettingsActivity.this, "Nazwa zmieniona!", Toast.LENGTH_SHORT).show();
                             editName.setText("");
                         }
-
+                        //Jesli pole e-mail niepuste - aktualizuj
                         if (!TextUtils.isEmpty(editEmail.getText().toString())) {
                             firebaseUser.updateEmail(editEmail.getText().toString().trim());
                             Toast.makeText(SettingsActivity.this, "Adres e-mail uaktualniony!", Toast.LENGTH_SHORT).show();
                             editEmail.setText("");
                         }
-
+                        //Jesli pole hasla niepuste - aktualizuj
                         if (!TextUtils.isEmpty(editPassword.getText().toString())) {
                             firebaseUser.updatePassword(editPassword.getText().toString());
                             Toast.makeText(SettingsActivity.this, "Hasło zmienione!", Toast.LENGTH_SHORT).show();
@@ -88,6 +93,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 });
 
+            //Jesli odswiezenie niepomyslne
             firebaseUser.reauthenticate(firebaseCred).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {

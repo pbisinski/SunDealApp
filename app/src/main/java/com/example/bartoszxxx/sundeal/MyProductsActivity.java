@@ -30,17 +30,14 @@ public class MyProductsActivity extends AppCompatActivity {
         setTitle("Moje produkty");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        //dostep do pliku z danymi
-        file = new File(this.getFilesDir(), "sundealapp.data");
-
-        //znajdź RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recycler);
-
-        //ustawienie sposobu rozmieszczenia elementów
+        //Ustawienie sposobu rozmieszczenia elementów
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //stworzenie listy produktow
+        //Dostep do pliku z danymi
+        file = new File(this.getFilesDir(), "sundealapp.data");
+
+        //Stworzenie listy produktow
         products = new ArrayList<>();
         try {
             File data = new File(file, "user_data");
@@ -59,10 +56,9 @@ public class MyProductsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //utworzenie adaptera
+        //Utworzenie adaptera
         mAdapter = new MyProductsAdapter(products, this);
-
-        //połączenie adaptera z RecyclerView
+        //Polaczenie adaptera z RecyclerView
         recyclerView.setAdapter(mAdapter);
     }
 

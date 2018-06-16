@@ -17,36 +17,34 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.w3c.dom.Text;
+
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private FirebaseHelper firebaseHelper;
 
-    //definiowanie pól
+    //Widzety
     private Button buttonSignIn;
+    private Button buttonSignUp;
     private EditText editTextEmail;
     private EditText editTextPassword;
-
-    private FirebaseHelper firebaseHelper;
     private ProgressDialog progressDialog;
-    private Button buttonSignUp;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        //polaczenie z baza
+        //Polaczenie z baza
         firebaseHelper = new FirebaseHelper();
 
-        //jeżeli not null to uzytkownik zalogowany
+        //Jesli uzytkownik zalogowany przejdz do MainActivity
         if(firebaseHelper.getFirebaseAuth().getCurrentUser() != null){
-            //zamyka aktywność
+            //Zamyka aktywność
             finish();
-            //otwiera aktywność ProfileActivity
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
 
-        //inicjalizacja widoków
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
@@ -54,51 +52,46 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         progressDialog = new ProgressDialog(this);
 
-        //odbieranie kliknięcia
+        //Obsluga klikniecia na przycisk
         buttonSignIn.setOnClickListener(this);
-        //textViewSignIn.setOnClickListener(this);
     }
 
-    //metoda - logowanie
+    //Zalogowanie uzytkownika
     private void userLogin(){
         String email = editTextEmail.getText().toString().trim();
         String password  = editTextPassword.getText().toString().trim();
 
-        //kontrola czy zostały wpisane e-mail i hasło
         if(TextUtils.isEmpty(email)){
             Toast.makeText(this,"Podaj adres e-mail",Toast.LENGTH_LONG).show();
             return;
         }
-
         if(TextUtils.isEmpty(password)){
             Toast.makeText(this,"Podaj hasło",Toast.LENGTH_LONG).show();
             return;
         }
-
-        //jeżeli pola nie są puste to wyświetla się progressDialog - logowanie w trakcie
-        progressDialog.setMessage("Logowanie, proszę czekać");
-        progressDialog.show();
-
-        //logowanie użytkownika
-        firebaseHelper.getFirebaseAuth().signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
-                        //jeżeli logowanie się powiodło uruchamia się ProfileActivity
-                        if(task.isSuccessful()){
-                            //uruchomienie ProfileActivity
-                            finish();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        } else {
-                            Toast.makeText(SignInActivity.this,"Ale muka - dane nieprawidłowe...",Toast.LENGTH_LONG).show();
+        if(!TextUtils.isEmpty(email)&&!TextUtils.isEmpty(password)) {
+            //Wyswietla monit o procesie logowania
+            progressDialog.setMessage("Logowanie, proszę czekać");
+            progressDialog.show();
+            //Logowanie uzytkownika do bazy
+            firebaseHelper.getFirebaseAuth().signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            progressDialog.dismiss();
+                            //Jesli logowanie pomyslne - wyswietl MainActivity
+                            if (task.isSuccessful()) {
+                                finish();
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            } else {
+                                //Jesli logowanie niepomyslne - Toast
+                                Toast.makeText(SignInActivity.this, "Dane nieprawidłowe", Toast.LENGTH_LONG).show();
+                            }
                         }
-                    }
-                });
-
+                    });
+        }
     }
 
-    //przejście przyciskiem do MainActivity
     @Override
     public void onClick(View view) {
         if(view == buttonSignIn){

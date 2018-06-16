@@ -106,28 +106,29 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
 
    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-       getMenuInflater().inflate(R.menu.search_menu, menu);
-       //dynamiczne pole wyszukiwania
-       MenuItem item = menu.findItem(R.id.action_search);
-       searchView = (SearchView) item.getActionView();
+        //Dodanie pola dynamicznego wyszukiwania
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView = (SearchView) item.getActionView();
 
-       searchView.setOnSearchClickListener(new View.OnClickListener() {
+        //Po otwarciu SearchView wyswietl wszystkie rekordy
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
                getAllProducts("");
            }
        });
-
-       searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+        //Po zamknieciu SearchView wyczysc liste rekordow
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
            @Override
            public boolean onClose() {
                 products = null;
                 rAdapter.setProducts(products);
                 return false;
-           }
-       });
-       searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            }
+        });
+        //Opoznione wyslanie zapytania po wpisaniu tekstu
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
            Handler mHandler = new Handler();
 
            @Override
@@ -152,34 +153,26 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                return true;
            }
 
-       });
+        });
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //Funkcja wylogowywania
-        if (id == R.id.action_settings) {
-            //Wylogowanie z FireBase
-            firebaseHelper.getFirebaseAuth().signOut();
-            //Zamknięcie aktywności
-            finish();
-            //Uruchomianie SignInActivity
-            startActivity(new Intent(this, SignInActivity.class));
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int id = item.getItemId();
+//
+//        if (id == R.id.action_settings) {
+//            firebaseHelper.getFirebaseAuth().signOut();
+//            finish();
+//            startActivity(new Intent(this, SignInActivity.class));
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        //Obsluga opcji panelu bocznego
         int id = item.getItemId();
 
         if (id == R.id.profile) {
@@ -195,11 +188,8 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
             Intent przejscie = new Intent(MainActivity.this, AboutAppActivity.class);
             this.startActivity(przejscie);
         } else if (id == R.id.logout) {
-            //Wylogowanie z FireBase
             firebaseHelper.getFirebaseAuth().signOut();
-            //Zamknięcie aktywności
             finish();
-            //Uruchomianie SignInActivity
             startActivity(new Intent(this, SignInActivity.class));
         }
 
@@ -225,7 +215,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 }
 
                 for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    //Wpisanie rekordow do pliku w pamieci lokalnej (oddzielane przecinkami)
+                    //Wpisanie rekordow do pliku w pamieci lokalnej (oddzielanie znakiem specjalnym)
                     try{
                         FileWriter fw = new FileWriter(data, true);
                         BufferedWriter bw = new BufferedWriter(fw);

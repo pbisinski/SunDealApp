@@ -29,17 +29,18 @@ import java.util.Locale;
 
 public class AddItemActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    EditText item, description;
-    TextView location;
-    Button insert;
-    Switch oddam, zamienie;
-    FirebaseHelper firebaseHelper;
-    Geocoder geocoder;
-
+    private FirebaseHelper firebaseHelper;
     private GoogleMap mMap;
     private LatLng latLng;
     private Marker marker;
     private ScrollView mScrollView;
+    Geocoder geocoder;
+
+    //Widzety
+    EditText item, description;
+    TextView location;
+    Button insert;
+    Switch oddam, zamienie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,21 +59,20 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
 
         mScrollView = (ScrollView) findViewById(R.id.scroll_view);
 
+        //Instancja MapFragment do obslugi mapy
         WorkaroundMapFragment mapFragment = (WorkaroundMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         geocoder = new Geocoder(this, Locale.getDefault());
-
         ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).setListener(new WorkaroundMapFragment.OnTouchListener() {
             @Override
             public void onTouch() {
                 mScrollView.requestDisallowInterceptTouchEvent(true);
             }
         });
-
     }
 
+    //Metoda interfejsu OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -130,21 +130,17 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
             Toast.makeText(this,"Podaj nazwę produktu",Toast.LENGTH_SHORT).show();
             return;
         }
-
-        //opis moze byc pusty?
-
         if(!oddam.isChecked()&&!zamienie.isChecked()){
             Toast.makeText(this,"Wybierz rodzaj transakcji",Toast.LENGTH_SHORT).show();
             return;
         }
-
         if(oddam.isChecked()&&zamienie.isChecked()){
             Toast.makeText(this,"Możesz wybrać tylko jeden rodzaj transakcji",Toast.LENGTH_SHORT).show();
             return;
         }
-
-
+        //Wygenerowanie klucza
         String id = firebaseHelper.getRef().push().getKey();
+        //Utworzenie obiektu-produktu
         ProductFirebase productFirebase = new ProductFirebase(
                 firebaseHelper.getFirebaseUser().getEmail(),
                 itemValue,
@@ -154,6 +150,7 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
                 oddam.isChecked(),
                 zamienie.isChecked(),
                 id);
+        //Wyslanie obiektu do bazy
         firebaseHelper.getRef().child(id).setValue(productFirebase);
         Toast.makeText(AddItemActivity.this, "Pomyślnie dodano: "+productFirebase.getItem(), Toast.LENGTH_LONG).show();
         setClear();

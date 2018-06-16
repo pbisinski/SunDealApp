@@ -17,11 +17,13 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private FirebaseAuth firebaseAuth;
+
+    //Widzety
     private EditText editTextEmail;
     private EditText editTextPassword;
     private Button buttonSignUp;
     private ProgressDialog progressDialog;
-    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +36,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         buttonSignUp = (Button) findViewById(R.id.buttonSignUp);
-
         progressDialog = new ProgressDialog(this);
-
+        //Obsluga klikniecia na przycisk
         buttonSignUp.setOnClickListener(this);
     }
 
@@ -44,41 +45,38 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         String email = editTextEmail.getText().toString().trim();
         String password  = editTextPassword.getText().toString().trim();
 
-        //checking if email and passwords are empty
+        //Jesli pole e-mail puste - Toast
         if(TextUtils.isEmpty(email)){
-            Toast.makeText(this,"Podaj adres e-mail",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Podaj adres e-mail",Toast.LENGTH_SHORT).show();
             return;
         }
-
-        if(TextUtils.isEmpty(password)){
-            Toast.makeText(this,"Podaj hasło",Toast.LENGTH_LONG).show();
+        //Jesli pole hasla puste lub haslo zbyt krotkie - Toast
+        if(TextUtils.isEmpty(password) || password.length() < 6){
+            Toast.makeText(this,"Podaj hasło (min. 6 znaków)",Toast.LENGTH_SHORT).show();
             return;
         }
-
-        //if the email and password are not empty
-        //displaying a progress dialog
-        progressDialog.setMessage("Rejestracja, proszę czekać");
-        progressDialog.show();
-
-        //creating a new user
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        //checking if success
-                        if(task.isSuccessful()){
-                            //display some message here
-                            Toast.makeText(SignUpActivity.this,"Użytkownik został zarejestrowany",Toast.LENGTH_LONG).show();
-                            finish();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        }else{
-                            //display some message here
-                            Toast.makeText(SignUpActivity.this,"Błąd rejestracji",Toast.LENGTH_LONG).show();
+        //Jesli dane poprawne rejestruj
+        if(!TextUtils.isEmpty(email) && password.length() >= 6 ) {
+            progressDialog.setMessage("Rejestracja, proszę czekać");
+            progressDialog.show();
+            //Tworzenie nowego uzytkownika
+            firebaseAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            //Jesli proces pomyslny
+                            if (task.isSuccessful()) {
+                                Toast.makeText(SignUpActivity.this, "Użytkownik został zarejestrowany", Toast.LENGTH_LONG).show();
+                                finish();
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            } else {
+                                //Jesli proces niepomyslny
+                                Toast.makeText(SignUpActivity.this, "Błąd rejestracji", Toast.LENGTH_SHORT).show();
+                            }
+                            progressDialog.dismiss();
                         }
-                        progressDialog.dismiss();
-                    }
-                });
-
+                    });
+        }
     }
 
     @Override
@@ -86,6 +84,5 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         if(view == buttonSignUp){
             registerUser();
         }
-
     }
 }
