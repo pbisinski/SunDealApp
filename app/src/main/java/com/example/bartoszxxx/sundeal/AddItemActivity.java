@@ -1,15 +1,14 @@
 package com.example.bartoszxxx.sundeal;
 
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +17,6 @@ import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -36,11 +34,12 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
     Button insert;
     Switch oddam, zamienie;
     FirebaseHelper firebaseHelper;
+    Geocoder geocoder;
 
     private GoogleMap mMap;
     private LatLng latLng;
     private Marker marker;
-    Geocoder geocoder;
+    private ScrollView mScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +56,21 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
         oddam = (Switch) findViewById(R.id.switch1);
         zamienie = (Switch) findViewById(R.id.switch2);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        mScrollView = (ScrollView) findViewById(R.id.scroll_view);
+
+        WorkaroundMapFragment mapFragment = (WorkaroundMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         geocoder = new Geocoder(this, Locale.getDefault());
+
+        ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).setListener(new WorkaroundMapFragment.OnTouchListener() {
+            @Override
+            public void onTouch() {
+                mScrollView.requestDisallowInterceptTouchEvent(true);
+            }
+        });
+
     }
 
     @Override
@@ -70,7 +79,6 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
 
         LatLng warsaw = new LatLng(52.229676, 21.012229);
         mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(warsaw , 11) );
-
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override

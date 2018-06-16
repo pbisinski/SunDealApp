@@ -38,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        setTitle("Ustawienia");
+        setTitle("Ustawienia profilu");
 
         //Polaczenie z FireBase
         firebaseAuth = FirebaseAuth.getInstance();
@@ -53,10 +53,12 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void setChanges(View view) {
 
-        AuthCredential firebaseCred = EmailAuthProvider
+        if (TextUtils.isEmpty(loginPassword.getText().toString())) {
+            Toast.makeText(SettingsActivity.this, "Podaj dotychczasowe hasło", Toast.LENGTH_SHORT).show();
+        } else {
+            AuthCredential firebaseCred = EmailAuthProvider
                 .getCredential(firebaseUser.getEmail(), loginPassword.getText().toString());
-
-        firebaseUser.reauthenticate(firebaseCred)
+            firebaseUser.reauthenticate(firebaseCred)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -65,32 +67,34 @@ public class SettingsActivity extends AppCompatActivity {
                                     .setDisplayName(editName.getText().toString().trim())
                                     .build();
                             firebaseUser.updateProfile(profileUpdates);
-                            Toast.makeText(SettingsActivity.this, "Nazwa", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SettingsActivity.this, "Nazwa zmieniona!", Toast.LENGTH_SHORT).show();
                             editName.setText("");
                         }
 
                         if (!TextUtils.isEmpty(editEmail.getText().toString())) {
                             firebaseUser.updateEmail(editEmail.getText().toString().trim());
-                            Toast.makeText(SettingsActivity.this, "Email", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SettingsActivity.this, "Adres e-mail uaktualniony!", Toast.LENGTH_SHORT).show();
                             editEmail.setText("");
                         }
 
                         if (!TextUtils.isEmpty(editPassword.getText().toString())) {
                             firebaseUser.updatePassword(editPassword.getText().toString());
-                            Toast.makeText(SettingsActivity.this, "Hasło", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SettingsActivity.this, "Hasło zmienione!", Toast.LENGTH_SHORT).show();
                             editPassword.setText("");
                         }
+                        loginPassword.setText("");
                     }
 
 
                 });
-        firebaseUser.reauthenticate(firebaseCred).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(SettingsActivity.this, "Niepoprawne dane", Toast.LENGTH_SHORT).show();
-            }
-        });
-        loginPassword.setText("");
+
+            firebaseUser.reauthenticate(firebaseCred).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(SettingsActivity.this, "Błąd logowania", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     @Override

@@ -21,9 +21,6 @@ import android.widget.TextView;
 import com.example.bartoszxxx.sundeal.Adapters.RecyclerAdapter;
 import com.example.bartoszxxx.sundeal.Products.ListProduct;
 import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -46,8 +43,6 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     private List<ListProduct> products;
     private RecyclerAdapter rAdapter;
     private SearchView searchView;
-
-    private MapFragment dummyMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,15 +92,6 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
 
         // połączenie adaptera z RecyclerView
         recyclerView.setAdapter(rAdapter);
-
-        MapFragment dummyMap = new MapFragment();
-
-        dummyMap.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                Log.d("MAPS API","map ready");
-            }
-        });
     }
 
     @Override

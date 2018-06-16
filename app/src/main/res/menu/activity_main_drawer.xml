@@ -4,29 +4,31 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/profile"
-            android:icon="@drawable/ic_menu_share"
-            android:title="Moje produkty" />
-        <item
-            android:id="@+id/add"
-            android:icon="@drawable/ic_menu_send"
-            android:title="Dodaj produkt" />
-        <item
-            android:id="@+id/settings"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Ustawienia" />
+        <item android:title="SunDeal">
+            <item
+                android:id="@+id/profile"
+                android:icon="@drawable/ic_profile"
+                android:title="Moje produkty" />
+            <item
+                android:id="@+id/add"
+                android:icon="@drawable/ic_add"
+                android:title="Dodaj produkt" />
+            <item
+                android:id="@+id/settings"
+                android:icon="@drawable/ic_settings"
+                android:title="Ustawienia" />
+        </item>
     </group>
 
     <item android:title="Inne">
         <menu>
             <item
                 android:id="@+id/about"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_about"
                 android:title="O aplikacji" />
             <item
                 android:id="@+id/logout"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_logout"
                 android:title="Wyloguj" />
         </menu>
     </item>
