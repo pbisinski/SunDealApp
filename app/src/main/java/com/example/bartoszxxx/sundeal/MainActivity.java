@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     //Pobranie danych z obiektu bazy, dodanie do listy produktow
-                    String owner = childDataSnapshot.getValue(ProductFirebase.class).getKey();
+                    String owner = childDataSnapshot.getValue(ProductFirebase.class).getOwner();
                     String item = childDataSnapshot.getValue(ProductFirebase.class).getItem();
                     String description = childDataSnapshot.getValue(ProductFirebase.class).getDescription();
                     String location = childDataSnapshot.getValue(ProductFirebase.class).getLocation();

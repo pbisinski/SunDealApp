@@ -13,17 +13,10 @@
         android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/author"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:layout_below="@+id/title" />
-
-    <TextView
         android:id="@+id/text"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/author" />
+        android:textColor="@color/colorAccent"
+        android:layout_below="@id/title" />
 
 </RelativeLayout>
