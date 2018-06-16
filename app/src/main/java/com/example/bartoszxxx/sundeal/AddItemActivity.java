@@ -140,7 +140,6 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
     private void setClear() {
         item.setText("");
         description.setText("");
-        location.setText("Wybierz lokalizację:");
         oddam.setChecked(false);
         zamienie.setChecked(false);
     }
