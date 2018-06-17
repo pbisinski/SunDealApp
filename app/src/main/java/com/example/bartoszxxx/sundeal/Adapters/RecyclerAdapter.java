@@ -93,7 +93,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         try{
                             Intent intent = new Intent (Intent.ACTION_SENDTO, Uri.fromParts(
                                     "mailto", products.get(position).getOwner(), null));
-                            intent.putExtra(Intent.EXTRA_SUBJECT, "SunDeal: " + products.get(position).getDescription());
+                            intent.putExtra(Intent.EXTRA_SUBJECT, "SunDeal: " + products.get(position).getItem());
                             intent.putExtra(Intent.EXTRA_TEXT, "Witam, jestem zainteresowany Pani/Pana ofertą.");
                             activity.startActivity(intent);
                         }catch(ActivityNotFoundException e){
