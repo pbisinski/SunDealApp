@@ -102,7 +102,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="20dp"
-            android:onClick="BtnInsert"
             android:text="Dodaj" />
 
     </LinearLayout>

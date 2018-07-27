@@ -14,8 +14,6 @@ import android.widget.Toast;
 import com.example.bartoszxxx.sundeal.FirebaseHelper;
 import com.example.bartoszxxx.sundeal.Products.Product;
 import com.example.bartoszxxx.sundeal.R;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -23,16 +21,13 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
 
     private List<Product> products;
     private Context context;
-    private FirebaseDatabase database;
-    private DatabaseReference ref;
     private FirebaseHelper firebaseHelper;
 
-    public MyProductsAdapter(Context context) {
+    public MyProductsAdapter() {
 
     }
 
-    public MyProductsAdapter(List<Product> products, Context context) {
-        this.products = products;
+    public MyProductsAdapter(Context context) {
         this.context = context;
         firebaseHelper = new FirebaseHelper();
     }
@@ -40,43 +35,40 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
     @NonNull
     @Override
     public MyProductsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //utwórz inflater (narzędzie do wczytywania widoków stworzonych w XML)
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-
-        //wczytaj widok jednego wiersza
         View rowView = inflater.inflate(R.layout.my_product_list_element, parent, false);
-
-        // twórz obiek ViewHolder, który będzie trzymać odwołania do elementów jednego wiersza (np. tytułu)
         MyProductsAdapter.ViewHolder viewHolder = new MyProductsAdapter.ViewHolder(rowView);
-
-        //zwróć nowoutworzony obiekt
         return viewHolder;
     }
 
+    public void setProducts(List<Product> reviews) {
+        this.products = reviews;
+        notifyDataSetChanged();
+    }
+
     @Override
-    public void onBindViewHolder(@NonNull final MyProductsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyProductsAdapter.ViewHolder holder, final int position) {
         final Product listItem = products.get(position);
 
         holder.title.setText(products.get(position).getItem());
         holder.author.setText(products.get(position).getDescription());
         holder.text.setText(products.get(position).getLocation());
 
-        //Obsluga klikniecia na element listy
         holder.options.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PopupMenu popup = new PopupMenu(context, holder.options);
-                //Dodanie XMLa jednego produktu
                 popup.inflate(R.menu.item);
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         firebaseHelper.getRef().child(listItem.getKey()).removeValue();
                         Toast.makeText(context,"Usunięto", Toast.LENGTH_LONG).show();
-                        return false;
+                        products.remove(position);
+                        notifyItemRemoved(position);
+                        return true;
                     }
                 });
-                //Wyswietl menu
                 popup.show();
             }
         });
@@ -84,21 +76,16 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
 
     @Override
     public int getItemCount() {
-        //W momencie tworzenia adaptera nie otrzymujemy, dlatego products może być nullem
         if (products != null) {
             return products.size();
         }
         return 0;
     }
 
-     //Pozyskaj jeden produkt z danej pozycji.
-     //Lista produktów może być nullem ponieważ nie jest przekazywana przez konstruktor.
     public Product getProduct(int index) {
         return (products != null) ? products.get(index) : null;
     }
 
-
-     //Holder dla widoków.
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
         public TextView author;

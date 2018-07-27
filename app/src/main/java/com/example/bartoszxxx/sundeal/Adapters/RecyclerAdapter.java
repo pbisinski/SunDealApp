@@ -27,12 +27,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private Context context;
     private Activity activity;
 
-    public RecyclerAdapter(Context context) {
-        this.context = context;
+    public RecyclerAdapter(){
+
     }
 
-    public RecyclerAdapter(List<ListProduct> products, Context context) {
-        this.products = products;
+    public RecyclerAdapter(Context context) {
         this.context = context;
     }
 
@@ -54,7 +53,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
 
-     //Produkty to recenzje
+    //Produkty to recenzje
     public void setProducts(List<ListProduct> reviews) {
         this.products = reviews;
         notifyDataSetChanged();
@@ -65,7 +64,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         final ListProduct listItem = products.get(position);
 
         holder.title.setText(products.get(position).getItem());
-        if (products.get(position).getOddam()){
+        if (products.get(position).getOddam()) {
             holder.text.setText("Oddam");
         } else {
             holder.text.setText("Zamienię");
@@ -90,13 +89,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                 alertDialog.setButton("Kontynuuj...", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        try{
-                            Intent intent = new Intent (Intent.ACTION_SENDTO, Uri.fromParts(
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                                     "mailto", products.get(position).getOwner(), null));
                             intent.putExtra(Intent.EXTRA_SUBJECT, "SunDeal: " + products.get(position).getItem());
                             intent.putExtra(Intent.EXTRA_TEXT, "Witam, jestem zainteresowany Pani/Pana ofertą.");
                             activity.startActivity(intent);
-                        }catch(ActivityNotFoundException e){
+                        } catch (ActivityNotFoundException e) {
                             Log.e("MAILTO", "error");
                         }
                     }
@@ -119,7 +118,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return (products != null) ? products.get(index) : null;
     }
 
-     //Holder dla widoków.
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
         public TextView text;

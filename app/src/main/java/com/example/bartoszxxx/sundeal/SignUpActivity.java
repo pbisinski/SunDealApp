@@ -19,7 +19,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private FirebaseAuth firebaseAuth;
 
-    //Widzety
     private EditText editTextEmail;
     private EditText editTextPassword;
     private Button buttonSignUp;
@@ -30,14 +29,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        //polaczenie z baza
         firebaseAuth = FirebaseAuth.getInstance();
 
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         buttonSignUp = (Button) findViewById(R.id.buttonSignUp);
         progressDialog = new ProgressDialog(this);
-        //Obsluga klikniecia na przycisk
+
         buttonSignUp.setOnClickListener(this);
     }
 

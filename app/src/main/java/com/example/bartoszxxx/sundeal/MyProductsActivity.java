@@ -1,25 +1,28 @@
 package com.example.bartoszxxx.sundeal;
 
 import android.content.Intent;
-import android.support.v4.app.NavUtils;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.example.bartoszxxx.sundeal.Adapters.MyProductsAdapter;
 import com.example.bartoszxxx.sundeal.Products.Product;
+import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyProductsActivity extends AppCompatActivity {
 
-    private File file;
+    private FirebaseHelper firebaseHelper;
     private List<Product> products;
     private MyProductsAdapter mAdapter;
 
@@ -27,45 +30,48 @@ public class MyProductsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_products);
-        setTitle("Moje produkty");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         RecyclerView recyclerView = findViewById(R.id.recycler);
-        //Ustawienie sposobu rozmieszczenia elementów
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //Dostep do pliku z danymi
-        file = new File(this.getFilesDir(), "sundealapp.data");
+        firebaseHelper = new FirebaseHelper();
 
-        //Stworzenie listy produktow
-        products = new ArrayList<>();
-        try {
-            File data = new File(file, "user_data");
-            FileReader fileReader = new FileReader(data);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line;
-            //odczytanie jednej linii (pusta)
-            bufferedReader.readLine();
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] dane = line.split("`");
-                Product product = new Product(dane[0],dane[1],dane[2], dane[3]);
-                products.add(product);
-            }
-            fileReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //Utworzenie adaptera
-        mAdapter = new MyProductsAdapter(products, this);
-        //Polaczenie adaptera z RecyclerView
+        mAdapter = new MyProductsAdapter(this);
         recyclerView.setAdapter(mAdapter);
+        getUserProducts();
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent przejscie = new Intent(MyProductsActivity.this, AddItemActivity.class);
+                startActivity(przejscie);
+            }
+        });
     }
 
-    @Override
-    public void onBackPressed() {
-        final Intent upIntent = NavUtils.getParentActivityIntent(this);
-        NavUtils.navigateUpTo(this, upIntent);
-        finish();
+    public void getUserProducts() {
+        products = new ArrayList<>();
+        Query queryRef = firebaseHelper.getRef().orderByChild("owner").equalTo(firebaseHelper.getFirebaseUser().getEmail());
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                    String item = childDataSnapshot.getValue(ProductFirebase.class).getItem();
+                    String description = childDataSnapshot.getValue(ProductFirebase.class).getDescription();
+                    String location = childDataSnapshot.getValue(ProductFirebase.class).getLocation();
+                    String key = childDataSnapshot.getValue(ProductFirebase.class).getKey();
+                    Product product = new Product(item, description, location, key);
+                    products.add(product);
+                }
+                mAdapter.setProducts(products);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

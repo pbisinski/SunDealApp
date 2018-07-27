@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.SupportMapFragment;
 
-//Customowy MapFragment obslugujacy przewijanie mapy w ScrollView
+/**
+ * Custom MapViewer to support map scrolling in ScrollView
+ */
 public class WorkaroundMapFragment extends SupportMapFragment {
 
     private OnTouchListener mListener;
@@ -31,7 +33,7 @@ public class WorkaroundMapFragment extends SupportMapFragment {
     }
 
     public interface OnTouchListener {
-        public abstract void onTouch();
+        void onTouch();
     }
 
     public class TouchableWrapper extends FrameLayout {
