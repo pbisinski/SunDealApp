@@ -1,8 +1,11 @@
 package com.example.bartoszxxx.sundeal;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -65,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         RecyclerView recyclerView = findViewById(R.id.products_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL);
+//        decoration.setDrawable(getApplicationContext().getResources().getDrawable(R.drawable.custom_divider));
+//        recyclerView.addItemDecoration(decoration);
         rAdapter = new RecyclerAdapter(this);
         recyclerView.setAdapter(rAdapter);
     }

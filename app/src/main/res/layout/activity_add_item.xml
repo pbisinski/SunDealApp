@@ -50,34 +50,35 @@
                 android:ems="10"
                 android:inputType="textMultiLine" />
 
-            <RelativeLayout
-                android:id="@+id/relativeSwitches"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:padding="10dp">
 
-                <Switch
-                    android:id="@+id/switch1"
-                    android:layout_width="wrap_content"
+                <RadioGroup
+                    android:id="@+id/RadioGroup"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:checked="false"
-                    android:padding="10dp"
-                    android:text="Oddam" />
+                    android:orientation="horizontal">
 
-                <Switch
-                    android:id="@+id/switch2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_toEndOf="@id/switch2"
-                    android:layout_toRightOf="@id/switch2"
-                    android:padding="10dp"
-                    android:text="Zamienię" />
-            </RelativeLayout>
+                    <RadioButton
+                        android:id="@+id/RadioBtnGiveaway"
+                        android:text="Oddam"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <RadioButton
+                        android:id="@+id/RadioButtonExchange"
+                        android:text="Zamienię"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                </RadioGroup>
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/location"

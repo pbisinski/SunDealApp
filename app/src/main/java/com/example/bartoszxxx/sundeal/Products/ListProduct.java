@@ -1,7 +1,5 @@
 package com.example.bartoszxxx.sundeal.Products;
 
-import com.example.bartoszxxx.sundeal.Products.Product;
-
 public class ListProduct extends Product {
 
     private Boolean oddam;

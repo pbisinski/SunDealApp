@@ -1,10 +1,7 @@
 package com.example.bartoszxxx.sundeal.Products;
 
-import com.example.bartoszxxx.sundeal.Products.ListProduct;
-
 public class ProductFirebase extends ListProduct {
 
-    //rozwiazanie problemu wyszukiwania
     private String item_lowercase;
 
     public ProductFirebase() {
