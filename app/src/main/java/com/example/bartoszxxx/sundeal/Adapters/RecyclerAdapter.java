@@ -27,7 +27,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private Context context;
     private Activity activity;
 
-    public RecyclerAdapter(){
+    public RecyclerAdapter() {
 
     }
 

@@ -35,7 +35,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         if (firebaseHelper.getFirebaseAuth().getCurrentUser() != null) {
             finish();
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            startActivity(new Intent(getApplicationContext(), NewMainActivity.class));
         }
 
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
@@ -70,7 +70,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                             progressDialog.dismiss();
                             if (task.isSuccessful()) {
                                 finish();
-                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                startActivity(new Intent(getApplicationContext(), NewMainActivity.class));
                             } else {
                                 Toast.makeText(SignInActivity.this, "Dane nieprawidłowe", Toast.LENGTH_LONG).show();
                             }

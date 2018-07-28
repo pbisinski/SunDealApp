@@ -58,12 +58,12 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
             @Override
             public void onClick(View view) {
                 PopupMenu popup = new PopupMenu(context, holder.options);
-                popup.inflate(R.menu.item);
+                popup.inflate(R.menu.remove);
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         firebaseHelper.getRef().child(listItem.getKey()).removeValue();
-                        Toast.makeText(context,"Usunięto", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Usunięto", Toast.LENGTH_LONG).show();
                         products.remove(position);
                         notifyItemRemoved(position);
                         return true;

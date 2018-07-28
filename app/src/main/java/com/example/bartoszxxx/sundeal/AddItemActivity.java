@@ -45,7 +45,6 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
     private EditText item, description;
     private TextView location;
     private RadioButton RdBtnGiveaway, RdBtnExchange;
-    private RadioGroup radioGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +53,14 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        firebaseHelper = new FirebaseHelper();
+
         item = (EditText) findViewById(R.id.item);
         description = (EditText) findViewById(R.id.description);
         location = (TextView) findViewById(R.id.location);
-        radioGroup = (RadioGroup) findViewById(R.id.RadioGroup);
         RdBtnGiveaway = (RadioButton) findViewById(R.id.RadioBtnGiveaway);
         RdBtnExchange = (RadioButton) findViewById(R.id.RadioButtonExchange);
+        mScrollView = (ScrollView) findViewById(R.id.scroll_view);
         Button BtnInsert = (Button) findViewById(R.id.BtnInsert);
         BtnInsert.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,10 +68,6 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
                 AddProduct();
             }
         });
-
-        firebaseHelper = new FirebaseHelper();
-
-        mScrollView = (ScrollView) findViewById(R.id.scroll_view);
 
         WorkaroundMapFragment mapFragment = (WorkaroundMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -173,7 +170,8 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
                 RdBtnExchange.isChecked(),
                 id);
         firebaseHelper.getRef().child(id).setValue(productFirebase);
-        Snackbar.make(mScrollView, "Pomyślnie dodano: " + productFirebase.getItem(), Snackbar.LENGTH_LONG).show();
+        Snackbar.make(mScrollView, "Pomyślnie dodano: " + productFirebase.getItem(), Snackbar.LENGTH_SHORT).show();
         setClear();
     }
+
 }

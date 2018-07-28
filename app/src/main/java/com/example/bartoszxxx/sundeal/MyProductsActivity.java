@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.bartoszxxx.sundeal.Adapters.MyProductsAdapter;
 import com.example.bartoszxxx.sundeal.Products.Product;
@@ -32,21 +34,34 @@ public class MyProductsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_products);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         RecyclerView recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         firebaseHelper = new FirebaseHelper();
 
+        TextView TvUserName = (TextView) findViewById(R.id.TvUserName);
+        TvUserName.setText("Witaj, " + firebaseHelper.getFirebaseUser().getDisplayName());
+
         mAdapter = new MyProductsAdapter(this);
         recyclerView.setAdapter(mAdapter);
         getUserProducts();
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        Button BtnLogout = (Button) findViewById(R.id.BtnLogout);
+        BtnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent przejscie = new Intent(MyProductsActivity.this, AddItemActivity.class);
-                startActivity(przejscie);
+                firebaseHelper.getFirebaseAuth().signOut();
+                finish();
+                startActivity(new Intent(MyProductsActivity.this, SignInActivity.class));
+            }
+        });
+
+        Button BtnSettings = (Button) findViewById(R.id.BtnSettings);
+        BtnSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MyProductsActivity.this, SettingsActivity.class));
             }
         });
     }

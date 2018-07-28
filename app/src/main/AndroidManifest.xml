@@ -15,36 +15,44 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".AboutAppActivity"
-            android:label="@string/title_activity_about"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".SignUpActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".SignInActivity">
+            android:name=".NewMainActivity"
+            android:label="">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".SignUpActivity" />
+
+        <activity android:name=".SignInActivity" />
+
         <activity
             android:name=".AddItemActivity"
             android:label="@string/title_activity_add_item"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".NewMainActivity" />
+
         <activity
             android:name=".MyProductsActivity"
             android:label="@string/title_activity_my_products"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".NewMainActivity" />
+
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".NewMainActivity" />
+
+        <activity
+            android:name=".SearchActivity"
+            android:label="@string/title_activity_search"
+            android:parentActivityName=".NewMainActivity" />
+        <activity
+            android:name=".AboutAppActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName=".NewMainActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

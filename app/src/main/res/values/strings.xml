@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">SunDeal</string>
-    <string name="start_search">Wpisz nazwę produktu</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -8,14 +7,19 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Wyloguj</string>
     <string name="item_settings">Usuń</string>
-    <string name="action_favorite">action_favorite</string>
-    <string name="button_send" />
-    <string name="location_default">Brak lokalizacji</string>
+    <string name="action_favorite">Profil</string>
     <string name="title_activity_profile">ProfileActivity</string>
-    <string name="title_activity_settings">Ustawienia profilu</string>
-    <string name="title_activity_my_products">Moje produkty</string>
-    <string name="title_activity_about">O aplikacji</string>
+    <string name="button_send" />
+    <string name="title_activity_settings">Ustawienia</string>
     <string name="title_activity_add_item">Dodaj produkt</string>
+    <string name="title_activity_about">O aplikacji</string>
+    <string name="title_activity_my_products">Moje produkty</string>
+    <string name="title_activity_search">Wyszukaj produkt</string>
+    <string name="location_default">Brak lokalizacji</string>
     <string name="view_title">Tytuł</string>
     <string name="view_description">Opis</string>
+    <string name="password">Hasło</string>
+    <string name="sign_in">Zaloguj</string>
+    <string name="email">E-mail</string>
+    <string name="signup_hint">Nie masz jeszcze konta? Zarejestruj się</string>
 </resources>

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -39,22 +40,22 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         buttonSignUp.setOnClickListener(this);
     }
 
-    private void registerUser(){
+    private void registerUser() {
         String email = editTextEmail.getText().toString().trim();
-        String password  = editTextPassword.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
 
         //Jesli pole e-mail puste - Toast
-        if(TextUtils.isEmpty(email)){
+        if (TextUtils.isEmpty(email)) {
             editTextEmail.setError("Podaj e-mail");
             return;
         }
         //Jesli pole hasla puste lub haslo zbyt krotkie - Toast
-        if(TextUtils.isEmpty(password) || password.length() < 6){
+        if (TextUtils.isEmpty(password) || password.length() < 6) {
             editTextPassword.setError("Hasło min. 6 znaków");
             return;
         }
         //Jesli dane poprawne rejestruj
-        if(!TextUtils.isEmpty(email) && password.length() >= 6 ) {
+        if (!TextUtils.isEmpty(email) && password.length() >= 6) {
             progressDialog.setMessage("Rejestracja, proszę czekać");
             progressDialog.show();
             //Tworzenie nowego uzytkownika
@@ -66,7 +67,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             if (task.isSuccessful()) {
                                 Toast.makeText(SignUpActivity.this, "Użytkownik został zarejestrowany", Toast.LENGTH_LONG).show();
                                 finish();
-                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                startActivity(new Intent(getApplicationContext(), NewMainActivity.class));
                             } else {
                                 //Jesli proces niepomyslny
                                 Toast.makeText(SignUpActivity.this, "Błąd rejestracji", Toast.LENGTH_SHORT).show();
@@ -79,7 +80,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-        if(view == buttonSignUp){
+        if (view == buttonSignUp) {
             registerUser();
         }
     }
