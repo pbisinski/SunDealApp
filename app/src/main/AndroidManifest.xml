@@ -18,17 +18,17 @@
 
         <activity
             android:name=".NewMainActivity"
-            android:label="">
+            android:label=""></activity>
+
+        <activity android:name=".SignUpActivity" />
+
+        <activity android:name=".SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".SignUpActivity" />
-
-        <activity android:name=".SignInActivity" />
 
         <activity
             android:name=".AddItemActivity"
@@ -48,10 +48,6 @@
         <activity
             android:name=".SearchActivity"
             android:label="@string/title_activity_search"
-            android:parentActivityName=".NewMainActivity" />
-        <activity
-            android:name=".AboutAppActivity"
-            android:label="@string/title_activity_about"
             android:parentActivityName=".NewMainActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

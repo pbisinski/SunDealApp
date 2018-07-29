@@ -22,4 +22,14 @@
     <string name="sign_in">Zaloguj</string>
     <string name="email">E-mail</string>
     <string name="signup_hint">Nie masz jeszcze konta? Zarejestruj się</string>
+    <string name="giveaway">Oddam</string>
+    <string name="exchange">Zamienię</string>
+    <string name="choose_location">Wybierz lokalizację</string>
+    <string name="add">Dodaj</string>
+    <string name="your_products">Twoje produkty</string>
+    <string name="logout">Wyloguj</string>
+    <string name="placeholder">placeholder</string>
+    <string name="slogan">Dziel się, wymieniaj!</string>
+    <string name="add_product">dodaj produkt</string>
+    <string name="search_product">wyszukaj produkt</string>
 </resources>

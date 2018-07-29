@@ -6,13 +6,12 @@
     android:fillViewport="false"
     android:orientation="vertical">
 
-    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:orientation="vertical"
-        tools:context=".MainActivity">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,14 +25,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="@string/view_title"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName" />
+                android:hint="@string/view_title"
+                android:inputType="textAutoCorrect" />
 
             <TextView
                 android:id="@+id/view_description"
@@ -47,55 +46,49 @@
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:hint="@string/view_description"
                 android:inputType="textMultiLine" />
 
-            <LinearLayout
+            <RadioGroup
+                android:id="@+id/RadioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:orientation="horizontal"
                 android:padding="10dp">
 
-                <RadioGroup
-                    android:id="@+id/RadioGroup"
-                    android:layout_width="match_parent"
+                <RadioButton
+                    android:id="@+id/RadioBtnGiveaway"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_weight="1"
+                    android:text="@string/giveaway" />
 
-                    <RadioButton
-                        android:id="@+id/RadioBtnGiveaway"
-                        android:text="Oddam"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                <RadioButton
+                    android:id="@+id/RadioButtonExchange"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/exchange" />
 
-                    <RadioButton
-                        android:id="@+id/RadioButtonExchange"
-                        android:text="Zamienię"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
-
-                </RadioGroup>
-
-            </LinearLayout>
+            </RadioGroup>
 
             <TextView
                 android:id="@+id/location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:textAlignment="center"
-                android:text="Wybierz lokalizację" />
+                android:text="@string/choose_location"
+                android:textAlignment="center" />
 
         </LinearLayout>
 
         <fragment
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
+            class="com.example.bartoszxxx.sundeal.WorkaroundMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="314dp"
-            class="com.example.bartoszxxx.sundeal.WorkaroundMapFragment"/>
+            android:layout_height="314dp" />
 
         <Button
             android:id="@+id/BtnInsert"
@@ -103,7 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="20dp"
-            android:text="Dodaj" />
+            android:text="@string/add" />
 
     </LinearLayout>
 

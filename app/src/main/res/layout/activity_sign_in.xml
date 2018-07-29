@@ -11,18 +11,18 @@
 
 
     <LinearLayout
-        android:layout_centerVertical="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_gravity="center_horizontal"
             android:text="Logowanie użytkownika"
-            android:id="@+id/textView"
-            android:layout_gravity="center_horizontal" />
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <EditText
             android:id="@+id/editTextEmail"
@@ -45,18 +45,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:text="@string/sign_in"
-            android:onClick="onClick"/>
+            android:onClick="onClick"
+            android:text="@string/sign_in" />
 
         <Button
             android:id="@+id/buttonSignUp"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="#316ddc"
-            android:text="@string/signup_hint"
             android:onClick="onClick"
-            style="?android:attr/borderlessButtonStyle" />
+            android:text="@string/signup_hint"
+            android:textColor="@color/colorAccent" />
 
     </LinearLayout>
 

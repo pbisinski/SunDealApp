@@ -17,8 +17,6 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
-import java.util.Set;
-
 public class SettingsActivity extends AppCompatActivity {
 
     private FirebaseUser firebaseUser;
@@ -41,8 +39,8 @@ public class SettingsActivity extends AppCompatActivity {
         etEmail = (EditText) findViewById(R.id.etEmail);
         etNewPassword = (EditText) findViewById(R.id.etNewPassword);
         etOldPassword = (EditText) findViewById(R.id.etOldPassword);
-        Button SetChangesbtn = (Button) findViewById(R.id.SetChangesbtn);
-        SetChangesbtn.setOnClickListener(new View.OnClickListener() {
+        Button BtnSetChanges = (Button) findViewById(R.id.BtnSetChanges);
+        BtnSetChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setChanges();
