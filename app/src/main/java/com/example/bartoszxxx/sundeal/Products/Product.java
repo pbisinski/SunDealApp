@@ -18,20 +18,36 @@ public class Product {
         this.key = key;
     }
 
-    public String getItem() { return item; }
+    public String getItem() {
+        return item;
+    }
 
-    public void setItem(String item) { this.item = item; }
+    public void setItem(String item) {
+        this.item = item;
+    }
 
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public String getLocation() { return location; }
+    public String getLocation() {
+        return location;
+    }
 
-    public void setLocation(String location) { this.location = location; }
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
-    public String getKey() { return key; }
+    public String getKey() {
+        return key;
+    }
 
-    public void setKey(String key) { this.key = key; }
+    public void setKey(String key) {
+        this.key = key;
+    }
 
 }

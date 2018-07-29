@@ -11,7 +11,7 @@ public class ListProduct extends Product {
     }
 
     public ListProduct(String owner, String item, String description, String location, Boolean oddam, Boolean zamienie, String key) {
-        super(item,description,location,key);
+        super(item, description, location, key);
         this.owner = owner;
         this.oddam = oddam;
         this.zamienie = zamienie;
