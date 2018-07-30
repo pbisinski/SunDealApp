@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">SunDeal</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -20,6 +20,7 @@
     <string name="view_description">Opis</string>
     <string name="password">Hasło</string>
     <string name="sign_in">Zaloguj</string>
+    <string name="sign_up">Zarejestruj</string>
     <string name="email">E-mail</string>
     <string name="signup_hint">Nie masz jeszcze konta? Zarejestruj się</string>
     <string name="giveaway">Oddam</string>
@@ -30,6 +31,7 @@
     <string name="logout">Wyloguj</string>
     <string name="placeholder">placeholder</string>
     <string name="slogan">Dziel się, wymieniaj!</string>
-    <string name="add_product">dodaj produkt</string>
-    <string name="search_product">wyszukaj produkt</string>
+    <string name="add_product">Dodaj produkt</string>
+    <string name="search_product">Wyszukaj produkt</string>
+    <string name="welcome_message" formatted="false">Witaj, <xliff:g example="Jan" id="name">%s</xliff:g></string>
 </resources>

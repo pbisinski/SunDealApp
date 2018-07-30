@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:key="name"
+        android:summary="Ustaw wyświetlaną w aplikacji nazwę"
+        android:title="Nazwa" />
+    <EditTextPreference
+        android:key="email"
+        android:summary="Ustaw adres e-mail do kontaktu z użytkownikami"
+        android:title="E-mail" />
+</PreferenceScreen>

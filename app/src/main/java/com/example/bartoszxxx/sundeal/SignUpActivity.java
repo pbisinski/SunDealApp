@@ -44,32 +44,25 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
-        //Jesli pole e-mail puste - Toast
         if (TextUtils.isEmpty(email)) {
             editTextEmail.setError("Podaj e-mail");
             return;
-        }
-        //Jesli pole hasla puste lub haslo zbyt krotkie - Toast
-        if (TextUtils.isEmpty(password) || password.length() < 6) {
+        } else if (password.length() < 6) {
             editTextPassword.setError("Hasło min. 6 znaków");
             return;
-        }
-        //Jesli dane poprawne rejestruj
-        if (!TextUtils.isEmpty(email) && password.length() >= 6) {
+        } else {
             progressDialog.setMessage("Rejestracja, proszę czekać");
             progressDialog.show();
-            //Tworzenie nowego uzytkownika
             firebaseAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            //Jesli proces pomyslny
                             if (task.isSuccessful()) {
                                 Toast.makeText(SignUpActivity.this, "Użytkownik został zarejestrowany", Toast.LENGTH_LONG).show();
                                 finish();
-                                startActivity(new Intent(getApplicationContext(), NewMainActivity.class));
+                                firebaseAuth.signOut();
+                                startActivity(new Intent(getApplicationContext(), SignInActivity.class));
                             } else {
-                                //Jesli proces niepomyslny
                                 Toast.makeText(SignUpActivity.this, "Błąd rejestracji", Toast.LENGTH_SHORT).show();
                             }
                             progressDialog.dismiss();

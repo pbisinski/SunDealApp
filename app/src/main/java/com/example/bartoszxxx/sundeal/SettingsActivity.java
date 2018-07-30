@@ -1,12 +1,10 @@
 package com.example.bartoszxxx.sundeal;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,67 +18,34 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 public class SettingsActivity extends AppCompatActivity {
 
     private FirebaseUser firebaseUser;
-    private FirebaseHelper firebaseHelper;
 
-    private EditText etName;
-    private EditText etEmail;
-    private EditText etNewPassword;
-    private EditText etOldPassword;
+    SharedPreferences.OnSharedPreferenceChangeListener spChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, String s) {
+            final String key = s;
+            AuthCredential firebaseCred = EmailAuthProvider.getCredential(
+                    firebaseUser.getEmail(), sharedPreferences.getString("pass", "")
+            );
+            firebaseUser.reauthenticate(firebaseCred).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    switch (key) {
+                        case "name":
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(sharedPreferences.getString("name", ""))
+                                    .build();
+                            firebaseUser.updateProfile(profileUpdates);
+                            break;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+                        case "email":
+                            firebaseUser.updateEmail(sharedPreferences.getString("email", ""));
+                            break;
 
-        firebaseHelper = new FirebaseHelper();
-        firebaseUser = firebaseHelper.getFirebaseUser();
-
-        etName = (EditText) findViewById(R.id.etName);
-        etEmail = (EditText) findViewById(R.id.etEmail);
-        etNewPassword = (EditText) findViewById(R.id.etNewPassword);
-        etOldPassword = (EditText) findViewById(R.id.etOldPassword);
-        Button BtnSetChanges = (Button) findViewById(R.id.BtnSetChanges);
-        BtnSetChanges.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setChanges();
-            }
-        });
-    }
-
-    public void setChanges() {
-        if (TextUtils.isEmpty(etOldPassword.getText().toString())) {
-            etOldPassword.setError("Pole nie może być puste");
-        } else {
-            //Refresh auth credential before changes
-            AuthCredential firebaseCred = EmailAuthProvider
-                    .getCredential(firebaseUser.getEmail(), etOldPassword.getText().toString());
-            firebaseUser.reauthenticate(firebaseCred)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (!TextUtils.isEmpty(etName.getText().toString())) {
-                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                        .setDisplayName(etName.getText().toString().trim())
-                                        .build();
-                                firebaseUser.updateProfile(profileUpdates);
-                                Toast.makeText(SettingsActivity.this, "Nazwa zmieniona!", Toast.LENGTH_SHORT).show();
-                                etName.setText("");
-                            }
-                            if (!TextUtils.isEmpty(etEmail.getText().toString())) {
-                                firebaseUser.updateEmail(etEmail.getText().toString().trim());
-                                Toast.makeText(SettingsActivity.this, "Adres e-mail uaktualniony!", Toast.LENGTH_SHORT).show();
-                                etEmail.setText("");
-                            }
-                            if (!TextUtils.isEmpty(etNewPassword.getText().toString())) {
-                                firebaseUser.updatePassword(etNewPassword.getText().toString());
-                                Toast.makeText(SettingsActivity.this, "Hasło zmienione!", Toast.LENGTH_SHORT).show();
-                                etNewPassword.setText("");
-                            }
-                            etOldPassword.setText("");
-                            etOldPassword.setError(null);
-                        }
-                    });
+                        default:
+                            break;
+                    }
+                }
+            });
 
             firebaseUser.reauthenticate(firebaseCred).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -88,7 +53,19 @@ public class SettingsActivity extends AppCompatActivity {
                     Toast.makeText(SettingsActivity.this, "Błąd logowania", Toast.LENGTH_SHORT).show();
                 }
             });
-        }
-    }
 
+        }
+    };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_settings);
+
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        firebaseUser = firebaseHelper.getFirebaseUser();
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+        preferences.registerOnSharedPreferenceChangeListener(spChanged);
+    }
 }

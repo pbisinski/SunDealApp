@@ -49,4 +49,5 @@ public class NewMainActivity extends AppCompatActivity {
         startActivity(intent);
         return true;
     }
+
 }

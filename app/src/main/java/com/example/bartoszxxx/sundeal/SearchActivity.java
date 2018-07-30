@@ -80,7 +80,6 @@ public class SearchActivity extends AppCompatActivity {
             public boolean onQueryTextChange(final String s) {
                 mHandler.removeCallbacksAndMessages(null);
                 if (s.equals("")) {
-
                     return false;
                 }
                 mHandler.postDelayed(new Runnable() {
@@ -91,7 +90,6 @@ public class SearchActivity extends AppCompatActivity {
                 }, 500);
                 return true;
             }
-
         });
         return true;
     }
