@@ -33,6 +33,8 @@ public class MyProductsActivity extends AppCompatActivity {
     private List<Product> products;
     private MyProductsAdapter mAdapter;
     private SharedPreferences prefs;
+    private RecyclerView recyclerView;
+    private TextView textEmptyList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +46,8 @@ public class MyProductsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        RecyclerView recyclerView = findViewById(R.id.recycler);
+        textEmptyList = (TextView) findViewById(R.id.TvEmptyList);
+        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -87,7 +90,7 @@ public class MyProductsActivity extends AppCompatActivity {
         TvUserName.setText(message);
     }
 
-    public void getUserProducts() {
+    private void getUserProducts() {
         products = new ArrayList<>();
         Query queryRef = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE).orderByChild("owner").equalTo(firebaseAuth.getCurrentUser().getEmail());
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -102,6 +105,7 @@ public class MyProductsActivity extends AppCompatActivity {
                     products.add(product);
                 }
                 mAdapter.setProducts(products);
+                setListMessage();
             }
 
             @Override
@@ -109,5 +113,16 @@ public class MyProductsActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void setListMessage(){
+        if (mAdapter.getItemCount() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            textEmptyList.setVisibility(View.VISIBLE);
+            textEmptyList.setText(R.string.my_products_empty);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            textEmptyList.setVisibility(View.GONE);
+        }
     }
 }

@@ -9,12 +9,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-public class NewMainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_main);
+        setContentView(R.layout.activity_main);
 
         Button BtnAddProduct = (Button) findViewById(R.id.BtnAddProduct);
         Button BtnSearchProduct = (Button) findViewById(R.id.BtnSearchProduct);

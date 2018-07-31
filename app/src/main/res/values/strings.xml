@@ -21,7 +21,7 @@
     <string name="exchange">Zamienię</string>
     <string name="choose_location">Wybierz lokalizację</string>
     <string name="add">Dodaj</string>
-    <string name="your_products">Twoje produkty</string>
+    <string name="your_products">Lista twoich produktów</string>
     <string name="placeholder">placeholder name</string>
     <string name="slogan">Dziel się, wymieniaj!</string>
     <string name="add_product">Dodaj produkt</string>
@@ -35,4 +35,6 @@
     <string name="signup_success">Użytkownik został zarejestrowany</string>
     <string name="signin_title">Logowanie użytkownika</string>
     <string name="signup_title">Rejestracja użytkownika</string>
+    <string name="my_products_loading">Wczytywanie listy...</string>
+    <string name="my_products_empty">Brak produktów do wyświetlenia</string>
 </resources>

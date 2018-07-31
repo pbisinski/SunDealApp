@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".NewMainActivity"
+            android:name=".MainActivity"
             android:label=""
             android:launchMode="singleTop"></activity>
 
@@ -37,12 +37,12 @@
         <activity
             android:name=".AddItemActivity"
             android:label="@string/title_activity_add_item"
-            android:parentActivityName=".NewMainActivity" />
+            android:parentActivityName=".MainActivity" />
 
         <activity
             android:name=".MyProductsActivity"
             android:label="@string/title_activity_my_products"
-            android:parentActivityName=".NewMainActivity" />
+            android:parentActivityName=".MainActivity" />
 
         <activity
             android:name=".SettingsActivity"
@@ -52,7 +52,7 @@
         <activity
             android:name=".SearchActivity"
             android:label="@string/title_activity_search"
-            android:parentActivityName=".NewMainActivity" />
+            android:parentActivityName=".MainActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

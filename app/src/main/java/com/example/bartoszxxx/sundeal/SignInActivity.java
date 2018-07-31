@@ -40,7 +40,7 @@ public class SignInActivity extends AppCompatActivity {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user != null) {
             finish();
-            startActivity(new Intent(getApplicationContext(), NewMainActivity.class));
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
 
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
@@ -86,7 +86,7 @@ public class SignInActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 finish();
                                 setPreferences(email, password, firebaseAuth.getCurrentUser());
-                                Intent intent = new Intent(getApplicationContext(), NewMainActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
