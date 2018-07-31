@@ -7,7 +7,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="12dp"
         app:srcCompat="@color/colorAccent" />
 
     <LinearLayout
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:text="Item"
             android:textStyle="bold"
-            android:textSize="23sp"
+            android:textSize="24sp"
             android:layout_marginBottom="5dp"/>
 
         <TextView
@@ -35,7 +35,7 @@
             android:id="@+id/itemDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="17sp"
+            android:textSize="16sp"
             android:padding="5dp"
             android:text="Description" />
 
@@ -70,6 +70,5 @@
             android:text="Location" />
 
     </LinearLayout>
-
 
 </LinearLayout>

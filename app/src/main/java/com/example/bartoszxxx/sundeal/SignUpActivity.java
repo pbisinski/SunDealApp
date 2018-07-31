@@ -45,25 +45,25 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         String password = editTextPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
-            editTextEmail.setError("Podaj e-mail");
+            editTextEmail.setError(getString(R.string.error_email));
             return;
         } else if (password.length() < 6) {
-            editTextPassword.setError("Hasło min. 6 znaków");
+            editTextPassword.setError(getString(R.string.error_password_too_short));
             return;
         } else {
-            progressDialog.setMessage("Rejestracja, proszę czekać");
+            progressDialog.setMessage(getString(R.string.process_dialog));
             progressDialog.show();
             firebaseAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(SignUpActivity.this, "Użytkownik został zarejestrowany", Toast.LENGTH_LONG).show();
+                                Toast.makeText(SignUpActivity.this, R.string.signup_success, Toast.LENGTH_LONG).show();
                                 finish();
                                 firebaseAuth.signOut();
                                 startActivity(new Intent(getApplicationContext(), SignInActivity.class));
                             } else {
-                                Toast.makeText(SignUpActivity.this, "Błąd rejestracji", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignUpActivity.this, R.string.error_login, Toast.LENGTH_SHORT).show();
                             }
                             progressDialog.dismiss();
                         }

@@ -1,15 +1,8 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">SunDeal</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Wyloguj</string>
     <string name="item_settings">Usuń</string>
     <string name="action_favorite">Profil</string>
     <string name="title_activity_profile">ProfileActivity</string>
-    <string name="button_send" />
     <string name="title_activity_settings">Ustawienia</string>
     <string name="title_activity_add_item">Dodaj produkt</string>
     <string name="title_activity_about">O aplikacji</string>
@@ -21,6 +14,7 @@
     <string name="password">Hasło</string>
     <string name="sign_in">Zaloguj</string>
     <string name="sign_up">Zarejestruj</string>
+    <string name="logout">Wyloguj</string>
     <string name="email">E-mail</string>
     <string name="signup_hint">Nie masz jeszcze konta? Zarejestruj się</string>
     <string name="giveaway">Oddam</string>
@@ -28,10 +22,17 @@
     <string name="choose_location">Wybierz lokalizację</string>
     <string name="add">Dodaj</string>
     <string name="your_products">Twoje produkty</string>
-    <string name="logout">Wyloguj</string>
-    <string name="placeholder">placeholder</string>
+    <string name="placeholder">placeholder name</string>
     <string name="slogan">Dziel się, wymieniaj!</string>
     <string name="add_product">Dodaj produkt</string>
     <string name="search_product">Wyszukaj produkt</string>
     <string name="welcome_message" formatted="false">Witaj, <xliff:g example="Jan" id="name">%s</xliff:g></string>
+    <string name="process_dialog">Proszę czekać</string>
+    <string name="error_password">Podaj hasło</string>
+    <string name="error_email">Podaj e-mail</string>
+    <string name="error_login">Błąd logowania</string>
+    <string name="error_password_too_short">Hasło zbyt krótkie</string>
+    <string name="signup_success">Użytkownik został zarejestrowany</string>
+    <string name="signin_title">Logowanie użytkownika</string>
+    <string name="signup_title">Rejestracja użytkownika</string>
 </resources>

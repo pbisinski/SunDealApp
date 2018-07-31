@@ -52,7 +52,6 @@ public class MyProductsActivity extends AppCompatActivity {
 
         mAdapter = new MyProductsAdapter(this);
         recyclerView.setAdapter(mAdapter);
-        getUserProducts();
 
         Button BtnLogout = (Button) findViewById(R.id.BtnLogout);
         BtnLogout.setOnClickListener(new View.OnClickListener() {
@@ -61,8 +60,8 @@ public class MyProductsActivity extends AppCompatActivity {
                 firebaseAuth.signOut();
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.clear();
-                editor.commit();
-                Log.i("SHAREDPREFRENCES", "preferences cleared");
+                editor.apply();
+                Log.i("SHARED_PREFRENCES", "preferences cleared");
                 Intent intent = new Intent(MyProductsActivity.this, SignInActivity.class);
                 finish();
                 startActivity(intent);
@@ -81,6 +80,7 @@ public class MyProductsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        getUserProducts();
         TextView TvUserName = (TextView) findViewById(R.id.TvUserName);
         String name = prefs.getString("name", "");
         String message = getString(R.string.welcome_message, name);

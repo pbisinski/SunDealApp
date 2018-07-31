@@ -1,5 +1,6 @@
 package com.example.bartoszxxx.sundeal;
 
+import android.app.ActionBar;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,7 +16,6 @@ import com.example.bartoszxxx.sundeal.Adapters.RecyclerAdapter;
 import com.example.bartoszxxx.sundeal.Products.FirebaseHelper;
 import com.example.bartoszxxx.sundeal.Products.ListProduct;
 import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +28,6 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
 
-    private FirebaseAuth firebaseAuth;
     private RecyclerAdapter rAdapter;
     private List<ListProduct> products;
     private SearchView searchView;
@@ -38,10 +37,10 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ActionBar actionBar = this.getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         RecyclerView recyclerView = findViewById(R.id.products_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -66,8 +65,7 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                products = null;
-                rAdapter.setProducts(products);
+                rAdapter.setProducts(null);
                 return false;
             }
         });

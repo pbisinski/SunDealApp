@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Logowanie użytkownika"
+            android:text="@string/signin_title"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <EditText
@@ -45,7 +45,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:onClick="onClick"
             android:text="@string/sign_in" />
 
         <Button
@@ -54,7 +53,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:onClick="onClick"
             android:text="@string/signup_hint"
             android:textColor="@color/colorAccent" />
 

@@ -68,15 +68,15 @@ public class SignInActivity extends AppCompatActivity {
         final String password = editTextPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
-            editTextEmail.setError("Podaj e-mail");
+            editTextEmail.setError(getString(R.string.error_email));
             return;
         }
         if (TextUtils.isEmpty(password)) {
-            editTextPassword.setError("Podaj hasło");
+            editTextPassword.setError(getString(R.string.error_password));
             return;
         }
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
-            progressDialog.setMessage("Logowanie, proszę czekać");
+            progressDialog.setMessage(getString(R.string.process_dialog));
             progressDialog.show();
             firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -91,7 +91,7 @@ public class SignInActivity extends AppCompatActivity {
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                             } else {
-                                Toast.makeText(getApplicationContext(), "Błąd logowania", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), R.string.error_login, Toast.LENGTH_LONG).show();
                                 Log.d("IF-ONCOMPLETE", "onComplete: ELSE");
                             }
                         }
