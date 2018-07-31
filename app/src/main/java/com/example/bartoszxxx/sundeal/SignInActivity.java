@@ -1,6 +1,5 @@
 package com.example.bartoszxxx.sundeal;
 
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,13 +17,15 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
+public class SignInActivity extends AppCompatActivity {
 
-    private FirebaseHelper firebaseHelper;
+    private FirebaseAuth firebaseAuth;
 
-    private Button buttonSignIn;
-    private Button buttonSignUp;
+    private Button BtnSignIn;
+    private Button BtnSignUp;
     private EditText editTextEmail;
     private EditText editTextPassword;
     private ProgressDialog progressDialog;
@@ -34,27 +35,37 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        firebaseHelper = new FirebaseHelper();
+        firebaseAuth = FirebaseAuth.getInstance();
 
-        if (firebaseHelper.getFirebaseAuth().getCurrentUser() != null) {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user != null) {
             finish();
-            setPreferences();
             startActivity(new Intent(getApplicationContext(), NewMainActivity.class));
         }
 
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
-        buttonSignUp = (Button) findViewById(R.id.buttonSignUp);
-
+        BtnSignIn = (Button) findViewById(R.id.buttonSignIn);
+        BtnSignUp = (Button) findViewById(R.id.buttonSignUp);
         progressDialog = new ProgressDialog(this);
 
-        buttonSignIn.setOnClickListener(this);
+        BtnSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userLogin();
+            }
+        });
+        BtnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+            }
+        });
     }
 
     private void userLogin() {
-        String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
+        final String email = editTextEmail.getText().toString().trim();
+        final String password = editTextPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
             editTextEmail.setError("Podaj e-mail");
@@ -67,48 +78,34 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
             progressDialog.setMessage("Logowanie, proszę czekać");
             progressDialog.show();
-            firebaseHelper.getFirebaseAuth().signInWithEmailAndPassword(email, password)
+            firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             progressDialog.dismiss();
                             if (task.isSuccessful()) {
                                 finish();
-                                setPreferences();
-                                startActivity(new Intent(getApplicationContext(), NewMainActivity.class));
+                                setPreferences(email, password, firebaseAuth.getCurrentUser());
+                                Intent intent = new Intent(getApplicationContext(), NewMainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
                             } else {
-                                Toast.makeText(SignInActivity.this, "Błąd logowania", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Błąd logowania", Toast.LENGTH_LONG).show();
+                                Log.d("IF-ONCOMPLETE", "onComplete: ELSE");
                             }
                         }
                     });
         }
     }
 
-    public void setPreferences() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(SignInActivity.this);
+    public void setPreferences(String email, String password, FirebaseUser user) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = preferences.edit();
-        try {
-            String name = firebaseHelper.getFirebaseAuth().getCurrentUser().getDisplayName();
-            String password = editTextPassword.getText().toString().trim();
-            String email = editTextEmail.getText().toString().trim();
-            editor.putString("name", name);
-            editor.putString("pass", password);
-            editor.putString("email", email);
-            editor.apply();
-        } catch (NullPointerException e) {
-            Log.e("FIREBASE", "setPreferences: user null");
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view == buttonSignIn) {
-            userLogin();
-        }
-
-        if (view == buttonSignUp) {
-            startActivity(new Intent(this, SignUpActivity.class));
-        }
+        editor.putString("pass", password);
+        editor.putString("email", email);
+        editor.putString("name", user.getDisplayName());
+        editor.apply();
     }
 
     @Override

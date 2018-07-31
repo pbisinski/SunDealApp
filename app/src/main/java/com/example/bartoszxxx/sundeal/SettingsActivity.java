@@ -7,26 +7,29 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.example.bartoszxxx.sundeal.Products.FirebaseHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private FirebaseUser firebaseUser;
+    private FirebaseAuth firebaseAuth;
 
     SharedPreferences.OnSharedPreferenceChangeListener spChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, String s) {
+            final FirebaseUser user = firebaseAuth.getCurrentUser();
             final String key = s;
             AuthCredential firebaseCred = EmailAuthProvider.getCredential(
-                    firebaseUser.getEmail(), sharedPreferences.getString("pass", "")
+                    user.getEmail(), sharedPreferences.getString("pass", "")
             );
-            firebaseUser.reauthenticate(firebaseCred).addOnCompleteListener(new OnCompleteListener<Void>() {
+            user.reauthenticate(firebaseCred).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     switch (key) {
@@ -34,11 +37,11 @@ public class SettingsActivity extends AppCompatActivity {
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(sharedPreferences.getString("name", ""))
                                     .build();
-                            firebaseUser.updateProfile(profileUpdates);
+                            user.updateProfile(profileUpdates);
                             break;
 
                         case "email":
-                            firebaseUser.updateEmail(sharedPreferences.getString("email", ""));
+                            user.updateEmail(sharedPreferences.getString("email", ""));
                             break;
 
                         default:
@@ -47,7 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
 
-            firebaseUser.reauthenticate(firebaseCred).addOnFailureListener(new OnFailureListener() {
+            user.reauthenticate(firebaseCred).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(SettingsActivity.this, "Błąd logowania", Toast.LENGTH_SHORT).show();
@@ -62,10 +65,9 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        FirebaseHelper firebaseHelper = new FirebaseHelper();
-        firebaseUser = firebaseHelper.getFirebaseUser();
+        firebaseAuth = FirebaseAuth.getInstance();
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         preferences.registerOnSharedPreferenceChangeListener(spChanged);
     }
 }

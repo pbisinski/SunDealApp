@@ -11,9 +11,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.bartoszxxx.sundeal.FirebaseHelper;
+import com.example.bartoszxxx.sundeal.Products.FirebaseHelper;
 import com.example.bartoszxxx.sundeal.Products.Product;
-import com.example.bartoszxxx.sundeal.R;
+import com.example.bartoszxxx.sundeal.R;;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -21,7 +24,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
 
     private List<Product> products;
     private Context context;
-    private FirebaseHelper firebaseHelper;
+    private FirebaseAuth firebaseAuth;
 
     public MyProductsAdapter() {
 
@@ -29,7 +32,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
 
     public MyProductsAdapter(Context context) {
         this.context = context;
-        firebaseHelper = new FirebaseHelper();
+        firebaseAuth = FirebaseAuth.getInstance();
     }
 
     @NonNull
@@ -62,7 +65,8 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        firebaseHelper.getRef().child(listItem.getKey()).removeValue();
+                        DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
+                        database.getRef().child(listItem.getKey()).removeValue();
                         Toast.makeText(context, "Usunięto", Toast.LENGTH_LONG).show();
                         products.remove(position);
                         notifyItemRemoved(position);

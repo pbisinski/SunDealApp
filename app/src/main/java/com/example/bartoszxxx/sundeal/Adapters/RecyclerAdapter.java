@@ -38,22 +38,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @NonNull
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // 1. utwórz inflater (narzędzie do wczytywania widoków stworzonych w XML)
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         activity = (Activity) context;
-        // 2. wczytaj widok jednego wiersza
         View rowView = inflater.inflate(R.layout.product_list_element, parent, false);
-
-        // 3. stwórz obiek ViewHolder, który będzie trzymać odwołania
-        // do elementów jednego wiersza (np. tytułu)
         RecyclerAdapter.ViewHolder viewHolder = new RecyclerAdapter.ViewHolder(rowView);
-
-        // 4. zwróć nowoutworzony obiekt
         return viewHolder;
     }
 
-
-    //Produkty to recenzje
     public void setProducts(List<ListProduct> reviews) {
         this.products = reviews;
         notifyDataSetChanged();
@@ -70,7 +61,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             holder.text.setText("Zamienię");
         }
 
-        //Obsluga klikniecia na element listy
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

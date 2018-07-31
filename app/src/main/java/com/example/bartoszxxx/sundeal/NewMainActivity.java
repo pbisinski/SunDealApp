@@ -22,15 +22,13 @@ public class NewMainActivity extends AppCompatActivity {
         BtnAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(NewMainActivity.this, AddItemActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), AddItemActivity.class));
             }
         });
         BtnSearchProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(NewMainActivity.this, SearchActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), SearchActivity.class));
             }
         });
 
@@ -45,7 +43,7 @@ public class NewMainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent(NewMainActivity.this, MyProductsActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MyProductsActivity.class);
         startActivity(intent);
         return true;
     }

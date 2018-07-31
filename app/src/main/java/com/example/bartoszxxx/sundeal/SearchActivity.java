@@ -12,10 +12,14 @@ import android.view.View;
 import android.widget.SearchView;
 
 import com.example.bartoszxxx.sundeal.Adapters.RecyclerAdapter;
+import com.example.bartoszxxx.sundeal.Products.FirebaseHelper;
 import com.example.bartoszxxx.sundeal.Products.ListProduct;
 import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -24,7 +28,7 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
 
-    private FirebaseHelper firebaseHelper;
+    private FirebaseAuth firebaseAuth;
     private RecyclerAdapter rAdapter;
     private List<ListProduct> products;
     private SearchView searchView;
@@ -34,7 +38,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        firebaseHelper = new FirebaseHelper();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -96,7 +100,8 @@ public class SearchActivity extends AppCompatActivity {
 
     public void getAllProducts(String queryText) {
         products = new ArrayList<>();
-        Query queryRef = firebaseHelper.getRef().orderByChild("item_lowercase").startAt(queryText).endAt(queryText + "\uf8ff");
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
+        Query queryRef = database.orderByChild("item_lowercase").startAt(queryText).endAt(queryText + "\uf8ff");
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

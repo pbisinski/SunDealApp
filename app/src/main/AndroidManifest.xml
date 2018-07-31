@@ -19,13 +19,14 @@
 
         <activity
             android:name=".NewMainActivity"
-            android:label=""></activity>
-
-        <activity android:name=".SignUpActivity" />
+            android:label=""
+            android:launchMode="singleTop"></activity>
 
         <activity
-            android:name=".SignInActivity"
-            android:launchMode="singleTop">
+            android:name=".SignUpActivity"
+            android:parentActivityName=".SignInActivity" />
+
+        <activity android:name=".SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

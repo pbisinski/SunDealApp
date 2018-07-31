@@ -16,6 +16,7 @@ import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.example.bartoszxxx.sundeal.Products.FirebaseHelper;
 import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +25,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +37,7 @@ import java.util.Locale;
 public class AddItemActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     Geocoder geocoder;
-    private FirebaseHelper firebaseHelper;
+    private FirebaseAuth firebaseAuth;
     private ScrollView mScrollView;
     private LatLng latLng;
     private Marker marker;
@@ -53,7 +57,7 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        firebaseHelper = new FirebaseHelper();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         item = (EditText) findViewById(R.id.item);
         description = (EditText) findViewById(R.id.description);
@@ -159,9 +163,10 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
             locationValue = getResources().getString(R.string.location_default);
         }
 
-        String id = firebaseHelper.getRef().push().getKey();
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
+        String id = database.push().getKey();
         ProductFirebase productFirebase = new ProductFirebase(
-                firebaseHelper.getFirebaseUser().getEmail(),
+                firebaseAuth.getCurrentUser().getEmail(),
                 itemValue,
                 itemValue.toLowerCase(),
                 descriptionValue,
@@ -169,7 +174,7 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
                 RdBtnGiveaway.isChecked(),
                 RdBtnExchange.isChecked(),
                 id);
-        firebaseHelper.getRef().child(id).setValue(productFirebase);
+        database.child(id).setValue(productFirebase);
         Snackbar.make(mScrollView, "Pomyślnie dodano: " + productFirebase.getItem(), Snackbar.LENGTH_SHORT).show();
         setClear();
     }
