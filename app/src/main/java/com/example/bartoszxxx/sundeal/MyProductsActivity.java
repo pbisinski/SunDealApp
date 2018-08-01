@@ -115,7 +115,7 @@ public class MyProductsActivity extends AppCompatActivity {
         });
     }
 
-    private void setListMessage(){
+    private void setListMessage() {
         if (mAdapter.getItemCount() == 0) {
             recyclerView.setVisibility(View.GONE);
             textEmptyList.setVisibility(View.VISIBLE);

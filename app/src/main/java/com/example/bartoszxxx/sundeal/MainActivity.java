@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         BtnAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), AddItemActivity.class));
+                startActivity(new Intent(getApplicationContext(), AddProductActivity.class));
             }
         });
         BtnSearchProduct.setOnClickListener(new View.OnClickListener() {

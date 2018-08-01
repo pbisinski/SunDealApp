@@ -1,19 +1,21 @@
 package com.example.bartoszxxx.sundeal;
 
-import android.app.ActionBar;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.ScrollView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.bartoszxxx.sundeal.Products.FirebaseHelper;
@@ -34,24 +36,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class AddItemActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class AddProductActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private final int MIN_ITEM_NAME_LENGTH = 4;
     Geocoder geocoder;
     private FirebaseAuth firebaseAuth;
-    private ScrollView mScrollView;
+    private NestedScrollView nScrollView;
     private LatLng latLng;
     private Marker marker;
     private GoogleMap mMap;
-    private EditText item, description;
-    private TextView location;
+    private EditText ItemName, ItemDescription;
+    private TextView ItemLocation;
     private RadioButton RdBtnGiveaway, RdBtnExchange;
+    private RadioGroup RadioGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_item);
+        setContentView(R.layout.activity_add_product);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        ActionBar actionBar = this.getActionBar();
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -59,32 +65,35 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        item = (EditText) findViewById(R.id.item);
-        description = (EditText) findViewById(R.id.description);
-        location = (TextView) findViewById(R.id.location);
+        nScrollView = (NestedScrollView) findViewById(R.id.scroll_view);
+        ItemLocation = (TextView) findViewById(R.id.TvLocation);
+        ItemName = (TextInputEditText) findViewById(R.id.EtItemName);
+        ItemDescription = (TextInputEditText) findViewById(R.id.EtItemDesc);
         RdBtnGiveaway = (RadioButton) findViewById(R.id.RadioBtnGiveaway);
         RdBtnExchange = (RadioButton) findViewById(R.id.RadioButtonExchange);
-        mScrollView = (ScrollView) findViewById(R.id.scroll_view);
-        Button BtnInsert = (Button) findViewById(R.id.BtnInsert);
-        BtnInsert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AddProduct();
-            }
-        });
+        RadioGroup = (RadioGroup) findViewById(R.id.RadioGroup);
 
         WorkaroundMapFragment mapFragment = (WorkaroundMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         geocoder = new Geocoder(this, Locale.getDefault());
+
         ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).setListener(new WorkaroundMapFragment.OnTouchListener() {
             @Override
             public void onTouch() {
-                mScrollView.requestDisallowInterceptTouchEvent(true);
+                nScrollView.requestDisallowInterceptTouchEvent(true);
             }
         });
 
-        item.addTextChangedListener(new TextWatcher() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addProduct();
+            }
+        });
+
+        ItemName.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -96,13 +105,14 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (item.getText().toString().length() < 3) {
-                    item.setError("Zbyt krótki tytuł");
+                if (ItemName.getText().toString().length() < MIN_ITEM_NAME_LENGTH) {
+                    ItemName.setError("Zbyt krótki tytuł");
                 } else {
-                    item.setError(null);
+                    ItemName.setError(null);
                 }
             }
         });
+
     }
 
     @Override
@@ -127,7 +137,7 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
                 Address address = addresses.get(0);
 
                 if (address != null) {
-                    location.setText(address.getAddressLine(0));
+                    ItemLocation.setText(address.getAddressLine(0));
                 }
 
                 if (marker != null) {
@@ -136,47 +146,45 @@ public class AddItemActivity extends AppCompatActivity implements OnMapReadyCall
 
                 marker = mMap.addMarker((new MarkerOptions().position(point).title(address.getAddressLine(0))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))));
-
             }
         });
-
     }
 
     private void setClear() {
-        item.setText("");
-        description.setText("");
-        RdBtnGiveaway.setChecked(false);
-        RdBtnExchange.setChecked(false);
+        ItemName.setText("");
+        ItemDescription.setText("");
+        ItemName.clearFocus();
+        ItemDescription.clearFocus();
+        RadioGroup.clearCheck();
+        ItemName.setError(null);
     }
 
-    public void AddProduct() {
+    private void addProduct() {
 
-        String itemValue = item.getText().toString().trim();
-        String descriptionValue = description.getText().toString().trim();
-        String locationValue = location.getText().toString();
+        String itemName = ItemName.getText().toString().trim();
+        String descriptionValue = ItemDescription.getText().toString().trim();
+        String locationValue = ItemLocation.getText().toString();
 
-        if (!RdBtnGiveaway.isChecked() && !RdBtnExchange.isChecked() && TextUtils.isEmpty(itemValue)) {
-            Snackbar.make(mScrollView, "Uzupełnij brakujące dane", Snackbar.LENGTH_LONG).show();
-            return;
-        }
         if (marker == null) {
             locationValue = getResources().getString(R.string.location_default);
         }
-
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
-        String id = database.push().getKey();
-        ProductFirebase productFirebase = new ProductFirebase(
-                firebaseAuth.getCurrentUser().getEmail(),
-                itemValue,
-                itemValue.toLowerCase(),
-                descriptionValue,
-                locationValue,
-                RdBtnGiveaway.isChecked(),
-                RdBtnExchange.isChecked(),
-                id);
-        database.child(id).setValue(productFirebase);
-        Snackbar.make(mScrollView, "Pomyślnie dodano: " + productFirebase.getItem(), Snackbar.LENGTH_SHORT).show();
-        setClear();
+        if (!RdBtnGiveaway.isChecked() && !RdBtnExchange.isChecked() || itemName.length() < MIN_ITEM_NAME_LENGTH) {
+            Snackbar.make(nScrollView, "Uzupełnij brakujące dane", Snackbar.LENGTH_LONG).show();
+        } else {
+            DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
+            String id = database.push().getKey();
+            ProductFirebase productFirebase = new ProductFirebase(
+                    firebaseAuth.getCurrentUser().getEmail(),
+                    itemName,
+                    itemName.toLowerCase(),
+                    descriptionValue,
+                    locationValue,
+                    RdBtnGiveaway.isChecked(),
+                    RdBtnExchange.isChecked(),
+                    id);
+            database.child(id).setValue(productFirebase);
+            Snackbar.make(nScrollView, "Pomyślnie dodano: " + productFirebase.getItem(), Snackbar.LENGTH_SHORT).show();
+            setClear();
+        }
     }
-
 }
