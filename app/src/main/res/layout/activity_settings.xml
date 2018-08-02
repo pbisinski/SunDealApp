@@ -3,6 +3,6 @@
     android:id="@+id/activity_settings"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:name="SettingsFragment">
+    android:name="com.example.bartoszxxx.sundeal.SettingsFragment">
 
 </fragment>

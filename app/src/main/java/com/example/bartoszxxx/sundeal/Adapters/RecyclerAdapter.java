@@ -1,10 +1,8 @@
 package com.example.bartoszxxx.sundeal.Adapters;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -13,7 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.bartoszxxx.sundeal.Products.ListProduct;
@@ -26,6 +26,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private List<ListProduct> products;
     private Context context;
     private Activity activity;
+
+    private int mExpandedPosition = -1;
 
     public RecyclerAdapter() {
 
@@ -52,48 +54,44 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, final int position) {
-        final ListProduct listItem = products.get(position);
 
         holder.title.setText(products.get(position).getItem());
         if (products.get(position).getOddam()) {
-            holder.text.setText("Oddam");
+            holder.type.setText("Oddam");
         } else {
-            holder.text.setText("Zamienię");
+            holder.type.setText("Zamienię");
         }
+        holder.description.setText(products.get(position).getDescription());
+        holder.location.setText(products.get(position).getLocation());
+        holder.contactBtn.setText(products.get(position).getOwner());
 
-        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+        holder.contactBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-                LayoutInflater inflater = alertDialog.getLayoutInflater();
-                View v = inflater.inflate(R.layout.dialog_product, null);
-                alertDialog.setView(v);
-                TextView item = v.findViewById(R.id.itemName);
-                TextView desc = v.findViewById(R.id.itemDescription);
-                TextView ownr = v.findViewById(R.id.itemOwner);
-                TextView locn = v.findViewById(R.id.itemLocation);
-                item.setText(products.get(position).getItem());
-                desc.setText(products.get(position).getDescription());
-                ownr.setText(products.get(position).getOwner());
-                locn.setText(products.get(position).getLocation());
-
-                alertDialog.setButton("Kontynuuj...", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                                    "mailto", products.get(position).getOwner(), null));
-                            intent.putExtra(Intent.EXTRA_SUBJECT, "SunDeal: " + products.get(position).getItem());
-                            intent.putExtra(Intent.EXTRA_TEXT, "Witam, jestem zainteresowany Pani/Pana ofertą.");
-                            activity.startActivity(intent);
-                        } catch (ActivityNotFoundException e) {
-                            Log.e("MAILTO", "error");
-                        }
-                    }
-                });
-
-                alertDialog.show();
+                try {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                            "mailto", products.get(position).getOwner(), null));
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "SunDeal: " + products.get(position).getItem());
+                    intent.putExtra(Intent.EXTRA_TEXT, "Witam, jestem zainteresowany Pani/Pana ofertą.");
+                    activity.startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    Log.e("MAILTO", "error");
+                }
             }
         });
+
+        final boolean isExpanded = position==mExpandedPosition;
+        holder.moreInfo.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.imageView.setImageResource(isExpanded?R.drawable.ic_up_less:R.drawable.ic_expand);
+        holder.itemView.setActivated(isExpanded);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mExpandedPosition = isExpanded ? -1:position;
+                notifyItemChanged(position);
+            }
+        });
+
     }
 
     @Override
@@ -104,20 +102,28 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return 0;
     }
 
-    public ListProduct getProduct(int index) {
+    private ListProduct getProduct(int index) {
         return (products != null) ? products.get(index) : null;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView title;
-        public TextView text;
-        public RelativeLayout relativeLayout;
+        private TextView title;
+        private TextView type;
+        private TextView description;
+        private TextView location;
+        private LinearLayout moreInfo;
+        private ImageView imageView;
+        private Button contactBtn;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.title);
-            text = itemView.findViewById(R.id.text);
-            relativeLayout = itemView.findViewById(R.id.relativeLayout);
+            title = itemView.findViewById(R.id.titleView);
+            type = itemView.findViewById(R.id.typeView);
+            moreInfo = itemView.findViewById(R.id.moreInfo);
+            imageView = itemView.findViewById(R.id.imageExpand);
+            description = itemView.findViewById(R.id.descriptionView);
+            location = itemView.findViewById(R.id.locationView);
+            contactBtn = itemView.findViewById(R.id.contactBtn);
         }
     }
 }

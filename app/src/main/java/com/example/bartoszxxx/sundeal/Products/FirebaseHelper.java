@@ -1,6 +1,6 @@
 package com.example.bartoszxxx.sundeal.Products;
 
-public class FirebaseHelper {
+public interface FirebaseHelper {
     
-    public static final String DATABASE_REFERENCE = "Products";
+    String DATABASE_REFERENCE = "Products";
 }

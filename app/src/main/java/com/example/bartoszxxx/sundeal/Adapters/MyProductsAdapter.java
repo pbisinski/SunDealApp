@@ -2,7 +2,6 @@ package com.example.bartoszxxx.sundeal.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.bartoszxxx.sundeal.MyProductsActivity;
 import com.example.bartoszxxx.sundeal.Products.FirebaseHelper;
 import com.example.bartoszxxx.sundeal.Products.Product;
 import com.example.bartoszxxx.sundeal.R;;
@@ -69,7 +67,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
                     public boolean onMenuItemClick(MenuItem item) {
                         DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
                         database.getRef().child(listItem.getKey()).removeValue();
-                        Toast.makeText(context, "Usunięto pomyślnie", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, R.string.remove_success, Toast.LENGTH_LONG).show();
                         products.remove(position);
                         notifyItemRemoved(position);
                         return true;
