@@ -92,7 +92,6 @@ public class SignInActivity extends AppCompatActivity {
                                 startActivity(intent);
                             } else {
                                 Toast.makeText(getApplicationContext(), R.string.error_login, Toast.LENGTH_LONG).show();
-                                Log.d("IF-ONCOMPLETE", "onComplete: ELSE");
                             }
                         }
                     });

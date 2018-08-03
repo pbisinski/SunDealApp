@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bartoszxxx.sundeal.Products.FirebaseHelper;
 import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
@@ -106,7 +107,7 @@ public class AddProductActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void afterTextChanged(Editable s) {
                 if (ItemName.getText().toString().length() < MIN_ITEM_NAME_LENGTH) {
-                    ItemName.setError("Zbyt krótki tytuł");
+                    ItemName.setError(getString(R.string.titlename_too_short));
                 } else {
                     ItemName.setError(null);
                 }
@@ -162,28 +163,28 @@ public class AddProductActivity extends AppCompatActivity implements OnMapReadyC
     private void addProduct() {
 
         String itemName = ItemName.getText().toString().trim();
-        String descriptionValue = ItemDescription.getText().toString().trim();
-        String locationValue = ItemLocation.getText().toString();
+        String itemDescription = ItemDescription.getText().toString().trim();
+        String itemLocation = ItemLocation.getText().toString();
+        Boolean itemGiveaway = RdBtnGiveaway.isChecked();
 
         if (marker == null) {
-            locationValue = getResources().getString(R.string.location_default);
+            itemLocation = getResources().getString(R.string.location_default);
         }
         if (!RdBtnGiveaway.isChecked() && !RdBtnExchange.isChecked() || itemName.length() < MIN_ITEM_NAME_LENGTH) {
-            Snackbar.make(nScrollView, "Uzupełnij brakujące dane", Snackbar.LENGTH_LONG).show();
+            Toast.makeText(this, "Uzupełnij brakujące dane", Toast.LENGTH_SHORT).show();
         } else {
             DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
-            String id = database.push().getKey();
+            String id_key = database.push().getKey();
             ProductFirebase productFirebase = new ProductFirebase(
                     firebaseAuth.getCurrentUser().getEmail(),
                     itemName,
                     itemName.toLowerCase(),
-                    descriptionValue,
-                    locationValue,
-                    RdBtnGiveaway.isChecked(),
-                    RdBtnExchange.isChecked(),
-                    id);
-            database.child(id).setValue(productFirebase);
-            Snackbar.make(nScrollView, "Pomyślnie dodano: " + productFirebase.getItem(), Snackbar.LENGTH_SHORT).show();
+                    itemDescription,
+                    itemLocation,
+                    itemGiveaway,
+                    id_key);
+            database.child(id_key).setValue(productFirebase);
+            Toast.makeText(this, "Pomyślnie dodano: " + productFirebase.getTitle(), Toast.LENGTH_SHORT).show();
             setClear();
         }
     }

@@ -2,21 +2,15 @@ package com.example.bartoszxxx.sundeal.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.bartoszxxx.sundeal.Products.FirebaseHelper;
 import com.example.bartoszxxx.sundeal.Products.Product;
 import com.example.bartoszxxx.sundeal.R;;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -51,31 +45,9 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull final MyProductsAdapter.ViewHolder holder, final int position) {
-        final Product listItem = products.get(position);
-
-        holder.title.setText(products.get(position).getItem());
+        holder.title.setText(products.get(position).getTitle());
         holder.author.setText(products.get(position).getDescription());
         holder.text.setText(products.get(position).getLocation());
-
-        holder.options.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu popup = new PopupMenu(context, holder.options);
-                popup.inflate(R.menu.remove);
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
-                        database.getRef().child(listItem.getKey()).removeValue();
-                        Toast.makeText(context, R.string.remove_success, Toast.LENGTH_LONG).show();
-                        products.remove(position);
-                        notifyItemRemoved(position);
-                        return true;
-                    }
-                });
-                popup.show();
-            }
-        });
     }
 
     @Override
@@ -94,14 +66,12 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
         public TextView title;
         public TextView author;
         public TextView text;
-        public TextView options;
 
         public ViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             author = itemView.findViewById(R.id.author);
             text = itemView.findViewById(R.id.text);
-            options = itemView.findViewById(R.id.options);
         }
     }
 }

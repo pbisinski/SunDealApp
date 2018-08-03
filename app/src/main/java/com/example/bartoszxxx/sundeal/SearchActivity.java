@@ -14,7 +14,7 @@ import android.widget.SearchView;
 
 import com.example.bartoszxxx.sundeal.Adapters.RecyclerAdapter;
 import com.example.bartoszxxx.sundeal.Products.FirebaseHelper;
-import com.example.bartoszxxx.sundeal.Products.ListProduct;
+import com.example.bartoszxxx.sundeal.Products.ProductLocal;
 import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,7 +29,7 @@ import java.util.List;
 public class SearchActivity extends AppCompatActivity {
 
     private RecyclerAdapter rAdapter;
-    private List<ListProduct> products;
+    private List<ProductLocal> products;
     private SearchView searchView;
 
     @Override
@@ -105,13 +105,12 @@ public class SearchActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     String owner = childDataSnapshot.getValue(ProductFirebase.class).getOwner();
-                    String item = childDataSnapshot.getValue(ProductFirebase.class).getItem();
+                    String item = childDataSnapshot.getValue(ProductFirebase.class).getTitle();
                     String description = childDataSnapshot.getValue(ProductFirebase.class).getDescription();
                     String location = childDataSnapshot.getValue(ProductFirebase.class).getLocation();
                     String key = childDataSnapshot.getValue(ProductFirebase.class).getKey();
-                    Boolean oddam = childDataSnapshot.getValue(ProductFirebase.class).getOddam();
-                    Boolean zamienie = childDataSnapshot.getValue(ProductFirebase.class).getZamienie();
-                    ListProduct product = new ListProduct(owner, item, description, location, oddam, zamienie, key);
+                    Boolean itemGiveaway = childDataSnapshot.getValue(ProductFirebase.class).getGiveaway();
+                    ProductLocal product = new ProductLocal(owner, item, description, location, itemGiveaway, key);
                     try {
                         products.add(product);
                     } catch (NullPointerException e) {

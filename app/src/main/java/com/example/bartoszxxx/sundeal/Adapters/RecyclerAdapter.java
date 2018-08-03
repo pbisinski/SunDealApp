@@ -16,14 +16,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.bartoszxxx.sundeal.Products.ListProduct;
+import com.example.bartoszxxx.sundeal.Products.ProductLocal;
 import com.example.bartoszxxx.sundeal.R;
 
 import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
-    private List<ListProduct> products;
+    private List<ProductLocal> products;
     private Context context;
     private Activity activity;
 
@@ -47,7 +47,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return viewHolder;
     }
 
-    public void setProducts(List<ListProduct> reviews) {
+    public void setProducts(List<ProductLocal> reviews) {
         this.products = reviews;
         notifyDataSetChanged();
     }
@@ -55,8 +55,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, final int position) {
 
-        holder.title.setText(products.get(position).getItem());
-        if (products.get(position).getOddam()) {
+        holder.title.setText(products.get(position).getTitle());
+        if (products.get(position).getGiveaway()) {
             holder.type.setText("Oddam");
         } else {
             holder.type.setText("Zamienię");
@@ -71,7 +71,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 try {
                     Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                             "mailto", products.get(position).getOwner(), null));
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "SunDeal: " + products.get(position).getItem());
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "SunDeal: " + products.get(position).getTitle());
                     intent.putExtra(Intent.EXTRA_TEXT, "Witam, jestem zainteresowany Pani/Pana ofertą.");
                     activity.startActivity(intent);
                 } catch (ActivityNotFoundException e) {
@@ -80,18 +80,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             }
         });
 
-        final boolean isExpanded = position==mExpandedPosition;
-        holder.moreInfo.setVisibility(isExpanded?View.VISIBLE:View.GONE);
-        holder.imageView.setImageResource(isExpanded?R.drawable.ic_up_less:R.drawable.ic_expand);
+        final boolean isExpanded = position == mExpandedPosition;
+        holder.moreInfo.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+        holder.imageView.setImageResource(isExpanded ? R.drawable.ic_up_less : R.drawable.ic_expand);
         holder.itemView.setActivated(isExpanded);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mExpandedPosition = isExpanded ? -1:position;
+                mExpandedPosition = isExpanded ? -1 : position;
                 notifyItemChanged(position);
             }
         });
-
     }
 
     @Override
@@ -102,7 +101,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return 0;
     }
 
-    private ListProduct getProduct(int index) {
+    private ProductLocal getProduct(int index) {
         return (products != null) ? products.get(index) : null;
     }
 
