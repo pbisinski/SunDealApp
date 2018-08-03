@@ -9,24 +9,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.bartoszxxx.sundeal.Products.Product;
-import com.example.bartoszxxx.sundeal.R;;
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.bartoszxxx.sundeal.R;
 
 import java.util.List;
 
 public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.ViewHolder> {
 
     private List<Product> products;
-    private Context context;
-    private FirebaseAuth firebaseAuth;
 
     public MyProductsAdapter() {
 
-    }
-
-    public MyProductsAdapter(Context context) {
-        this.context = context;
-        firebaseAuth = FirebaseAuth.getInstance();
     }
 
     @NonNull

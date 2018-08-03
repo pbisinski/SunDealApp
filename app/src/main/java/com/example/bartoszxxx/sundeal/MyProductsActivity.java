@@ -57,7 +57,7 @@ public class MyProductsActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        mAdapter = new MyProductsAdapter(this);
+        mAdapter = new MyProductsAdapter();
         recyclerView.setAdapter(mAdapter);
 
         Button BtnLogout = (Button) findViewById(R.id.BtnLogout);
