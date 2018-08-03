@@ -1,4 +1,4 @@
-package com.example.bartoszxxx.sundeal.Products;
+package com.example.bartoszxxx.sundeal;
 
 public interface FirebaseHelper {
     

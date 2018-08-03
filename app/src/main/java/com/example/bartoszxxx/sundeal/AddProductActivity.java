@@ -1,11 +1,11 @@
 package com.example.bartoszxxx.sundeal;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -13,13 +13,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.bartoszxxx.sundeal.Products.FirebaseHelper;
 import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,9 +28,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,6 +43,7 @@ import java.util.Locale;
 
 public class AddProductActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private static final int RC_PHOTO_PICKER =  2;
     private final int MIN_ITEM_NAME_LENGTH = 4;
     Geocoder geocoder;
     private FirebaseAuth firebaseAuth;
@@ -50,6 +55,7 @@ public class AddProductActivity extends AppCompatActivity implements OnMapReadyC
     private TextView ItemLocation;
     private RadioButton RdBtnGiveaway, RdBtnExchange;
     private RadioGroup RadioGroup;
+    private Button PhotoPickerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +79,7 @@ public class AddProductActivity extends AppCompatActivity implements OnMapReadyC
         RdBtnGiveaway = (RadioButton) findViewById(R.id.RadioBtnGiveaway);
         RdBtnExchange = (RadioButton) findViewById(R.id.RadioButtonExchange);
         RadioGroup = (RadioGroup) findViewById(R.id.RadioGroup);
+        PhotoPickerButton = (Button) findViewById(R.id.PhotoPickerBtn);
 
         WorkaroundMapFragment mapFragment = (WorkaroundMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -83,6 +90,16 @@ public class AddProductActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onTouch() {
                 nScrollView.requestDisallowInterceptTouchEvent(true);
+            }
+        });
+
+        PhotoPickerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/jpeg");
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER);
             }
         });
 
@@ -114,6 +131,22 @@ public class AddProductActivity extends AppCompatActivity implements OnMapReadyC
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
+            Uri selectedImageUri = data.getData();
+            final StorageReference photoRef = FirebaseStorage.getInstance().getReference("sundeal_photos").child(selectedImageUri.getLastPathSegment());
+            photoRef.putFile(selectedImageUri).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(AddProductActivity.this, photoRef.getDownloadUrl().toString(), Toast.LENGTH_SHORT).show();
+                    //TODO adding photos to Product, displaying Product photos
+                }
+            });
+        }
     }
 
     @Override
@@ -171,7 +204,7 @@ public class AddProductActivity extends AppCompatActivity implements OnMapReadyC
             itemLocation = getResources().getString(R.string.location_default);
         }
         if (!RdBtnGiveaway.isChecked() && !RdBtnExchange.isChecked() || itemName.length() < MIN_ITEM_NAME_LENGTH) {
-            Toast.makeText(this, "Uzupełnij brakujące dane", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_missing_data, Toast.LENGTH_SHORT).show();
         } else {
             DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
             String id_key = database.push().getKey();

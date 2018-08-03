@@ -1,6 +1,5 @@
 package com.example.bartoszxxx.sundeal.Adapters;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,14 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.bartoszxxx.sundeal.Products.Product;
+import com.example.bartoszxxx.sundeal.Products.ProductLocal;
 import com.example.bartoszxxx.sundeal.R;
 
 import java.util.List;
 
 public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.ViewHolder> {
 
-    private List<Product> products;
+    private List<ProductLocal> products;
 
     public MyProductsAdapter() {
 
@@ -30,7 +29,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
         return viewHolder;
     }
 
-    public void setProducts(List<Product> reviews) {
+    public void setProducts(List<ProductLocal> reviews) {
         this.products = reviews;
         notifyDataSetChanged();
     }
@@ -50,7 +49,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
         return 0;
     }
 
-    public Product getProduct(int index) {
+    public ProductLocal getProduct(int index) {
         return (products != null) ? products.get(index) : null;
     }
 

@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.SearchView;
 
 import com.example.bartoszxxx.sundeal.Adapters.RecyclerAdapter;
-import com.example.bartoszxxx.sundeal.Products.FirebaseHelper;
 import com.example.bartoszxxx.sundeal.Products.ProductLocal;
 import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
 import com.google.firebase.database.DataSnapshot;

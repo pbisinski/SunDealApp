@@ -37,6 +37,7 @@
     <string name="my_products_empty">Brak produktów do wyświetlenia</string>
     <string name="remove_success">Usunięto pomyślnie</string>
     <string name="contact_info">Kliknij, aby skontaktować się z właścicielem</string>
-    <string name="action_settings">Settings</string>
     <string name="titlename_too_short">Zbyt krótki tytuł</string>
+    <string name="button_photo">Dodaj zdjęcie (BETA)</string>
+    <string name="toast_missing_data">Uzupełnij brakujące dane</string>
 </resources>
