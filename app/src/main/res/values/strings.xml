@@ -38,6 +38,6 @@
     <string name="remove_success">Usunięto pomyślnie</string>
     <string name="contact_info">Kliknij, aby skontaktować się z właścicielem</string>
     <string name="titlename_too_short">Zbyt krótki tytuł</string>
-    <string name="button_photo">Dodaj zdjęcie (BETA)</string>
     <string name="toast_missing_data">Uzupełnij brakujące dane</string>
+    <string name="add_photo">Dodaj zdjęcie</string>
 </resources>

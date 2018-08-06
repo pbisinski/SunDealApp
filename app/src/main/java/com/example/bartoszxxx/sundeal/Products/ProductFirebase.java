@@ -8,8 +8,8 @@ public class ProductFirebase extends ProductLocal {
 
     }
 
-    public ProductFirebase(String owner, String item, String item_lowercase, String description, String location, Boolean giveaway, String key) {
-        super(owner, item, description, location, giveaway, key);
+    public ProductFirebase(String owner, String item, String item_lowercase, String description, String location, Boolean giveaway, String key, String photoUrl) {
+        super(owner, item, description, location, giveaway, key, photoUrl);
         this.item_lowercase = item_lowercase;
     }
 

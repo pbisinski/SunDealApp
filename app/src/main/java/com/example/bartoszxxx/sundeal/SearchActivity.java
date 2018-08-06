@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 
+import com.bumptech.glide.Glide;
 import com.example.bartoszxxx.sundeal.Adapters.RecyclerAdapter;
 import com.example.bartoszxxx.sundeal.Products.ProductLocal;
 import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
@@ -27,7 +28,7 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
 
-    private RecyclerAdapter rAdapter;
+    private RecyclerAdapter mAdapter;
     private List<ProductLocal> products;
     private SearchView searchView;
 
@@ -44,8 +45,8 @@ public class SearchActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.products_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        rAdapter = new RecyclerAdapter(this);
-        recyclerView.setAdapter(rAdapter);
+        mAdapter = new RecyclerAdapter(Glide.with(this));
+        recyclerView.setAdapter(mAdapter);
 
     }
 
@@ -64,7 +65,7 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                rAdapter.setProducts(null);
+                mAdapter.setProducts(null);
                 return false;
             }
         });
@@ -109,14 +110,15 @@ public class SearchActivity extends AppCompatActivity {
                     String location = childDataSnapshot.getValue(ProductFirebase.class).getLocation();
                     String key = childDataSnapshot.getValue(ProductFirebase.class).getKey();
                     Boolean itemGiveaway = childDataSnapshot.getValue(ProductFirebase.class).getGiveaway();
-                    ProductLocal product = new ProductLocal(owner, item, description, location, itemGiveaway, key);
+                    String photoUrl = childDataSnapshot.getValue(ProductFirebase.class).getPhotoUrl();
+                    ProductLocal product = new ProductLocal(owner, item, description, location, itemGiveaway, key, photoUrl);
                     try {
                         products.add(product);
                     } catch (NullPointerException e) {
                         Log.e("ProductList", e.toString());
                     }
                 }
-                rAdapter.setProducts(products);
+                mAdapter.setProducts(products);
             }
 
             @Override

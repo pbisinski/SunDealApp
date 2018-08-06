@@ -15,10 +15,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.bartoszxxx.sundeal.Adapters.MyProductsAdapter;
 import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
 import com.example.bartoszxxx.sundeal.Products.ProductLocal;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +108,15 @@ public class MyProductsActivity extends AppCompatActivity {
                                     public void onDismissed(Snackbar transientBottomBar, int event) {
                                         super.onDismissed(transientBottomBar, event);
                                         if (event != DISMISS_EVENT_ACTION) {
+                                            if (product.getPhotoUrl() != null) {
+                                                StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(product.getPhotoUrl());
+                                                photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(MyProductsActivity.this, "file deleted", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            }
                                             DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
                                             database.getRef().child(product.getKey()).removeValue();
                                         }

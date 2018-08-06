@@ -8,18 +8,20 @@ public class ProductLocal {
     private String key;
     private Boolean giveaway;
     private String owner;
+    private String photoUrl;
 
     public ProductLocal() {
 
     }
 
-    public ProductLocal(String owner, String item, String description, String location, Boolean giveaway, String key) {
-        this.title = item;
+    public ProductLocal(String owner, String title, String description, String location, Boolean giveaway, String key, String photoUrl) {
+        this.owner = owner;
+        this.title = title;
         this.description = description;
         this.location = location;
-        this.key = key;
-        this.owner = owner;
         this.giveaway = giveaway;
+        this.key = key;
+        this.photoUrl = photoUrl;
     }
 
     public String getTitle() {
@@ -45,5 +47,7 @@ public class ProductLocal {
     public String getOwner() {
         return owner;
     }
+
+    public String getPhotoUrl() { return photoUrl; }
 
 }
