@@ -8,100 +8,91 @@
     app:cardCornerRadius="2dp"
     app:cardPreventCornerOverlap="false">
 
-        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/frameLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/frameLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/photoView"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom">
+
+            <TextView
+                android:id="@+id/locationView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/round_corner"
+                android:drawableLeft="@drawable/ic_location"
+                android:drawableTint="@color/colorLightPrimary"
+                android:padding="2dp"
+                android:textColor="@color/colorLightPrimary"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toTopOf="@+id/moreInfo"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <ImageView
-                android:id="@+id/photoView"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop" />
+                android:id="@+id/contactBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:tint="@color/colorAccent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_grocery" />
 
-            <android.support.constraint.ConstraintLayout
+            <LinearLayout
+                android:id="@+id/moreInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#CCFFFFFF"
-                android:layout_gravity="bottom">
+                android:background="#E6FFFFFF"
+                android:orientation="vertical"
+                android:padding="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
                     android:id="@+id/titleView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="zzzzz"
                     android:textColor="@color/colorPrimaryText"
                     android:textSize="24sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/locationView" />
 
                 <TextView
                     android:id="@+id/typeView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="21dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="zzzzz"
-                    android:textColor="@color/colorLightPrimary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <Button
-                    android:id="@+id/contactBtn"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/typeView" />
-
-                <LinearLayout
-                    android:id="@+id/moreInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
-                    android:orientation="vertical"
-                    android:paddingLeft="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/titleView">
+                    android:textColor="@color/colorAccent" />
 
-                    <TextView
-                        android:id="@+id/descriptionView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorSecondaryText"
-                        android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/descriptionView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorSecondaryText" />
 
-                    <TextView
-                        android:id="@+id/locationView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:drawableLeft="@drawable/ic_location"
-                        android:drawableTint="@color/colorSecondaryText"
-                        tools:text="zz" />
+            </LinearLayout>
 
-                </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
 
-            </android.support.constraint.ConstraintLayout>
-
-        </FrameLayout>
+    </FrameLayout>
 
 
 </android.support.v7.widget.CardView>

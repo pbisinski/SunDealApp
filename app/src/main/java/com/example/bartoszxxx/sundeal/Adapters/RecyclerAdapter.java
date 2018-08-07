@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -54,7 +53,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
         holder.description.setText(products.get(position).getDescription());
         holder.location.setText(products.get(position).getLocation());
-        holder.contactBtn.setText(products.get(position).getOwner());
         glide.load(products.get(position).getPhotoUrl()).into(holder.photo);
         holder.contactBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +87,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         private TextView type;
         private TextView description;
         private TextView location;
-        private Button contactBtn;
+        private ImageView contactBtn;
         private ImageView photo;
         private final Context context;
 

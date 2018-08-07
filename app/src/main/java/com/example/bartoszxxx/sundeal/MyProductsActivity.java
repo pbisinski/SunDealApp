@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,13 +15,14 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.bartoszxxx.sundeal.Adapters.MyProductsAdapter;
 import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
 import com.example.bartoszxxx.sundeal.Products.ProductLocal;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -43,6 +45,7 @@ public class MyProductsActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private RecyclerView recyclerView;
     private TextView textEmptyList;
+    private ProgressBar progBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,7 @@ public class MyProductsActivity extends AppCompatActivity {
         textEmptyList = (TextView) findViewById(R.id.TvEmptyList);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        progBar = findViewById(R.id.progBar);
 
         firebaseAuth = FirebaseAuth.getInstance();
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -108,14 +112,21 @@ public class MyProductsActivity extends AppCompatActivity {
                                     public void onDismissed(Snackbar transientBottomBar, int event) {
                                         super.onDismissed(transientBottomBar, event);
                                         if (event != DISMISS_EVENT_ACTION) {
+                                            textEmptyList.setVisibility(View.VISIBLE);
                                             if (product.getPhotoUrl() != null) {
                                                 StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(product.getPhotoUrl());
                                                 photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        Toast.makeText(MyProductsActivity.this, "file deleted", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(MyProductsActivity.this, "Zdjęcie usunięte", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(MyProductsActivity.this, "Usuwanie zdjęcia nie powiodło się", Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
+                                                textEmptyList.setVisibility(View.INVISIBLE);
                                             }
                                             DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
                                             database.getRef().child(product.getKey()).removeValue();
