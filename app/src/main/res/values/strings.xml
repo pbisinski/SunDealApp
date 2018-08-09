@@ -39,4 +39,5 @@
     <string name="titlename_too_short">Zbyt krótki tytuł</string>
     <string name="toast_missing_data">Uzupełnij brakujące dane</string>
     <string name="add_photo">Dodaj zdjęcie</string>
+    <string name="add_location">Wybierz lokalizację</string>
 </resources>

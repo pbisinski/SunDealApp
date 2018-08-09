@@ -100,24 +100,46 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/PhotoPickerBtn" />
+            app:layout_constraintTop_toTopOf="@+id/DetailsView" />
 
-        <Button
-            android:id="@+id/PhotoPickerBtn"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/DetailsView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:text="@string/add_photo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/RadioGroup" />
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/RadioGroup">
 
+
+            <Button
+                android:id="@+id/PhotoPickerBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_photo" />
+
+            <TextView
+                android:id="@+id/PhotoFileName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/PlacePickerBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/add_location" />
+
+            <TextView
+                android:id="@+id/LocationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v4.widget.NestedScrollView>

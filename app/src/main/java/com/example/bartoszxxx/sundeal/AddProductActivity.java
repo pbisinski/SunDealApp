@@ -11,15 +11,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,13 +44,15 @@ public class AddProductActivity extends AppCompatActivity {
     //TODO adding location on map
 
     private static final int RC_PHOTO_PICKER = 2;
+    private static final int RC_PLACE_PICKER = 4;
     private final int MIN_ITEM_NAME_LENGTH = 4;
 
     private FirebaseAuth firebaseAuth;
     private EditText ItemName, ItemDescription;
+    private TextView PhotoFileName, LocationName;
+    private LinearLayout detailsView;
     private RadioButton RdBtnGiveaway, RdBtnExchange;
     private RadioGroup RadioGroup;
-    private Button PhotoPickerButton;
     private String downloadUrl;
     private Uri selectedImageUri;
     private ProgressBar progressBar;
@@ -68,9 +77,13 @@ public class AddProductActivity extends AppCompatActivity {
         RdBtnGiveaway = (RadioButton) findViewById(R.id.RadioBtnGiveaway);
         RdBtnExchange = (RadioButton) findViewById(R.id.RadioButtonExchange);
         RadioGroup = (RadioGroup) findViewById(R.id.RadioGroup);
-        PhotoPickerButton = (Button) findViewById(R.id.PhotoPickerBtn);
+        PhotoFileName = (TextView) findViewById(R.id.PhotoFileName);
+        LocationName = (TextView) findViewById(R.id.LocationName);
         progressBar = findViewById(R.id.determinateBar);
+        detailsView = findViewById(R.id.DetailsView);
 
+        Button PhotoPickerButton = (Button) findViewById(R.id.PhotoPickerBtn);
+        Button PlacePickerButton = (Button) findViewById(R.id.PlacePickerBtn);
         PhotoPickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,16 +93,24 @@ public class AddProductActivity extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER);
             }
         });
+        PlacePickerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                try {
+                    startActivityForResult(builder.build(AddProductActivity.this), RC_PLACE_PICKER);
+                } catch (GooglePlayServicesNotAvailableException | GooglePlayServicesRepairableException e) {
+                    Log.e("AddProductActivity", e.toString());
+                }
+
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (selectedImageUri != null) {
-                    uploadPhoto();
-                } else {
-                    addProduct();
-                }
+                addProduct();
             }
         });
 
@@ -116,16 +137,25 @@ public class AddProductActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
-            selectedImageUri = data.getData();
-            String fileName = DocumentFile.fromSingleUri(this, selectedImageUri).getName();
-            PhotoPickerButton.setText(fileName);
+        if (requestCode == RC_PHOTO_PICKER) {
+            if (resultCode == RESULT_OK) {
+                selectedImageUri = data.getData();
+                String fileName = DocumentFile.fromSingleUri(this, selectedImageUri).getName();
+                PhotoFileName.setText(fileName);
+            }
+        }
+        if (requestCode == RC_PLACE_PICKER) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(this, data);
+                String placeName = place.getAddress().toString();
+                LocationName.setText(placeName);
+            }
         }
     }
 
-    public void uploadPhoto() {
+    public void addProductWithPhoto() {
         progressBar.setVisibility(View.VISIBLE);
-        PhotoPickerButton.setVisibility(View.INVISIBLE);
+        detailsView.setVisibility(View.INVISIBLE);
         String uniqueID = UUID.randomUUID().toString();
         final StorageReference photoRef = FirebaseStorage.getInstance().getReference("sundeal_photos").child(uniqueID);
         UploadTask uploadTask = photoRef.putFile(selectedImageUri);
@@ -142,7 +172,7 @@ public class AddProductActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     downloadUrl = task.getResult().toString();
-                    addProduct();
+                    addProductToDatabase();
                 }
             }
         });
@@ -155,15 +185,26 @@ public class AddProductActivity extends AppCompatActivity {
         ItemDescription.clearFocus();
         RadioGroup.clearCheck();
         ItemName.setError(null);
-        PhotoPickerButton.setText(R.string.add_photo);
-        PhotoPickerButton.setVisibility(View.VISIBLE);
+        PhotoFileName.setText("");
+        detailsView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
     }
 
     private void addProduct() {
+        if (selectedImageUri != null) {
+            addProductWithPhoto();
+        } else {
+            addProductToDatabase();
+        }
+    }
+
+    private void addProductToDatabase() {
         String itemName = ItemName.getText().toString().trim();
         String itemDescription = ItemDescription.getText().toString().trim();
-        String itemLocation = getString(R.string.location_default);
+        String itemLocation = LocationName.getText().toString();
+        if (itemDescription.isEmpty()) {
+            getString(R.string.location_default);
+        }
         Boolean itemGiveaway = RdBtnGiveaway.isChecked();
 
         if (!RdBtnGiveaway.isChecked() && !RdBtnExchange.isChecked() || itemName.length() < MIN_ITEM_NAME_LENGTH) {
