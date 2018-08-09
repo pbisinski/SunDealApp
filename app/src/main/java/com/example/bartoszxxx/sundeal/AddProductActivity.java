@@ -3,6 +3,7 @@ package com.example.bartoszxxx.sundeal;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
@@ -30,7 +31,6 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -47,7 +47,6 @@ public class AddProductActivity extends AppCompatActivity {
     private static final int RC_PLACE_PICKER = 4;
     private final int MIN_ITEM_NAME_LENGTH = 4;
 
-    private FirebaseAuth firebaseAuth;
     private EditText ItemName, ItemDescription;
     private TextView PhotoFileName, LocationName;
     private LinearLayout detailsView;
@@ -56,6 +55,7 @@ public class AddProductActivity extends AppCompatActivity {
     private String downloadUrl;
     private Uri selectedImageUri;
     private ProgressBar progressBar;
+    private String itemName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +69,6 @@ public class AddProductActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        firebaseAuth = FirebaseAuth.getInstance();
 
         ItemName = (TextInputEditText) findViewById(R.id.EtItemName);
         ItemDescription = (TextInputEditText) findViewById(R.id.EtItemDesc);
@@ -110,7 +108,12 @@ public class AddProductActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addProduct();
+                itemName = ItemName.getText().toString().trim();
+                if (!RdBtnGiveaway.isChecked() && !RdBtnExchange.isChecked() || itemName.length() < MIN_ITEM_NAME_LENGTH) {
+                    Toast.makeText(AddProductActivity.this, R.string.toast_missing_data, Toast.LENGTH_SHORT).show();
+                } else {
+                    addProduct();
+                }
             }
         });
 
@@ -147,8 +150,12 @@ public class AddProductActivity extends AppCompatActivity {
         if (requestCode == RC_PLACE_PICKER) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
-                String placeName = place.getAddress().toString();
-                LocationName.setText(placeName);
+                try {
+                    String placeName = place.getAddress().toString();
+                    LocationName.setText(placeName);
+                } catch (NullPointerException e) {
+                    Log.e("PLACE_PICKER", e.toString());
+                }
             }
         }
     }
@@ -159,7 +166,7 @@ public class AddProductActivity extends AppCompatActivity {
         String uniqueID = UUID.randomUUID().toString();
         final StorageReference photoRef = FirebaseStorage.getInstance().getReference("sundeal_photos").child(uniqueID);
         UploadTask uploadTask = photoRef.putFile(selectedImageUri);
-        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                 if (!task.isSuccessful()) {
@@ -186,6 +193,7 @@ public class AddProductActivity extends AppCompatActivity {
         RadioGroup.clearCheck();
         ItemName.setError(null);
         PhotoFileName.setText("");
+        LocationName.setText("");
         detailsView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
     }
@@ -199,11 +207,13 @@ public class AddProductActivity extends AppCompatActivity {
     }
 
     private void addProductToDatabase() {
-        String itemName = ItemName.getText().toString().trim();
         String itemDescription = ItemDescription.getText().toString().trim();
         String itemLocation = LocationName.getText().toString();
         if (itemDescription.isEmpty()) {
-            getString(R.string.location_default);
+            itemDescription = getString(R.string.description_default);
+        }
+        if (itemLocation.isEmpty()) {
+            itemLocation = getString(R.string.location_default);
         }
         Boolean itemGiveaway = RdBtnGiveaway.isChecked();
 
@@ -213,7 +223,7 @@ public class AddProductActivity extends AppCompatActivity {
             DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
             String idKey = database.push().getKey();
             ProductFirebase productFirebase = new ProductFirebase(
-                    firebaseAuth.getCurrentUser().getEmail(),
+                    PreferenceManager.getDefaultSharedPreferences(this).getString("email", "no-email"),
                     itemName,
                     itemName.toLowerCase(),
                     itemDescription,

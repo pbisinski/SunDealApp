@@ -51,6 +51,12 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        getAllProducts(null);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
         MenuItem item = menu.findItem(R.id.action_search);
@@ -59,13 +65,12 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getAllProducts("");
+
             }
         });
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                mAdapter.setProducts(null);
                 return false;
             }
         });
@@ -98,8 +103,13 @@ public class SearchActivity extends AppCompatActivity {
 
     public void getAllProducts(String queryText) {
         products = new ArrayList<>();
+        Query queryRef;
         DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
-        Query queryRef = database.orderByChild("item_lowercase").startAt(queryText).endAt(queryText + "\uf8ff");
+        if (queryText != null) {
+            queryRef = database.orderByChild("item_lowercase").startAt(queryText).endAt(queryText + "\uf8ff");
+        } else {
+            queryRef = database.limitToLast(15);
+        }
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
