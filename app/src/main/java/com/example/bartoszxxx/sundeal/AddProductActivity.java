@@ -1,6 +1,7 @@
 package com.example.bartoszxxx.sundeal;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -13,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +38,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import org.w3c.dom.Text;
 
 import java.util.UUID;
 
@@ -80,8 +84,8 @@ public class AddProductActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.determinateBar);
         detailsView = findViewById(R.id.DetailsView);
 
-        Button PhotoPickerButton = (Button) findViewById(R.id.PhotoPickerBtn);
-        Button PlacePickerButton = (Button) findViewById(R.id.PlacePickerBtn);
+        final LinearLayout PhotoPickerButton = findViewById(R.id.PhotoPickerBtn);
+        LinearLayout PlacePickerButton = findViewById(R.id.PlacePickerBtn);
         PhotoPickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,7 +104,6 @@ public class AddProductActivity extends AppCompatActivity {
                 } catch (GooglePlayServicesNotAvailableException | GooglePlayServicesRepairableException e) {
                     Log.e("AddProductActivity", e.toString());
                 }
-
             }
         });
 
@@ -145,6 +148,7 @@ public class AddProductActivity extends AppCompatActivity {
                 selectedImageUri = data.getData();
                 String fileName = DocumentFile.fromSingleUri(this, selectedImageUri).getName();
                 PhotoFileName.setText(fileName);
+                findViewById(R.id.PhotoTitle).setVisibility(View.VISIBLE);
             }
         }
         if (requestCode == RC_PLACE_PICKER) {
@@ -153,6 +157,7 @@ public class AddProductActivity extends AppCompatActivity {
                 try {
                     String placeName = place.getAddress().toString();
                     LocationName.setText(placeName);
+                    findViewById(R.id.LocationTitle).setVisibility(View.VISIBLE);
                 } catch (NullPointerException e) {
                     Log.e("PLACE_PICKER", e.toString());
                 }

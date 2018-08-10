@@ -62,31 +62,33 @@
 
         <RadioGroup
             android:id="@+id/RadioGroup"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:gravity="center_horizontal"
             android:orientation="horizontal"
-            android:padding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayoutDesc">
 
             <RadioButton
                 android:id="@+id/RadioBtnGiveaway"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_margin="8dp"
+                android:gravity="center"
                 android:text="@string/giveaway" />
 
             <RadioButton
                 android:id="@+id/RadioButtonExchange"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_margin="8dp"
+                android:gravity="center"
                 android:text="@string/exchange" />
 
         </RadioGroup>
@@ -108,35 +110,96 @@
 
         <LinearLayout
             android:id="@+id/DetailsView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/RadioGroup">
 
+            <LinearLayout
+                android:id="@+id/PlacePickerBtn"
+                android:layout_width="100dp"
+                android:layout_height="80dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/simple_border"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="12dp">
 
-            <Button
-                android:id="@+id/PhotoPickerBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add_photo" />
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:tint="@color/colorSecondaryText"
+                    app:srcCompat="@drawable/ic_add_location" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/add_location" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/PhotoFileName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <Button
-                android:id="@+id/PlacePickerBtn"
+                android:id="@+id/LocationTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/add_location" />
+                android:text="Dodano lokalizację: "
+                android:textColor="@color/colorAccent"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/LocationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/PhotoPickerBtn"
+                android:layout_width="100dp"
+                android:layout_height="80dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/simple_border"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:tint="@color/colorSecondaryText"
+                    app:srcCompat="@drawable/ic_add_photo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/add_photo" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/PhotoTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dodano zdjęcie: "
+                android:textColor="@color/colorAccent"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/PhotoFileName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
