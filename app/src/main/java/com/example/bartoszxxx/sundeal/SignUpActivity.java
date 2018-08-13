@@ -16,26 +16,30 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class SignUpActivity extends AppCompatActivity {
 
+    @BindView(R.id.editTextEmail)
+    EditText editTextEmail;
+    @BindView(R.id.editTextPassword)
+    EditText editTextPassword;
+    @BindView(R.id.buttonSignUp)
+    Button BtnSignUp;
     private FirebaseAuth firebaseAuth;
-
-    private EditText editTextEmail;
-    private EditText editTextPassword;
     private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        ButterKnife.bind(this);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         progressDialog = new ProgressDialog(this);
-        Button buttonSignUp = (Button) findViewById(R.id.buttonSignUp);
-        buttonSignUp.setOnClickListener(new View.OnClickListener() {
+        BtnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 registerUser();

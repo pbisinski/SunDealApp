@@ -48,4 +48,6 @@
     <string name="product_addition_success">Pomyślnie dodano: </string>
     <string name="photo_added">Dodano zdjęcie:</string>
     <string name="location_added">Dodano lokalizację:</string>
+    <string name="giveaway_product">Oddam</string>
+    <string name="exchange_product">Zamienię</string>
 </resources>

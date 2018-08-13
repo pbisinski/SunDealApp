@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.SearchView;
 
 import com.bumptech.glide.Glide;
-import com.example.bartoszxxx.sundeal.Adapters.RecyclerAdapter;
+import com.example.bartoszxxx.sundeal.Listing.SearchProductsAdapter;
 import com.example.bartoszxxx.sundeal.Products.ProductLocal;
 import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
 import com.google.firebase.database.DataSnapshot;
@@ -28,7 +28,7 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
 
-    private RecyclerAdapter mAdapter;
+    private SearchProductsAdapter mAdapter;
     private List<ProductLocal> products;
     private SearchView searchView;
 
@@ -45,7 +45,7 @@ public class SearchActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.products_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mAdapter = new RecyclerAdapter(Glide.with(this));
+        mAdapter = new SearchProductsAdapter();
         recyclerView.setAdapter(mAdapter);
 
     }

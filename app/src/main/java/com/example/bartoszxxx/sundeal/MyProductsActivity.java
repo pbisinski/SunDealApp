@@ -18,7 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.bartoszxxx.sundeal.Adapters.MyProductsAdapter;
+import com.example.bartoszxxx.sundeal.Listing.MyProductsAdapter;
 import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
 import com.example.bartoszxxx.sundeal.Products.ProductLocal;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -36,36 +36,44 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MyProductsActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private List<ProductLocal> products;
     private MyProductsAdapter mAdapter;
     private SharedPreferences prefs;
-    private RecyclerView recyclerView;
-    private TextView textEmptyList;
+
+    @BindView(R.id.TvEmptyList)
+    TextView textEmptyList;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
+    @BindView(R.id.BtnLogout)
+    Button BtnLogout;
+    @BindView(R.id.BtnSettings)
+    Button BtnSettings;
+    @BindView(R.id.TvUserName)
+    TextView TvUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_products);
-
+        ButterKnife.bind(this);
         ActionBar actionBar = this.getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        textEmptyList = findViewById(R.id.TvEmptyList);
-        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter = new MyProductsAdapter();
+        recyclerView.setAdapter(mAdapter);
 
         firebaseAuth = FirebaseAuth.getInstance();
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        mAdapter = new MyProductsAdapter();
-        recyclerView.setAdapter(mAdapter);
-
-        Button BtnLogout = (Button) findViewById(R.id.BtnLogout);
         BtnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,7 +81,6 @@ public class MyProductsActivity extends AppCompatActivity {
             }
         });
 
-        Button BtnSettings = (Button) findViewById(R.id.BtnSettings);
         BtnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,11 +149,10 @@ public class MyProductsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getUserProducts();
-        TextView TvUserName = findViewById(R.id.TvUserName);
         String name = prefs.getString("name", "");
         String message = getString(R.string.welcome_message, name);
         TvUserName.setText(message);
+        getUserProducts();
     }
 
     private void getUserProducts() {
@@ -186,10 +192,10 @@ public class MyProductsActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
         editor.clear();
         editor.apply();
-        Log.i("SHARED_PREFRENCES", "preferences cleared");
+        Log.i("SharedPreferences", "cleared");
         Intent intent = new Intent(MyProductsActivity.this, SignInActivity.class);
-        finish();
         startActivity(intent);
+        finish();
     }
 
 }

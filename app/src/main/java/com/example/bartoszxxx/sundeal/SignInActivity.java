@@ -19,33 +19,37 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class SignInActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
 
-    private EditText editTextEmail;
-    private EditText editTextPassword;
+    @BindView(R.id.editTextEmail)
+    EditText editTextEmail;
+    @BindView(R.id.editTextPassword)
+    EditText editTextPassword;
+    @BindView(R.id.buttonSignUp)
+    Button BtnSignUp;
+    @BindView(R.id.buttonSignIn)
+    Button BtnSignIn;
     private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+        ButterKnife.bind(this);
 
         firebaseAuth = FirebaseAuth.getInstance();
-
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user != null) {
             finish();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
 
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        Button BtnSignIn = (Button) findViewById(R.id.buttonSignIn);
-        Button BtnSignUp = (Button) findViewById(R.id.buttonSignUp);
         progressDialog = new ProgressDialog(this);
-
         BtnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

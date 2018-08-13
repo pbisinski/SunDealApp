@@ -9,15 +9,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
+
+    @BindView(R.id.BtnAddProduct)
+    Button BtnAddProduct;
+    @BindView(R.id.BtnSearchProduct)
+    Button BtnSearchProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Button BtnAddProduct = (Button) findViewById(R.id.BtnAddProduct);
-        Button BtnSearchProduct = (Button) findViewById(R.id.BtnSearchProduct);
+        ButterKnife.bind(this);
 
         BtnAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override

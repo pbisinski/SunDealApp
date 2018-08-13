@@ -38,20 +38,42 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.UUID;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class AddProductActivity extends AppCompatActivity {
 
     private static final int RC_PHOTO_PICKER = 2;
     private static final int RC_PLACE_PICKER = 4;
     private final int MIN_ITEM_NAME_LENGTH = 4;
 
-    private EditText ItemName, ItemDescription;
-    private TextView PhotoFileName, LocationName;
-    private LinearLayout detailsView;
-    private RadioButton RdBtnGiveaway, RdBtnExchange;
-    private RadioGroup RadioGroup;
+    @BindView(R.id.EtItemName)
+    EditText ItemName;
+    @BindView(R.id.EtItemDesc)
+    TextInputEditText ItemDescription;
+    @BindView(R.id.RadioBtnGiveaway)
+    RadioButton RdBtnGiveaway;
+    @BindView(R.id.RadioButtonExchange)
+    RadioButton RdBtnExchange;
+    @BindView(R.id.RadioGroup)
+    RadioGroup radioGroup;
+    @BindView(R.id.PhotoFileName)
+    TextView PhotoFileName;
+    @BindView(R.id.LocationName)
+    TextView LocationName;
+    @BindView(R.id.DetailsView)
+    LinearLayout detailsView;
+    @BindView(R.id.PhotoPickerBtn)
+    LinearLayout PhotoPickerBtn;
+    @BindView(R.id.PlacePickerBtn)
+    LinearLayout PlacePickerBtn;
+    @BindView(R.id.determinateBar)
+    ProgressBar progressBar;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+
     private String downloadUrl;
     private Uri selectedImageUri;
-    private ProgressBar progressBar;
     private String itemName, itemLocation;
 
     @Override
@@ -60,26 +82,14 @@ public class AddProductActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_product);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        ButterKnife.bind(this);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        ItemName = (TextInputEditText) findViewById(R.id.EtItemName);
-        ItemDescription = (TextInputEditText) findViewById(R.id.EtItemDesc);
-        RdBtnGiveaway = findViewById(R.id.RadioBtnGiveaway);
-        RdBtnExchange = findViewById(R.id.RadioButtonExchange);
-        RadioGroup = findViewById(R.id.RadioGroup);
-        PhotoFileName = findViewById(R.id.PhotoFileName);
-        LocationName = findViewById(R.id.LocationName);
-        progressBar = findViewById(R.id.determinateBar);
-        detailsView = findViewById(R.id.DetailsView);
-
-        LinearLayout PhotoPickerButton = findViewById(R.id.PhotoPickerBtn);
-        LinearLayout PlacePickerButton = findViewById(R.id.PlacePickerBtn);
-        PhotoPickerButton.setOnClickListener(new View.OnClickListener() {
+        PhotoPickerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -88,7 +98,7 @@ public class AddProductActivity extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER);
             }
         });
-        PlacePickerButton.setOnClickListener(new View.OnClickListener() {
+        PlacePickerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
@@ -100,7 +110,6 @@ public class AddProductActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -188,10 +197,10 @@ public class AddProductActivity extends AppCompatActivity {
         ItemDescription.clearFocus();
         PhotoFileName.setText("");
         LocationName.setText("");
-        RadioGroup.clearCheck();
         ItemName.setError(null);
         detailsView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
+        radioGroup.clearCheck();
     }
 
     private void addProduct() {
