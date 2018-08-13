@@ -25,7 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
             final FirebaseUser user = firebaseAuth.getCurrentUser();
             final String key = s;
             AuthCredential firebaseCred = EmailAuthProvider.getCredential(
-                    user.getEmail(), sharedPreferences.getString("pass", "")
+                    user.getEmail(), sharedPreferences.getString("pass", "password")
             );
             user.reauthenticate(firebaseCred).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
@@ -67,8 +67,6 @@ public class SettingsActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         prefs.registerOnSharedPreferenceChangeListener(spChanged);
-
-
     }
 
     @Override

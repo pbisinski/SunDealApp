@@ -15,7 +15,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +44,6 @@ public class MyProductsActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private RecyclerView recyclerView;
     private TextView textEmptyList;
-    private ProgressBar progBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +55,9 @@ public class MyProductsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        textEmptyList = (TextView) findViewById(R.id.TvEmptyList);
+        textEmptyList = findViewById(R.id.TvEmptyList);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        progBar = findViewById(R.id.progBar);
 
         firebaseAuth = FirebaseAuth.getInstance();
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -100,8 +97,8 @@ public class MyProductsActivity extends AppCompatActivity {
                         products.remove(position);
                         mAdapter.notifyItemRemoved(position);
                         Snackbar snackbar = Snackbar
-                                .make(recyclerView, "Usunięto: " + product.getTitle(), Snackbar.LENGTH_LONG)
-                                .setAction("Cofnij", new View.OnClickListener() {
+                                .make(recyclerView, getString(R.string.removed_item) + product.getTitle(), Snackbar.LENGTH_LONG)
+                                .setAction(R.string.undo, new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
                                         products.add(position, product);
@@ -112,21 +109,19 @@ public class MyProductsActivity extends AppCompatActivity {
                                     public void onDismissed(Snackbar transientBottomBar, int event) {
                                         super.onDismissed(transientBottomBar, event);
                                         if (event != DISMISS_EVENT_ACTION) {
-                                            textEmptyList.setVisibility(View.VISIBLE);
                                             if (product.getPhotoUrl() != null) {
                                                 StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(product.getPhotoUrl());
                                                 photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        Toast.makeText(MyProductsActivity.this, "Zdjęcie usunięte", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(MyProductsActivity.this, R.string.photo_removed, Toast.LENGTH_SHORT).show();
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
-                                                        Toast.makeText(MyProductsActivity.this, "Usuwanie zdjęcia nie powiodło się", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(MyProductsActivity.this, R.string.failed_to_remove_photo, Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
-                                                textEmptyList.setVisibility(View.INVISIBLE);
                                             }
                                             DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
                                             database.getRef().child(product.getKey()).removeValue();
@@ -148,7 +143,7 @@ public class MyProductsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         getUserProducts();
-        TextView TvUserName = (TextView) findViewById(R.id.TvUserName);
+        TextView TvUserName = findViewById(R.id.TvUserName);
         String name = prefs.getString("name", "");
         String message = getString(R.string.welcome_message, name);
         TvUserName.setText(message);

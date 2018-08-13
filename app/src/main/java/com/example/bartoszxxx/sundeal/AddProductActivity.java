@@ -1,7 +1,6 @@
 package com.example.bartoszxxx.sundeal;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,9 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -39,13 +36,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.w3c.dom.Text;
-
 import java.util.UUID;
 
 public class AddProductActivity extends AppCompatActivity {
-
-    //TODO adding location on map
 
     private static final int RC_PHOTO_PICKER = 2;
     private static final int RC_PLACE_PICKER = 4;
@@ -59,13 +52,13 @@ public class AddProductActivity extends AppCompatActivity {
     private String downloadUrl;
     private Uri selectedImageUri;
     private ProgressBar progressBar;
-    private String itemName;
+    private String itemName, itemLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -76,15 +69,15 @@ public class AddProductActivity extends AppCompatActivity {
 
         ItemName = (TextInputEditText) findViewById(R.id.EtItemName);
         ItemDescription = (TextInputEditText) findViewById(R.id.EtItemDesc);
-        RdBtnGiveaway = (RadioButton) findViewById(R.id.RadioBtnGiveaway);
-        RdBtnExchange = (RadioButton) findViewById(R.id.RadioButtonExchange);
-        RadioGroup = (RadioGroup) findViewById(R.id.RadioGroup);
-        PhotoFileName = (TextView) findViewById(R.id.PhotoFileName);
-        LocationName = (TextView) findViewById(R.id.LocationName);
+        RdBtnGiveaway = findViewById(R.id.RadioBtnGiveaway);
+        RdBtnExchange = findViewById(R.id.RadioButtonExchange);
+        RadioGroup = findViewById(R.id.RadioGroup);
+        PhotoFileName = findViewById(R.id.PhotoFileName);
+        LocationName = findViewById(R.id.LocationName);
         progressBar = findViewById(R.id.determinateBar);
         detailsView = findViewById(R.id.DetailsView);
 
-        final LinearLayout PhotoPickerButton = findViewById(R.id.PhotoPickerBtn);
+        LinearLayout PhotoPickerButton = findViewById(R.id.PhotoPickerBtn);
         LinearLayout PlacePickerButton = findViewById(R.id.PlacePickerBtn);
         PhotoPickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,6 +150,7 @@ public class AddProductActivity extends AppCompatActivity {
                 try {
                     String placeName = place.getAddress().toString();
                     LocationName.setText(placeName);
+                    itemLocation = placeName;
                     findViewById(R.id.LocationTitle).setVisibility(View.VISIBLE);
                 } catch (NullPointerException e) {
                     Log.e("PLACE_PICKER", e.toString());
@@ -173,10 +167,7 @@ public class AddProductActivity extends AppCompatActivity {
         UploadTask uploadTask = photoRef.putFile(selectedImageUri);
         uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 return photoRef.getDownloadUrl();
             }
         }).addOnCompleteListener(new OnCompleteListener<Uri>() {
@@ -195,10 +186,10 @@ public class AddProductActivity extends AppCompatActivity {
         ItemDescription.setText("");
         ItemName.clearFocus();
         ItemDescription.clearFocus();
-        RadioGroup.clearCheck();
-        ItemName.setError(null);
         PhotoFileName.setText("");
         LocationName.setText("");
+        RadioGroup.clearCheck();
+        ItemName.setError(null);
         detailsView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
     }
@@ -213,11 +204,10 @@ public class AddProductActivity extends AppCompatActivity {
 
     private void addProductToDatabase() {
         String itemDescription = ItemDescription.getText().toString().trim();
-        String itemLocation = LocationName.getText().toString();
         if (itemDescription.isEmpty()) {
             itemDescription = getString(R.string.description_default);
         }
-        if (itemLocation.isEmpty()) {
+        if (itemLocation == null) {
             itemLocation = getString(R.string.location_default);
         }
         Boolean itemGiveaway = RdBtnGiveaway.isChecked();
@@ -225,19 +215,20 @@ public class AddProductActivity extends AppCompatActivity {
         if (!RdBtnGiveaway.isChecked() && !RdBtnExchange.isChecked() || itemName.length() < MIN_ITEM_NAME_LENGTH) {
             Toast.makeText(this, R.string.toast_missing_data, Toast.LENGTH_SHORT).show();
         } else {
+            String itemOwner = PreferenceManager.getDefaultSharedPreferences(this).getString("email", "no-email");
             DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
-            String idKey = database.push().getKey();
+            String key = database.push().getKey();
             ProductFirebase productFirebase = new ProductFirebase(
-                    PreferenceManager.getDefaultSharedPreferences(this).getString("email", "no-email"),
+                    itemOwner,
                     itemName,
-                    itemName.toLowerCase(),
+                    itemName.toLowerCase().trim(),
                     itemDescription,
                     itemLocation,
                     itemGiveaway,
-                    idKey,
+                    key,
                     downloadUrl);
-            database.child(idKey).setValue(productFirebase);
-            Toast.makeText(this, "Pomyślnie dodano: " + productFirebase.getTitle(), Toast.LENGTH_SHORT).show();
+            database.child(key).setValue(productFirebase);
+            Toast.makeText(this, getString(R.string.product_addition_success) + productFirebase.getTitle(), Toast.LENGTH_SHORT).show();
             setClear();
         }
     }

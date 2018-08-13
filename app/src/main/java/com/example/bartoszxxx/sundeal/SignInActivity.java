@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,8 +23,6 @@ public class SignInActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
 
-    private Button BtnSignIn;
-    private Button BtnSignUp;
     private EditText editTextEmail;
     private EditText editTextPassword;
     private ProgressDialog progressDialog;
@@ -45,8 +42,8 @@ public class SignInActivity extends AppCompatActivity {
 
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        BtnSignIn = (Button) findViewById(R.id.buttonSignIn);
-        BtnSignUp = (Button) findViewById(R.id.buttonSignUp);
+        Button BtnSignIn = (Button) findViewById(R.id.buttonSignIn);
+        Button BtnSignUp = (Button) findViewById(R.id.buttonSignUp);
         progressDialog = new ProgressDialog(this);
 
         BtnSignIn.setOnClickListener(new View.OnClickListener() {

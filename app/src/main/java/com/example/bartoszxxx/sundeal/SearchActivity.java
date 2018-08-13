@@ -57,6 +57,11 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
         MenuItem item = menu.findItem(R.id.action_search);
@@ -103,7 +108,7 @@ public class SearchActivity extends AppCompatActivity {
 
     public void getAllProducts(String queryText) {
         products = new ArrayList<>();
-        Query queryRef;
+        final Query queryRef;
         DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
         if (queryText != null) {
             queryRef = database.orderByChild("item_lowercase").startAt(queryText).endAt(queryText + "\uf8ff");
@@ -114,14 +119,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    String owner = childDataSnapshot.getValue(ProductFirebase.class).getOwner();
-                    String item = childDataSnapshot.getValue(ProductFirebase.class).getTitle();
-                    String description = childDataSnapshot.getValue(ProductFirebase.class).getDescription();
-                    String location = childDataSnapshot.getValue(ProductFirebase.class).getLocation();
-                    String key = childDataSnapshot.getValue(ProductFirebase.class).getKey();
-                    Boolean itemGiveaway = childDataSnapshot.getValue(ProductFirebase.class).getGiveaway();
-                    String photoUrl = childDataSnapshot.getValue(ProductFirebase.class).getPhotoUrl();
-                    ProductLocal product = new ProductLocal(owner, item, description, location, itemGiveaway, key, photoUrl);
+                    ProductLocal product = childDataSnapshot.getValue(ProductFirebase.class);
                     try {
                         products.add(product);
                     } catch (NullPointerException e) {
@@ -129,6 +127,7 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 }
                 mAdapter.setProducts(products);
+                queryRef.removeEventListener(this);
             }
 
             @Override

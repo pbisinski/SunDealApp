@@ -16,13 +16,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
+public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
 
     private EditText editTextEmail;
     private EditText editTextPassword;
-    private Button buttonSignUp;
     private ProgressDialog progressDialog;
 
     @Override
@@ -34,10 +33,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        buttonSignUp = (Button) findViewById(R.id.buttonSignUp);
         progressDialog = new ProgressDialog(this);
-
-        buttonSignUp.setOnClickListener(this);
+        Button buttonSignUp = (Button) findViewById(R.id.buttonSignUp);
+        buttonSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                registerUser();
+            }
+        });
     }
 
     private void registerUser() {
@@ -68,13 +71,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             progressDialog.dismiss();
                         }
                     });
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view == buttonSignUp) {
-            registerUser();
         }
     }
 }
