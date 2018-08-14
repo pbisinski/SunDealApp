@@ -6,7 +6,6 @@
     <string name="title_activity_add_item">Dodaj produkt</string>
     <string name="title_activity_my_products">Mój profil</string>
     <string name="title_activity_search">Wyszukaj produkt</string>
-    <string name="location_default">Brak lokalizacji</string>
     <string name="description_default">Brak opisu</string>
     <string name="view_title">Tytuł</string>
     <string name="view_description">Opis</string>
@@ -24,7 +23,7 @@
     <string name="slogan">Dziel się, wymieniaj!</string>
     <string name="add_product">Dodaj produkt</string>
     <string name="search_product">Wyszukaj produkt</string>
-    <string name="welcome_message" formatted="false">Witaj, <xliff:g example="Jan" id="name">%s</xliff:g></string>
+    <string name="welcome_message" formatted="true">Witaj, <xliff:g example="Jan" id="name">%s</xliff:g></string>
     <string name="process_dialog">Proszę czekać</string>
     <string name="error_password">Podaj hasło</string>
     <string name="error_email">Podaj e-mail</string>
@@ -45,7 +44,7 @@
     <string name="failed_to_remove_photo">Usuwanie zdjęcia nie powiodło się</string>
     <string name="removed_item">Usunięto:</string>
     <string name="undo">Cofnij</string>
-    <string name="product_addition_success">Pomyślnie dodano: </string>
+    <string name="product_addition_success">Produkt dodany pomyślnie</string>
     <string name="photo_added">Dodano zdjęcie:</string>
     <string name="location_added">Dodano lokalizację:</string>
     <string name="giveaway_product">Oddam</string>

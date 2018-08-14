@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.bartoszxxx.sundeal.Products.ProductLocal;
+import com.example.bartoszxxx.sundeal.Product;
 import com.example.bartoszxxx.sundeal.R;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.ViewHolder> {
 
     private Context context;
-    private List<ProductLocal> products;
+    private List<Product> products;
 
     public MyProductsAdapter() {
 
@@ -33,7 +33,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
         return new MyProductsAdapter.ViewHolder(rowView);
     }
 
-    public void setProducts(List<ProductLocal> reviews) {
+    public void setProducts(List<Product> reviews) {
         this.products = reviews;
         notifyDataSetChanged();
     }
@@ -53,7 +53,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Vi
         return 0;
     }
 
-    public ProductLocal getProduct(int index) {
+    public Product getProduct(int index) {
         return (products != null) ? products.get(index) : null;
     }
 

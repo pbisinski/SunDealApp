@@ -1,8 +1,9 @@
-package com.example.bartoszxxx.sundeal.Products;
+package com.example.bartoszxxx.sundeal;
 
-public class ProductLocal {
+public class Product {
 
     private String title;
+    private String titleLowercase;
     private String description;
     private String location;
     private String key;
@@ -10,22 +11,25 @@ public class ProductLocal {
     private String owner;
     private String photoUrl;
 
-    public ProductLocal() {
+    public Product() {
 
     }
 
-    public ProductLocal(String owner, String title, String description, String location, Boolean giveaway, String key, String photoUrl) {
+    public Product(String owner, String title, String description, String location, Boolean giveaway, String photoUrl) {
         this.owner = owner;
         this.title = title;
         this.description = description;
         this.location = location;
         this.giveaway = giveaway;
-        this.key = key;
         this.photoUrl = photoUrl;
     }
 
     public String getTitle() {
         return title;
+    }
+
+    public String getTitleLowercase() {
+        return titleLowercase;
     }
 
     public String getDescription() {
@@ -48,6 +52,16 @@ public class ProductLocal {
         return owner;
     }
 
-    public String getPhotoUrl() { return photoUrl; }
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setTitleLowercase(String titleLowercase) {
+        this.titleLowercase = titleLowercase;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
 }

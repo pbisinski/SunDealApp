@@ -12,10 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 
-import com.bumptech.glide.Glide;
 import com.example.bartoszxxx.sundeal.Listing.SearchProductsAdapter;
-import com.example.bartoszxxx.sundeal.Products.ProductLocal;
-import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,10 +23,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements FirebaseHelper {
 
     private SearchProductsAdapter mAdapter;
-    private List<ProductLocal> products;
+    private List<Product> products;
     private SearchView searchView;
 
     @Override
@@ -45,6 +42,7 @@ public class SearchActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.products_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        products = new ArrayList<>();
         mAdapter = new SearchProductsAdapter();
         recyclerView.setAdapter(mAdapter);
 
@@ -53,7 +51,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getAllProducts(null);
+        returnProducts(ALL_PRODUCTS);
     }
 
     @Override
@@ -91,13 +89,10 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(final String s) {
                 mHandler.removeCallbacksAndMessages(null);
-                if (s.equals("")) {
-                    return false;
-                }
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getAllProducts(s);
+                        returnProducts(s);
                     }
                 }, 500);
                 return true;
@@ -106,20 +101,30 @@ public class SearchActivity extends AppCompatActivity {
         return true;
     }
 
-    public void getAllProducts(String queryText) {
-        products = new ArrayList<>();
-        final Query queryRef;
+    public void returnProducts(String queryString) {
+        Query query;
         DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
-        if (queryText != null) {
-            queryRef = database.orderByChild("item_lowercase").startAt(queryText).endAt(queryText + "\uf8ff");
+        if (queryString == null) {
+            query = database.limitToLast(15);
         } else {
-            queryRef = database.limitToLast(15);
+            query = database.orderByChild("titleLowercase").startAt(queryString).endAt(queryString + "\uf8ff");
         }
-        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        getFromDatabase(query);
+    }
+
+    @Override
+    public void pushToDatabase(Product product) {
+
+    }
+
+    @Override
+    public void getFromDatabase(final Query query) {
+        products.clear();
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    ProductLocal product = childDataSnapshot.getValue(ProductFirebase.class);
+                    Product product = childDataSnapshot.getValue(Product.class);
                     try {
                         products.add(product);
                     } catch (NullPointerException e) {
@@ -127,13 +132,14 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 }
                 mAdapter.setProducts(products);
-                queryRef.removeEventListener(this);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
+
         });
+
     }
 }

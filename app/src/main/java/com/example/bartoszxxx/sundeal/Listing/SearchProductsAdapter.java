@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.bartoszxxx.sundeal.Products.ProductLocal;
+import com.example.bartoszxxx.sundeal.Product;
 import com.example.bartoszxxx.sundeal.R;
 
 import java.util.List;
@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 public class SearchProductsAdapter extends RecyclerView.Adapter<SearchProductsAdapter.ViewHolder> {
 
     private Context context;
-    private List<ProductLocal> products;
+    private List<Product> products;
 
     public SearchProductsAdapter() {
 
@@ -39,7 +39,7 @@ public class SearchProductsAdapter extends RecyclerView.Adapter<SearchProductsAd
         return new SearchProductsAdapter.ViewHolder(rowView);
     }
 
-    public void setProducts(List<ProductLocal> reviews) {
+    public void setProducts(List<Product> reviews) {
         this.products = reviews;
         notifyDataSetChanged();
     }
@@ -83,7 +83,7 @@ public class SearchProductsAdapter extends RecyclerView.Adapter<SearchProductsAd
         return 0;
     }
 
-    private ProductLocal getProduct(int index) {
+    private Product getProduct(int index) {
         return (products != null) ? products.get(index) : null;
     }
 

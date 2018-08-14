@@ -19,8 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bartoszxxx.sundeal.Listing.MyProductsAdapter;
-import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
-import com.example.bartoszxxx.sundeal.Products.ProductLocal;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,7 +40,7 @@ import butterknife.ButterKnife;
 public class MyProductsActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
-    private List<ProductLocal> products;
+    private List<Product> products;
     private MyProductsAdapter mAdapter;
     private SharedPreferences prefs;
 
@@ -100,7 +98,7 @@ public class MyProductsActivity extends AppCompatActivity {
                     @Override
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                         final int position = viewHolder.getAdapterPosition();
-                        final ProductLocal product = products.get(position);
+                        final Product product = products.get(position);
                         products.remove(position);
                         mAdapter.notifyItemRemoved(position);
                         Snackbar snackbar = Snackbar
@@ -157,12 +155,12 @@ public class MyProductsActivity extends AppCompatActivity {
 
     private void getUserProducts() {
         products = new ArrayList<>();
-        Query queryRef = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE).orderByChild("owner").equalTo(prefs.getString("email", ""));
+        Query queryRef = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE).orderByChild("owner").equalTo(prefs.getString("email", "no-email"));
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    ProductLocal product = childDataSnapshot.getValue(ProductFirebase.class);
+                    Product product = childDataSnapshot.getValue(Product.class);
                     products.add(product);
                 }
                 mAdapter.setProducts(products);

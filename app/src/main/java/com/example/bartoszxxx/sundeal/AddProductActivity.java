@@ -22,7 +22,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.bartoszxxx.sundeal.Products.ProductFirebase;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -32,6 +31,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -41,7 +41,7 @@ import java.util.UUID;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AddProductActivity extends AppCompatActivity {
+public class AddProductActivity extends AppCompatActivity implements FirebaseHelper {
 
     private static final int RC_PHOTO_PICKER = 2;
     private static final int RC_PLACE_PICKER = 4;
@@ -71,6 +71,11 @@ public class AddProductActivity extends AppCompatActivity {
     ProgressBar progressBar;
     @BindView(R.id.fab)
     FloatingActionButton fab;
+    @BindView(R.id.PhotoTitle)
+    TextView PhotoFileTitle;
+    @BindView(R.id.LocationTitle)
+    TextView LocationNameTitle;
+
 
     private String downloadUrl;
     private Uri selectedImageUri;
@@ -114,10 +119,10 @@ public class AddProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 itemName = ItemName.getText().toString().trim();
-                if (!RdBtnGiveaway.isChecked() && !RdBtnExchange.isChecked() || itemName.length() < MIN_ITEM_NAME_LENGTH) {
+                if (!RdBtnGiveaway.isChecked() && !RdBtnExchange.isChecked() || itemName.length() < MIN_ITEM_NAME_LENGTH || itemLocation == null || selectedImageUri == null) {
                     Toast.makeText(AddProductActivity.this, R.string.toast_missing_data, Toast.LENGTH_SHORT).show();
                 } else {
-                    addProduct();
+                    uploadPhoto();
                 }
             }
         });
@@ -150,7 +155,7 @@ public class AddProductActivity extends AppCompatActivity {
                 selectedImageUri = data.getData();
                 String fileName = DocumentFile.fromSingleUri(this, selectedImageUri).getName();
                 PhotoFileName.setText(fileName);
-                findViewById(R.id.PhotoTitle).setVisibility(View.VISIBLE);
+                PhotoFileTitle.setVisibility(View.VISIBLE);
             }
         }
         if (requestCode == RC_PLACE_PICKER) {
@@ -160,7 +165,7 @@ public class AddProductActivity extends AppCompatActivity {
                     String placeName = place.getAddress().toString();
                     LocationName.setText(placeName);
                     itemLocation = placeName;
-                    findViewById(R.id.LocationTitle).setVisibility(View.VISIBLE);
+                    LocationNameTitle.setVisibility(View.VISIBLE);
                 } catch (NullPointerException e) {
                     Log.e("PLACE_PICKER", e.toString());
                 }
@@ -168,11 +173,39 @@ public class AddProductActivity extends AppCompatActivity {
         }
     }
 
-    public void addProductWithPhoto() {
+    private void clearFields() {
+        ItemName.setText("");
+        ItemDescription.setText("");
+        ItemName.clearFocus();
+        ItemDescription.clearFocus();
+        PhotoFileName.setText("");
+        LocationName.setText("");
+        ItemName.setError(null);
+        detailsView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+        LocationNameTitle.setVisibility(View.INVISIBLE);
+        PhotoFileTitle.setVisibility(View.INVISIBLE);
+        radioGroup.clearCheck();
+        itemLocation = null;
+        downloadUrl = null;
+    }
+
+    private Product makeProduct() {
+        String itemDescription = ItemDescription.getText().toString().trim();
+        if (itemDescription.isEmpty()) {
+            itemDescription = getString(R.string.description_default);
+        }
+        Boolean itemGiveaway = RdBtnGiveaway.isChecked();
+        String itemOwner = PreferenceManager.getDefaultSharedPreferences(this).getString("email", "no-email");
+        return new Product(itemOwner, itemName, itemDescription, itemLocation, itemGiveaway, downloadUrl);
+    }
+
+    public void uploadPhoto() {
+        //set loading layout
         progressBar.setVisibility(View.VISIBLE);
         detailsView.setVisibility(View.INVISIBLE);
         String uniqueID = UUID.randomUUID().toString();
-        final StorageReference photoRef = FirebaseStorage.getInstance().getReference("sundeal_photos").child(uniqueID);
+        final StorageReference photoRef = FirebaseStorage.getInstance().getReference(STORAGE_REFERENCE).child(uniqueID);
         UploadTask uploadTask = photoRef.putFile(selectedImageUri);
         uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
@@ -184,61 +217,32 @@ public class AddProductActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     downloadUrl = task.getResult().toString();
-                    addProductToDatabase();
+                    Product product = makeProduct();
+                    pushToDatabase(product);
+                    clearFields();
                 }
             }
         });
     }
 
-    private void setClear() {
-        ItemName.setText("");
-        ItemDescription.setText("");
-        ItemName.clearFocus();
-        ItemDescription.clearFocus();
-        PhotoFileName.setText("");
-        LocationName.setText("");
-        ItemName.setError(null);
-        detailsView.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
-        radioGroup.clearCheck();
+    @Override
+    public void pushToDatabase(Product product) {
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference(DATABASE_REFERENCE);
+        String key = database.push().getKey();
+        String titleLowerCase = product.getTitle().toLowerCase();
+        product.setKey(key);
+        product.setTitleLowercase(titleLowerCase);
+        database.child(key).setValue(product).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(AddProductActivity.this, getString(R.string.product_addition_success), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void addProduct() {
-        if (selectedImageUri != null) {
-            addProductWithPhoto();
-        } else {
-            addProductToDatabase();
-        }
+    @Override
+    public void getFromDatabase(Query query) {
+
     }
 
-    private void addProductToDatabase() {
-        String itemDescription = ItemDescription.getText().toString().trim();
-        if (itemDescription.isEmpty()) {
-            itemDescription = getString(R.string.description_default);
-        }
-        if (itemLocation == null) {
-            itemLocation = getString(R.string.location_default);
-        }
-        Boolean itemGiveaway = RdBtnGiveaway.isChecked();
-
-        if (!RdBtnGiveaway.isChecked() && !RdBtnExchange.isChecked() || itemName.length() < MIN_ITEM_NAME_LENGTH) {
-            Toast.makeText(this, R.string.toast_missing_data, Toast.LENGTH_SHORT).show();
-        } else {
-            String itemOwner = PreferenceManager.getDefaultSharedPreferences(this).getString("email", "no-email");
-            DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
-            String key = database.push().getKey();
-            ProductFirebase productFirebase = new ProductFirebase(
-                    itemOwner,
-                    itemName,
-                    itemName.toLowerCase().trim(),
-                    itemDescription,
-                    itemLocation,
-                    itemGiveaway,
-                    key,
-                    downloadUrl);
-            database.child(key).setValue(productFirebase);
-            Toast.makeText(this, getString(R.string.product_addition_success) + productFirebase.getTitle(), Toast.LENGTH_SHORT).show();
-            setClear();
-        }
-    }
 }
