@@ -24,8 +24,14 @@ public class SettingsActivity extends AppCompatActivity {
         public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, String s) {
             final FirebaseUser user = firebaseAuth.getCurrentUser();
             final String key = s;
+            String Uemail;
+            try {
+                Uemail = user.getEmail();
+            } catch(NullPointerException e) {
+                return;
+            }
             AuthCredential firebaseCred = EmailAuthProvider.getCredential(
-                    user.getEmail(), sharedPreferences.getString("pass", "password")
+                    Uemail, sharedPreferences.getString("pass", "password")
             );
             user.reauthenticate(firebaseCred).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override

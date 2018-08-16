@@ -112,12 +112,6 @@ public class SearchActivity extends AppCompatActivity implements FirebaseHelper 
         getFromDatabase(query);
     }
 
-    @Override
-    public void pushToDatabase(Product product) {
-
-    }
-
-    @Override
     public void getFromDatabase(final Query query) {
         products.clear();
         query.addListenerForSingleValueEvent(new ValueEventListener() {

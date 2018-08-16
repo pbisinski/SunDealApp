@@ -39,11 +39,6 @@ import butterknife.ButterKnife;
 
 public class MyProductsActivity extends AppCompatActivity {
 
-    private FirebaseAuth firebaseAuth;
-    private List<Product> products;
-    private MyProductsAdapter mAdapter;
-    private SharedPreferences prefs;
-
     @BindView(R.id.TvEmptyList)
     TextView textEmptyList;
     @BindView(R.id.recyclerView)
@@ -54,12 +49,17 @@ public class MyProductsActivity extends AppCompatActivity {
     Button BtnSettings;
     @BindView(R.id.TvUserName)
     TextView TvUserName;
+    private FirebaseAuth firebaseAuth;
+    private List<Product> products;
+    private MyProductsAdapter mAdapter;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_products);
         ButterKnife.bind(this);
+
         ActionBar actionBar = this.getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -86,7 +86,7 @@ public class MyProductsActivity extends AppCompatActivity {
             }
         });
 
-        ItemTouchHelper mIth = new ItemTouchHelper(
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
                 new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
                         ItemTouchHelper.LEFT) {
 
@@ -115,28 +115,30 @@ public class MyProductsActivity extends AppCompatActivity {
                                         super.onDismissed(transientBottomBar, event);
                                         if (event != DISMISS_EVENT_ACTION) {
                                             if (product.getPhotoUrl() != null) {
-                                                StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(product.getPhotoUrl());
+                                                final StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(product.getPhotoUrl());
                                                 photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        Toast.makeText(MyProductsActivity.this, R.string.photo_removed, Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(MyProductsActivity.this, getString(R.string.photo_removed) + product.getTitle(), Toast.LENGTH_SHORT).show();
+                                                        DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
+                                                        database.getRef().child(product.getKey()).removeValue();
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
                                                         Toast.makeText(MyProductsActivity.this, R.string.failed_to_remove_photo, Toast.LENGTH_SHORT).show();
+                                                        products.add(position, product);
+                                                        mAdapter.notifyDataSetChanged();
                                                     }
                                                 });
                                             }
-                                            DatabaseReference database = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
-                                            database.getRef().child(product.getKey()).removeValue();
                                         }
                                     }
                                 });
                         snackbar.show();
                     }
                 });
-        mIth.attachToRecyclerView(recyclerView);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     @Override
@@ -147,10 +149,14 @@ public class MyProductsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        setWelcomeMessage();
+        getUserProducts();
+    }
+
+    private void setWelcomeMessage() {
         String name = prefs.getString("name", "");
         String message = getString(R.string.welcome_message, name);
         TvUserName.setText(message);
-        getUserProducts();
     }
 
     private void getUserProducts() {
@@ -158,23 +164,23 @@ public class MyProductsActivity extends AppCompatActivity {
         Query queryRef = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE).orderByChild("owner").equalTo(prefs.getString("email", "no-email"));
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     Product product = childDataSnapshot.getValue(Product.class);
                     products.add(product);
                 }
                 mAdapter.setProducts(products);
-                setListMessage();
+                setProductsListMessage();
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("DatabaseError", databaseError.toString());
             }
         });
     }
 
-    private void setListMessage() {
+    private void setProductsListMessage() {
         if (mAdapter.getItemCount() == 0) {
             recyclerView.setVisibility(View.GONE);
             textEmptyList.setVisibility(View.VISIBLE);
@@ -187,10 +193,11 @@ public class MyProductsActivity extends AppCompatActivity {
 
     private void logoutUser() {
         firebaseAuth.signOut();
+        Log.i("Firebase", "User signed out");
         SharedPreferences.Editor editor = prefs.edit();
         editor.clear();
         editor.apply();
-        Log.i("SharedPreferences", "cleared");
+        Log.i("SharedPreferences", "preferences cleared");
         Intent intent = new Intent(MyProductsActivity.this, SignInActivity.class);
         startActivity(intent);
         finish();
