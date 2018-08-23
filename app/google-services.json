@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "52758620278",
+    "firebase_url": "https://sun-project-f4387.firebaseio.com",
+    "project_id": "sun-project-f4387",
+    "storage_bucket": "sun-project-f4387.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:52758620278:android:fce2d917c59f26c2",
+        "android_client_info": {
+          "package_name": "com.sundeal.sundeal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "52758620278-6bg3hr1bvmv06bfgcin7ehl7goufsli1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sundeal.sundeal",
+            "certificate_hash": "4bb621b5e057fe24ce42201a56ac36ebbb79994a"
+          }
+        },
+        {
+          "client_id": "52758620278-cb4ldapdp9md6qh7e1akku5sd0732iqn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpEhin0ktNiHubr5Yxo0F9X-ZLY86OshA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "52758620278-cb4ldapdp9md6qh7e1akku5sd0732iqn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
