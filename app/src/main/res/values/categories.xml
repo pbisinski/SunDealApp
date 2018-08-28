@@ -2,8 +2,8 @@
 <resources>
     <string-array name="categories_array">
         <item>Wybierz kategorię</item>
-        <item>Żywność</item>
-        <item>Zabawki</item>
-        <item>Ubrania</item>
+        <item>@string/category_1</item>
+        <item>@string/category_2</item>
+        <item>@string/category_3</item>
     </string-array>
 </resources>

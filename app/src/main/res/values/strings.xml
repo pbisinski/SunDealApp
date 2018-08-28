@@ -6,4 +6,7 @@
     <string name="add_product">Dodaj produkt</string>
     <string name="photo">Zdjęcie</string>
     <string name="add_item">Dodaj</string>
+    <string name="category_1">Żywność</string>
+    <string name="category_2">Zabawki</string>
+    <string name="category_3">Ubrania</string>
 </resources>

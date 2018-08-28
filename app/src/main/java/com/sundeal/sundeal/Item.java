@@ -6,20 +6,21 @@ public class Item {
     private String description;
     private String location;
     private String owner;
+    private int category;
     private String photoUrl;
     private String nameLowerCase;
     private String key;
 
-    //for tests
-    public Item(String name) {
-        this.name = name;
+    public Item() {
+
     }
 
-    public Item(String name, String description, String location, String owner, String photoUrl, String nameLowerCase, String key) {
+    public Item(String name, String description, String location, String owner, int category, String photoUrl, String nameLowerCase, String key) {
         this.name = name;
         this.description = description;
         this.location = location;
         this.owner = owner;
+        this.category = category;
         this.photoUrl = photoUrl;
         this.nameLowerCase = nameLowerCase;
         this.key = key;
@@ -39,6 +40,10 @@ public class Item {
 
     public String getOwner() {
         return owner;
+    }
+
+    public int getCategory() {
+        return category;
     }
 
     public String getPhotoUrl() {

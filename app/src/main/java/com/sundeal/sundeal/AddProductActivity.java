@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -37,9 +38,9 @@ import studio.carbonylgroup.textfieldboxes.TextFieldBoxes;
 
 public class AddProductActivity extends AppCompatActivity {
 
-    private static final int RC_PHOTO_PICKER = 2;
-    private static int MIN_NAME_LEN = 4;
-    private static int MAX_NAME_LEN = 20;
+    private final static int RC_PHOTO_PICKER = 2;
+    private final static int MIN_NAME_LEN = 4;
+    private final static int MAX_NAME_LEN = 20;
 
     @BindView(R.id.basic_toolbar)
     android.support.v7.widget.Toolbar toolbar;
@@ -68,7 +69,7 @@ public class AddProductActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
         ButterKnife.bind(this);
-        mDatabase = FirebaseDatabase.getInstance().getReference("sundeal/items");
+        mDatabase = FirebaseDatabase.getInstance().getReference(FirebaseHelper.DATABASE_REFERENCE);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.categories_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -168,8 +169,8 @@ public class AddProductActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     final String downloadUrl = task.getResult().toString();
                     final String key = mDatabase.push().getKey();
-                    Item item = new Item(name, description, "address", "owner", downloadUrl, name.toLowerCase(), key);
-                    mDatabase.child(category + "/" + key).setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    Item item = new Item(name, description, "address", "owner", category, downloadUrl, name.toLowerCase(), key);
+                    mDatabase.child(key).setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             Toast.makeText(AddProductActivity.this, "Przedmiot dodano", Toast.LENGTH_SHORT).show();
@@ -180,7 +181,18 @@ public class AddProductActivity extends AppCompatActivity {
                     });
                 }
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(AddProductActivity.this, "Błąd dodawania do bazy: " + e.toString(), Toast.LENGTH_SHORT).show();
+            }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(0, R.anim.exit_fade);
     }
 
 }
