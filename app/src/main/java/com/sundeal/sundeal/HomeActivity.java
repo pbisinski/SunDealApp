@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.astuetz.PagerSlidingTabStrip;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -35,6 +37,10 @@ public class HomeActivity extends AppCompatActivity {
 
         mPager.setAdapter(adapterViewPager);
 
+        PagerSlidingTabStrip tabsStrip = findViewById(R.id.tabs);
+        tabsStrip.setShouldExpand(true);
+        tabsStrip.setViewPager(mPager);
+
         searchIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,8 +61,9 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    public static class MyPagerAdapter extends FragmentPagerAdapter {
+    public static class MyPagerAdapter extends FragmentPagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
         private static int NUM_SCREENS = 4;
+        private int tabIcons[] = {R.drawable.ic_home, R.drawable.ic_cart, R.drawable.ic_person, R.drawable.ic_settings};
 
         public MyPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
@@ -86,6 +93,11 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             return "Page " + position;
+        }
+
+        @Override
+        public int getPageIconResId(int position) {
+            return tabIcons[position];
         }
 
     }

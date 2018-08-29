@@ -54,7 +54,7 @@ public class SearchActivity extends AppCompatActivity {
             int category = b.getInt("category");
             makeQuery(category);
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-            searchView.setText(b.getString("title"));
+            searchView.setHint(b.getString("title"));
         }
 
         searchView.requestFocus();
