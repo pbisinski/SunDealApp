@@ -76,7 +76,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE) {
-                    makeQuery(textView.getText().toString());
+                    makeQuery(textView.getText().toString().toLowerCase().trim());
                 }
                 return true;
             }
@@ -89,7 +89,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void makeQuery(final String query) {
-        Query ref = mDatabase.orderByChild("name").startAt(query).endAt(query + "\uf8ff");
+        Query ref = mDatabase.orderByChild("nameLowerCase").startAt(query).endAt(query + "\uf8ff");
         getFromDatabase(ref);
     }
 

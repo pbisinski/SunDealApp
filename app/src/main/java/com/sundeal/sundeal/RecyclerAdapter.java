@@ -59,8 +59,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         viewHolder.type.setText(categoryName);
         viewHolder.description.setText(list.get(i).getDescription());
         viewHolder.location.setText(list.get(i).getLocation());
-        RequestOptions glideOptions = new RequestOptions().centerCrop();
 
+        RequestOptions glideOptions = new RequestOptions().centerCrop();
         Glide.with(context)
                 .load(list.get(i).getPhotoUrl())
                 .apply(glideOptions)
