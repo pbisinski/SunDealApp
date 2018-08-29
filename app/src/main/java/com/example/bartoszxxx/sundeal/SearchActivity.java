@@ -2,6 +2,7 @@ package com.example.bartoszxxx.sundeal;
 
 import android.app.ActionBar;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.bartoszxxx.sundeal.Listing.SearchProductsAdapter;
 import com.google.firebase.database.DataSnapshot;
@@ -107,16 +109,16 @@ public class SearchActivity extends AppCompatActivity implements FirebaseHelper 
         if (queryString == null) {
             query = database.limitToLast(15);
         } else {
-            query = database.orderByChild("titleLowercase").startAt(queryString).endAt(queryString + "\uf8ff");
+            query = database.orderByChild(SEARCH_PAR).startAt(queryString).endAt(queryString + "\uf8ff");
         }
         getFromDatabase(query);
     }
 
-    public void getFromDatabase(final Query query) {
+    public void  getFromDatabase(final Query query) {
         products.clear();
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     Product product = childDataSnapshot.getValue(Product.class);
                     try {
@@ -129,10 +131,9 @@ public class SearchActivity extends AppCompatActivity implements FirebaseHelper 
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(SearchActivity.this, "Error: " + databaseError.toString(), Toast.LENGTH_SHORT).show();
             }
-
         });
 
     }
