@@ -6,6 +6,18 @@
     android:orientation="vertical"
     tools:context=".SearchActivity">
 
+    <TextView
+        android:id="@+id/result_output"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/colorAccent"
+        android:layout_margin="2dp"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/products_recycler"
         android:layout_width="match_parent"

@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bartoszxxx.sundeal.Listing.SearchProductsAdapter;
@@ -30,6 +32,7 @@ public class SearchActivity extends AppCompatActivity implements FirebaseHelper 
     private SearchProductsAdapter mAdapter;
     private List<Product> products;
     private SearchView searchView;
+    private TextView resultOutput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,8 @@ public class SearchActivity extends AppCompatActivity implements FirebaseHelper 
         products = new ArrayList<>();
         mAdapter = new SearchProductsAdapter();
         recyclerView.setAdapter(mAdapter);
+
+        resultOutput = findViewById(R.id.result_output);
 
     }
 
@@ -66,6 +71,7 @@ public class SearchActivity extends AppCompatActivity implements FirebaseHelper 
         getMenuInflater().inflate(R.menu.search_menu, menu);
         MenuItem item = menu.findItem(R.id.action_search);
         searchView = (SearchView) item.getActionView();
+
 
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +134,7 @@ public class SearchActivity extends AppCompatActivity implements FirebaseHelper 
                     }
                 }
                 mAdapter.setProducts(products);
+                updateRecyclerInfo(mAdapter.getItemCount());
             }
 
             @Override
@@ -136,5 +143,15 @@ public class SearchActivity extends AppCompatActivity implements FirebaseHelper 
             }
         });
 
+    }
+
+    private void updateRecyclerInfo(final int resultCount) {
+        String resultText;
+        if (resultCount <= 0) {
+            resultText = "Nie znaleziono wyników";
+        } else {
+            resultText = "Znalezione wyniki: " + resultCount;
+        }
+        resultOutput.setText(resultText);
     }
 }

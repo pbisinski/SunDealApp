@@ -121,12 +121,16 @@ public class AddProductActivity extends AppCompatActivity implements FirebaseHel
                 final String itemOwner = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("email", "no-email");
                 final Boolean itemGiveaway = RdBtnGiveaway.isChecked();
 
-                if (itemName.length() < MIN_ITEM_NAME_LENGTH) {
-                    ItemName.setError(getString(R.string.titlename_too_short));
-                } else if (itemDescription.isEmpty()) {
-                    ItemDescription.setError(getString(R.string.description_too_short));
-                } else if (itemLocation == null || selectedImageUri == null) {
-                    Toast.makeText(AddProductActivity.this, getString(R.string.toast_missing_data), Toast.LENGTH_SHORT).show();
+                if (itemName.length() < MIN_ITEM_NAME_LENGTH || itemDescription.isEmpty() || itemLocation == null || selectedImageUri == null) {
+                    if (itemName.length() < MIN_ITEM_NAME_LENGTH) {
+                        ItemName.setError(getString(R.string.titlename_too_short));
+                    }
+                    if (itemDescription.isEmpty()) {
+                        ItemDescription.setError(getString(R.string.description_too_short));
+                    }
+                    if (itemLocation == null || selectedImageUri == null) {
+                        Toast.makeText(AddProductActivity.this, getString(R.string.toast_missing_data), Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     ItemName.clearFocus();
                     ItemDescription.clearFocus();
@@ -191,7 +195,7 @@ public class AddProductActivity extends AppCompatActivity implements FirebaseHel
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
                 try {
-                    String placeName = place.getAddress().toString();
+                    String placeName =  place.getAddress().toString();
                     ItemLocation.setText(placeName);
                     itemLocation = placeName;
                     LocationNameTitle.setVisibility(View.VISIBLE);

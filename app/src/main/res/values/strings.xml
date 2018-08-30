@@ -37,7 +37,7 @@
     <string name="contact_info">Kliknij, aby skontaktować się z właścicielem</string>
     <string name="titlename_too_short">Nazwa produktu musi składać się z min. 4 znaków</string>
     <string name="description_too_short">Opis nie może być pusty</string>
-    <string name="toast_missing_data">Uzupełnij brakujące dane</string>
+    <string name="toast_missing_data">Lokalizacja oraz zdjęcie są wymagane</string>
     <string name="add_photo">Zdjęcie</string>
     <string name="add_location">Lokalizacja</string>
     <string name="photo_removed">Usunięto pomyślnie:\u0020</string>
